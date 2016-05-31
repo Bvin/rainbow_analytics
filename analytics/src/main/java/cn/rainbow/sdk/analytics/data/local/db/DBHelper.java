@@ -1,0 +1,28 @@
+package cn.rainbow.sdk.analytics.data.local.db;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+/**
+ * Created by 32967 on 2016/5/31.
+ */
+public class DBHelper extends SQLiteOpenHelper{
+
+    private static final String DB_FILE_NAME = "th_analytics";
+    private static final int VERSION = 1;
+
+    public DBHelper(Context context) {
+        super(context.getApplicationContext(), DB_FILE_NAME, null, VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        new EventTable(sqLiteDatabase).drop().create();
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
+    }
+}

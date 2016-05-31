@@ -14,10 +14,13 @@ public class THAnalytics {
         return ourInstance;
     }
 
+    private Tracker mTracker;
+
     private THAnalytics() {
+        mTracker = new TrackerImpl();
     }
 
     public Tracker newTracker() {
-        return new TrackerImpl();
+        return mTracker;
     }
 }

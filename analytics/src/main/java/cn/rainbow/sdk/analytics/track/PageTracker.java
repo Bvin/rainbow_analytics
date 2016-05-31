@@ -1,5 +1,6 @@
 package cn.rainbow.sdk.analytics.track;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import cn.rainbow.sdk.analytics.event.Event;
@@ -12,10 +13,12 @@ public class PageTracker extends  EventTracker{
 
     private String mPageName;
     private PageEvent mPageEvent;
+    private Context mContext;
 
-    public PageTracker(String pageName) {
+    public PageTracker(Context context) {
         super(PageEvent.EVENT_ID, "统计页面");
-        mPageName = pageName;
+        mContext = context;
+        mPageName = context.getClass().getSimpleName();
     }
 
     @Override

@@ -1,8 +1,12 @@
 package cn.rainbow.sdk.analytics.track;
 
+import android.content.Context;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
+import cn.rainbow.sdk.analytics.data.local.db.EventTable;
 import cn.rainbow.sdk.analytics.event.Event;
 
 /**
@@ -14,12 +18,17 @@ public abstract class EventTracker<T extends Event> {
     private long mStartMillis;
     private T mEvent;
 
+    protected Context mContext;
     protected long mEventId;
     protected String mEventName;
 
     public EventTracker(long eventId, String eventName) {
         mEventId = eventId;
         mEventName = eventName;
+    }
+
+    public void attachContext(Context context){
+        mContext = context;
     }
 
     public void onEventStart(){
@@ -41,6 +50,14 @@ public abstract class EventTracker<T extends Event> {
         mEvent.setEndDate(getCurrentDate());
         long duration = System.currentTimeMillis() - mStartMillis;
         mEvent.setDuration(duration);
+
+        save();
+    }
+
+    protected void save() {
+        DBHelper dbHelper = new DBHelper(mContext);
+        EventTable eventTable = new EventTable(mEvent, dbHelper.getWritableDatabase());
+        eventTable.save();
     }
 
     private String getCurrentDate(){

@@ -1,9 +1,13 @@
 package cn.rainbow.sdk.analytics.track;
 
+import android.content.Context;
+
 /**
  * Created by 32967 on 2016/5/27.
  */
 public interface Tracker {
+
+    void attachContext(Context context);
 
     /**
      * 初始化.
@@ -15,15 +19,15 @@ public interface Tracker {
 
     /**
      * @brief 开始页面统计。
-     * @param page  页面名称。
+     * @param context  页面名称。
      */
-    void beginLogPage(String page);
+    void beginLogPage(Context context);
 
     /**
      * @brief 结束页面统计。
-     * @param page  页面名称。
+     * @param context  页面名称。
      */
-    void endLogPage(String page);
+    void endLogPage(Context context);
 
     /**
      * @brief 统计事件。
