@@ -1,12 +1,14 @@
 package cn.rainbow.sdk.analytics.track;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
 import cn.rainbow.sdk.analytics.data.local.db.EventTable;
+import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.Event;
 
 /**
@@ -40,6 +42,7 @@ public abstract class EventTracker<T extends Event> {
     }
 
     public abstract T createEvent();
+    public abstract SQLTable createTable(T event, SQLiteDatabase database);
 
     public void onEvent(){
 
@@ -56,8 +59,8 @@ public abstract class EventTracker<T extends Event> {
 
     protected void save() {
         DBHelper dbHelper = new DBHelper(mContext);
-        EventTable eventTable = new EventTable(mEvent, dbHelper.getWritableDatabase());
-        eventTable.save();
+        SQLTable table = createTable(mEvent, dbHelper.getWritableDatabase());
+        table.save();
     }
 
     private String getCurrentDate(){

@@ -1,6 +1,8 @@
-package cn.rainbow.sdk.analytics.track;
+package cn.rainbow.sdk.analytics.proxy;
 
 import android.content.Context;
+
+import cn.rainbow.sdk.analytics.Config;
 
 /**
  * Created by 32967 on 2016/5/27.
@@ -8,6 +10,10 @@ import android.content.Context;
 public interface Tracker {
 
     void attachContext(Context context);
+
+    void config(Config config);
+
+    Config getCurrentConfig();
 
     /**
      * 初始化.

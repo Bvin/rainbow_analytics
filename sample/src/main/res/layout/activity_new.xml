@@ -8,14 +8,6 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="cn.rainbow.sdk.thanalytics.MainActivity">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="下一页"
-        android:onClick="nextPage"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+    tools:context="cn.rainbow.sdk.thanalytics.NewActivity">
 
 </RelativeLayout>

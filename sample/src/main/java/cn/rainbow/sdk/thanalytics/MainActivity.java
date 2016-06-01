@@ -1,11 +1,9 @@
 package cn.rainbow.sdk.thanalytics;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
-import cn.rainbow.sdk.analytics.THAnalytics;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,15 +11,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        THAnalytics.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        THAnalytics.onPause(this);
+    public void nextPage(View view){
+        NewActivity.start(this);
     }
 }

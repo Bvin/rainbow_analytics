@@ -1,46 +1,77 @@
 package cn.rainbow.sdk.analytics.track;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.Log;
 
+import cn.rainbow.sdk.analytics.THAnalytics;
+import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
+import cn.rainbow.sdk.analytics.data.local.db.PageTable;
+import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 
 /**
  * Created by 32967 on 2016/5/31.
  */
-public class PageTracker extends  EventTracker{
+public class PageTracker extends  EventTracker<PageEvent>{
+
+    private static final String TAG = "PageTracker";
 
     private String mPageName;
     private PageEvent mPageEvent;
-    private Context mContext;
+    private PageTable mPageTable;
 
     public PageTracker(Context context) {
         super(PageEvent.EVENT_ID, "统计页面");
-        mContext = context;
+        attachContext(context);
         mPageName = context.getClass().getSimpleName();
     }
 
-    @Override
-    public Event createEvent() {
-        return mPageEvent;
+    /**
+     * 页面开始统计.
+     */
+    public void onPageStart(){
+        onPageStartAfter(null);
     }
 
     /**
-     * 页面开始统计
+     * 页面开始统计.
      * @param previousPage 前一页
      */
-    public void onPageStart(String previousPage){
-        if (mPageEvent == null) {
+    public void onPageStartAfter(String previousPage){
+        if (mPageEvent == null) {//必须在onEventStart()前初始化
             mPageEvent = new PageEvent(mPageName);
         }
-        if (TextUtils.isEmpty(previousPage)) {
+        if (!TextUtils.isEmpty(previousPage)) {
             mPageEvent.setPreviousPage(previousPage);
         }
         onEventStart();
     }
 
     public void onPageEnd(){
-        onEventEnd();
+        onEventEnd();//一定要调用onEventEnd()才会完成统计并且保存到数据库
+    }
+
+    @Override
+    public PageEvent createEvent() {
+        return mPageEvent;
+    }
+
+    @Override
+    public SQLTable createTable(PageEvent event, SQLiteDatabase database) {
+        if (mPageTable == null) {
+            mPageTable = new PageTable(event, database);
+        }
+        return mPageTable;
+    }
+
+    private void printDebugLog(String tag, String content) {
+        if (THAnalytics.getCurrentConfig() != null) {
+            if (THAnalytics.getCurrentConfig().isEnableDebugLog()) {
+                Log.d(tag, content);
+            }
+        }
     }
 }

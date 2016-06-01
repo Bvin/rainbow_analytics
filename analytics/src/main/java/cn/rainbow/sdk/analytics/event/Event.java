@@ -14,12 +14,12 @@ public class Event implements TableCreator{
     private String mEventName;
     private String mEventDesc;//data
     private int mEventType;
-    private String mStartDate;
-    private String mEndDate;
-    private long mDuration;
+    protected String mStartDate;
+    protected String mEndDate;
+    protected long mDuration;
 
     public Event() {
-        //empty construct
+        //empty construct,just use to create sql table when DBHelper create.
     }
 
     public Event(long eventId) {
