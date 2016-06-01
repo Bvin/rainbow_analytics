@@ -6,16 +6,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import cn.rainbow.sdk.analytics.THAnalytics;
-import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
 import cn.rainbow.sdk.analytics.data.local.db.PageTable;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 
 /**
  * Created by 32967 on 2016/5/31.
  */
-public class PageTracker extends  EventTracker<PageEvent>{
+public class PageTracker extends AbsEventTracker<PageEvent> {
 
     private static final String TAG = "PageTracker";
 
@@ -26,7 +24,7 @@ public class PageTracker extends  EventTracker<PageEvent>{
     public PageTracker(Context context) {
         super(PageEvent.EVENT_ID, "统计页面");
         attachContext(context);
-        mPageName = context.getClass().getSimpleName();
+        mPageName = context.getClass().getName();
     }
 
     /**
@@ -67,11 +65,4 @@ public class PageTracker extends  EventTracker<PageEvent>{
         return mPageTable;
     }
 
-    private void printDebugLog(String tag, String content) {
-        if (THAnalytics.getCurrentConfig() != null) {
-            if (THAnalytics.getCurrentConfig().isEnableDebugLog()) {
-                Log.d(tag, content);
-            }
-        }
-    }
 }

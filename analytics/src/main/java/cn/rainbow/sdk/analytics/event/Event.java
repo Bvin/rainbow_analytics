@@ -97,6 +97,15 @@ public class Event implements TableCreator{
         return cv;
     }
 
+
+    public void putValidInt(ContentValues cv, String key, int value) {
+        if (value > 0) cv.put(key, value);
+    }
+
+    public void putValidString(ContentValues cv, String key, String value) {
+        if (!TextUtils.isEmpty(value)) cv.put(key, value);
+    }
+
     @Override
     public String toString() {
         return "Event{" +
@@ -110,7 +119,7 @@ public class Event implements TableCreator{
                 '}';
     }
 
-    class Columns{
+    public class Columns{
         public static final String EVENT_ID = "event_id";
         public static final String EVENT_NAME = "event_name";
         public static final String EVENT_DESC = "event_desc";

@@ -12,9 +12,9 @@ import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.Event;
 
 /**
- * Created by 32967 on 2016/5/31.
+ * Created by bvin on 2016/5/31.
  */
-public abstract class EventTracker<T extends Event> {
+public abstract class AbsEventTracker<T extends Event> {
 
     private SimpleDateFormat mDateFormat;
     private long mStartMillis;
@@ -24,7 +24,7 @@ public abstract class EventTracker<T extends Event> {
     protected long mEventId;
     protected String mEventName;
 
-    public EventTracker(long eventId, String eventName) {
+    public AbsEventTracker(long eventId, String eventName) {
         mEventId = eventId;
         mEventName = eventName;
     }
@@ -33,22 +33,31 @@ public abstract class EventTracker<T extends Event> {
         mContext = context;
     }
 
+    public abstract T createEvent();
+    public abstract SQLTable createTable(T event, SQLiteDatabase database);
+
+    /**
+     * 事件开始.
+     * <p>调用此方法之前一定要确保createEvent()中的事件已被创建
+     */
     public void onEventStart(){
         if (mEvent == null) {
             mEvent = createEvent();
         }
+        if (mEvent == null)
+            throw new RuntimeException("event must be build before call onEventStart() method!");
         mEvent.setStartDate(getCurrentDate());
         mStartMillis = System.currentTimeMillis();
     }
-
-    public abstract T createEvent();
-    public abstract SQLTable createTable(T event, SQLiteDatabase database);
 
     public void onEvent(){
 
     }
 
     public void onEventEnd(){
+        if (mEvent == null)
+            throw new RuntimeException("event object may be not created or be recycled!");
+
         //事件统计结束，保存到数据库
         mEvent.setEndDate(getCurrentDate());
         long duration = System.currentTimeMillis() - mStartMillis;

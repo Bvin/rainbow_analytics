@@ -24,6 +24,14 @@ public class THAnalytics {
         return mTracker.getCurrentConfig();
     }
 
+    public static void onAppStart(Context context) {
+        mTracker.initApp(context, 1208, 0, 0);
+    }
+
+    public static void onAppExit() {
+        mTracker.onAppExit();
+    }
+
     public static void onResume(Context context) {
         mTracker.beginLogPage(context);
     }

@@ -5,8 +5,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import cn.rainbow.sdk.analytics.Config;
+import cn.rainbow.sdk.analytics.track.AppTracker;
 import cn.rainbow.sdk.analytics.track.DefaultEventTracker;
-import cn.rainbow.sdk.analytics.track.EventTracker;
+import cn.rainbow.sdk.analytics.track.AbsEventTracker;
 import cn.rainbow.sdk.analytics.track.PageTracker;
 
 /**
@@ -16,11 +17,12 @@ public class TrackerImpl implements Tracker{
 
     private static final String TAG = "TrackerImpl";
 
-    private EventTracker mEventTracker;
+    private AbsEventTracker mEventTracker;
+    private AppTracker mAppTracker;
     private PageTracker mPageTracker;
     private String mPageName;
     private Context mContext;
-    private Config mConfig;
+    private Config mConfig = new Config();//empty config
 
     @Override
     public void attachContext(Context context) {
@@ -38,8 +40,16 @@ public class TrackerImpl implements Tracker{
     }
 
     @Override
-    public void initApp(int appId, int reportPolicy, long member_id) {
+    public void initApp(Context context,int appId, int reportPolicy, long member_id) {
+        if (mAppTracker == null) {
+            mAppTracker = new AppTracker(context, appId);
+        }
+        mAppTracker.onStart();
+    }
 
+    @Override
+    public void onAppExit() {
+        mAppTracker.onExit();
     }
 
     @Override

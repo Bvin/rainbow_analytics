@@ -8,7 +8,7 @@ import android.text.TextUtils;
  * 页面访问事件.
  */
 public class PageEvent extends Event{
-    public static final long EVENT_ID = 1;
+    public static final long EVENT_ID = 2;
 
     private String mCurrentPage;
     private String mPreviousPage;

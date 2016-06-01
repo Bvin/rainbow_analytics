@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class SQLTable {
 
-    private TableCreator mTableCreator;
-    private SQLiteDatabase mDatabase;
+    public static final String _ID = "_id";
+
+    protected TableCreator mTableCreator;
+    protected SQLiteDatabase mDatabase;
 
     public SQLTable(TableCreator tableCreator, SQLiteDatabase database) {
         mTableCreator = tableCreator;
@@ -33,7 +35,7 @@ public class SQLTable {
     private String toCreateSql(TableCreator tableCreator) {
 
         return "CREATE TABLE IF NOT EXISTS " + tableCreator.tableName() +
-                "( _id INTEGER PRIMARY KEY AUTOINCREMENT," + tableCreator.defineFields()+")";
+                "( " + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + tableCreator.defineFields() + ")";
 
     }
 

@@ -21,7 +21,9 @@ public interface Tracker {
      * @param reportPolicy 发送策略
      * @param member_id 会员编号
      */
-    void initApp(int appId, int reportPolicy, long member_id);
+    void initApp(Context context,int appId, int reportPolicy, long member_id);
+
+    void onAppExit();
 
     /**
      * @brief 开始页面统计。
