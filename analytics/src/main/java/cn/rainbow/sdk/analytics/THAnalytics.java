@@ -1,26 +1,26 @@
 package cn.rainbow.sdk.analytics;
 
+import android.content.Context;
+
 import cn.rainbow.sdk.analytics.track.Tracker;
 import cn.rainbow.sdk.analytics.track.TrackerImpl;
 
 /**
- * Created by 32967 on 2016/5/27.
+ * Created by bvin on 2016/5/27.
  */
 public class THAnalytics {
 
-    private static THAnalytics ourInstance = new THAnalytics();
+    private static Tracker mTracker;
 
-    public static THAnalytics getInstance() {
-        return ourInstance;
-    }
-
-    private Tracker mTracker;
-
-    private THAnalytics() {
+    static {
         mTracker = new TrackerImpl();
     }
 
-    public Tracker newTracker() {
-        return mTracker;
+    public static void onResume(Context context) {
+        mTracker.beginLogPage(context);
+    }
+
+    public static void onPause(Context context) {
+        mTracker.endLogPage(context);
     }
 }

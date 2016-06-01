@@ -11,18 +11,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        THAnalytics.getInstance().newTracker().attachContext(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        THAnalytics.getInstance().newTracker().beginLogEvent(0,"TEST");
+        THAnalytics.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        THAnalytics.getInstance().newTracker().endLogEvent(0,"TEST");
+        THAnalytics.onPause(this);
     }
 }
