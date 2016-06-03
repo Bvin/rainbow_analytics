@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
-import cn.rainbow.sdk.analytics.data.local.db.EventTable;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.Event;
 
@@ -69,7 +68,7 @@ public abstract class AbsEventTracker<T extends Event> {
     protected void save() {
         DBHelper dbHelper = new DBHelper(mContext);
         SQLTable table = createTable(mEvent, dbHelper.getWritableDatabase());
-        table.save();
+        table.save(mEvent);
     }
 
     private String getCurrentDate(){

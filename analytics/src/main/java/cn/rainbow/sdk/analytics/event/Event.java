@@ -3,12 +3,14 @@ package cn.rainbow.sdk.analytics.event;
 import android.content.ContentValues;
 import android.text.TextUtils;
 
+import cn.rainbow.sdk.analytics.data.local.db.EventTable;
 import cn.rainbow.sdk.analytics.data.local.db.TableCreator;
+import cn.rainbow.sdk.analytics.data.local.db.TableSave;
 
 /**
  * Created by 32967 on 2016/5/31.
  */
-public class Event implements TableCreator{
+public class Event implements TableSave{
 
     private long mEventId;
     private String mEventName;
@@ -69,34 +71,17 @@ public class Event implements TableCreator{
     }
 
     @Override
-    public String tableName() {
-        return "event";
-    }
-
-    @Override
-    public String defineFields() {
-        return Columns.EVENT_ID + " LONG," +
-                Columns.EVENT_NAME + " TEXT," +
-                Columns.EVENT_DESC + " TEXT," +
-                Columns.EVENT_TYPE + " INT," +
-                Columns.EVENT_START_DATE + " TEXT," +
-                Columns.EVENT_END_DATE + " TEXT," +
-                Columns.EVENT_DURATION + " LONG";
-    }
-
-    @Override
-    public ContentValues values() {
+    public ContentValues saveValues() {
         ContentValues cv = new ContentValues();
-        cv.put(Columns.EVENT_ID, mEventId);
-        if (!TextUtils.isEmpty(mEventName)) cv.put(Columns.EVENT_NAME, mEventName);
-        if (!TextUtils.isEmpty(mEventDesc)) cv.put(Columns.EVENT_DESC, mEventDesc);
-        cv.put(Columns.EVENT_TYPE, mEventType);
-        if (!TextUtils.isEmpty(mStartDate)) cv.put(Columns.EVENT_START_DATE, mStartDate);
-        if (!TextUtils.isEmpty(mEndDate)) cv.put(Columns.EVENT_END_DATE, mEndDate);
-        if (mDuration > 0) cv.put(Columns.EVENT_DURATION, mDuration);
+        cv.put(EventTable.Columns.EVENT_ID, mEventId);
+        if (!TextUtils.isEmpty(mEventName)) cv.put(EventTable.Columns.EVENT_NAME, mEventName);
+        if (!TextUtils.isEmpty(mEventDesc)) cv.put(EventTable.Columns.EVENT_DESC, mEventDesc);
+        cv.put(EventTable.Columns.EVENT_TYPE, mEventType);
+        if (!TextUtils.isEmpty(mStartDate)) cv.put(EventTable.Columns.EVENT_START_DATE, mStartDate);
+        if (!TextUtils.isEmpty(mEndDate)) cv.put(EventTable.Columns.EVENT_END_DATE, mEndDate);
+        if (mDuration > 0) cv.put(EventTable.Columns.EVENT_DURATION, mDuration);
         return cv;
     }
-
 
     public void putValidInt(ContentValues cv, String key, int value) {
         if (value > 0) cv.put(key, value);
@@ -119,13 +104,5 @@ public class Event implements TableCreator{
                 '}';
     }
 
-    public class Columns{
-        public static final String EVENT_ID = "event_id";
-        public static final String EVENT_NAME = "event_name";
-        public static final String EVENT_DESC = "event_desc";
-        public static final String EVENT_TYPE = "event_type";
-        public static final String EVENT_START_DATE = "start_date";
-        public static final String EVENT_END_DATE = "end_date";
-        public static final String EVENT_DURATION = "duration";
-    }
+
 }

@@ -12,9 +12,12 @@ public class SQLTable {
     protected TableCreator mTableCreator;
     protected SQLiteDatabase mDatabase;
 
-    public SQLTable(TableCreator tableCreator, SQLiteDatabase database) {
-        mTableCreator = tableCreator;
+    public SQLTable(SQLiteDatabase database) {
         mDatabase = database;
+    }
+
+    public void setTableCreator(TableCreator tableCreator) {
+        mTableCreator = tableCreator;
     }
 
     public SQLTable create() {
@@ -27,15 +30,15 @@ public class SQLTable {
         return this;
     }
 
-    public SQLTable save() {
-        mDatabase.insert(mTableCreator.tableName(), null, mTableCreator.values());
+    public SQLTable save(TableSave tableSave) {
+        mDatabase.insert(mTableCreator.tableName(), null, tableSave.saveValues());
         return this;
     }
 
     private String toCreateSql(TableCreator tableCreator) {
 
         return "CREATE TABLE IF NOT EXISTS " + tableCreator.tableName() +
-                "( " + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + tableCreator.defineFields() + ")";
+                "( " + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + tableCreator.tableColumns() + ")";
 
     }
 

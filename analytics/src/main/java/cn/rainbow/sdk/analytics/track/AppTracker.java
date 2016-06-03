@@ -36,11 +36,11 @@ public class AppTracker extends AbsEventTracker<AppEvent>{
         }
         if (mAppTable == null) {
             DBHelper dbHelper = new DBHelper(mContext);
-            mAppTable = new AppTable(mAppEvent,dbHelper.getWritableDatabase());
+            mAppTable = new AppTable(dbHelper.getWritableDatabase());
         }
         collectInfo();
         onEventStart();
-        mAppTable.insert();//开始就统计
+        mAppTable.insert(mAppEvent);//开始就统计
     }
 
     private void collectInfo() {
@@ -74,7 +74,7 @@ public class AppTracker extends AbsEventTracker<AppEvent>{
 
     @Override
     protected void save() {
-        mAppTable.update();//convert save to update.
+        mAppTable.update(mAppEvent);//convert save to update.
     }
 
     @Override
@@ -85,7 +85,7 @@ public class AppTracker extends AbsEventTracker<AppEvent>{
     @Override
     public SQLTable createTable(AppEvent event, SQLiteDatabase database) {
         if (mAppTable == null) {
-            mAppTable = new AppTable(event, database);
+            mAppTable = new AppTable(database);
         }
         return mAppTable;
     }
