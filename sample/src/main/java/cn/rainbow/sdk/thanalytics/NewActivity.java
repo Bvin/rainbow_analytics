@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class NewActivity extends BaseActivity {
 
@@ -16,6 +19,11 @@ public class NewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new);
-        findViewById(R.id.button).setOnClickListener(null);
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//崩溃统计测试
+                ImageButton ib = (ImageButton) findViewById(R.id.button2);
+            }
+        });
     }
 }

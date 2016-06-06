@@ -14,8 +14,8 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
         Config config = new Config();
-        config.enableDebugLog(true);
-        config.enableCrashTrack(true);
+        config.enableDebugLog(true);//打开log
+        config.enableCrashTrack(true);//开启崩溃收集
         THAnalytics.setConfig(config);
         THAnalytics.onAppStart(this);
     }
