@@ -22,7 +22,7 @@ public class DefaultEventTracker extends AbsEventTracker {
 
     @Override
     public SQLTable createTable(Event event, SQLiteDatabase database) {
-        return new EventTable(event, database);
+        return new EventTable(database);
     }
 
 }

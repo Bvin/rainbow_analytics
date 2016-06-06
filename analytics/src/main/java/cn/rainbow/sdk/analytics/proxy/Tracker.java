@@ -60,9 +60,10 @@ public interface Tracker {
 
     /**
      * @brief 应用奔溃日志统计。
+     * @param context 需要上下收集信息
      * @param appId app编号。
      * @param platform  平台（iPhone, iPad, Android Phone, Android Pad）
      * @param crash_log  奔溃内容详情。
      */
-    void logCrashInfo(int appId, String platform, String crash_log);
+    void logCrashInfo(Context context, String crash_log);
 }

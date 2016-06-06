@@ -60,7 +60,7 @@ public class PageTracker extends AbsEventTracker<PageEvent> {
     @Override
     public SQLTable createTable(PageEvent event, SQLiteDatabase database) {
         if (mPageTable == null) {
-            mPageTable = new PageTable(event, database);
+            mPageTable = new PageTable(database);
         }
         return mPageTable;
     }

@@ -6,6 +6,7 @@ package cn.rainbow.sdk.analytics;
 public class Config {
 
     private boolean mEnableDebugLog;
+    private boolean mEnableCrashTrack;
 
     public void enableDebugLog(boolean enable){
         mEnableDebugLog = enable;
@@ -13,5 +14,13 @@ public class Config {
 
     public boolean isEnableDebugLog(){
         return mEnableDebugLog;
+    }
+
+    public void enableCrashTrack(boolean enable){
+        mEnableCrashTrack = enable;
+    }
+
+    public boolean isEnableCrashTrack(){
+        return mEnableCrashTrack;
     }
 }

@@ -2,6 +2,7 @@ package cn.rainbow.sdk.thanalytics;
 
 import android.app.Application;
 
+import cn.rainbow.sdk.analytics.Config;
 import cn.rainbow.sdk.analytics.THAnalytics;
 
 /**
@@ -12,6 +13,10 @@ public class App extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+        Config config = new Config();
+        config.enableDebugLog(true);
+        config.enableCrashTrack(true);
+        THAnalytics.setConfig(config);
         THAnalytics.onAppStart(this);
     }
 

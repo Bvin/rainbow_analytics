@@ -11,6 +11,7 @@
     tools:context="cn.rainbow.sdk.thanalytics.MainActivity">
 
     <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="下一页"

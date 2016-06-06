@@ -16,7 +16,7 @@ public class THAnalytics {
         mTracker = new TrackerImpl();
     }
 
-    public static void config(Config config){
+    public static void setConfig(Config config){
         mTracker.config(config);
     }
 
@@ -24,8 +24,13 @@ public class THAnalytics {
         return mTracker.getCurrentConfig();
     }
 
+    //如果开启Crash跟踪，调用此方法将会开启...
     public static void onAppStart(Context context) {
         mTracker.initApp(context, 1208, 0, 0);
+        if (mTracker.getCurrentConfig().isEnableCrashTrack()) {
+            CrashHandler crashHandler = new CrashHandler(context);
+            Thread.setDefaultUncaughtExceptionHandler(crashHandler);
+        }
     }
 
     public static void onAppExit() {
@@ -38,5 +43,9 @@ public class THAnalytics {
 
     public static void onPause(Context context) {
         mTracker.endLogPage(context);
+    }
+
+    public static void reportCrash(Context context, String log) {
+        mTracker.logCrashInfo(context, log);
     }
 }

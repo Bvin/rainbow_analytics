@@ -18,7 +18,7 @@ public class Log {
 
     public static void d(String tag, String msg) {
         if (sEnableLog)
-            android.util.Log.i(tag, checkEmpty(msg));
+            android.util.Log.d(tag, checkEmpty(msg));
     }
 
     public static void e(String tag, String msg, Throwable tr) {

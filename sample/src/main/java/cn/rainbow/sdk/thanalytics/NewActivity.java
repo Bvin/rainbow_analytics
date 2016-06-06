@@ -16,5 +16,6 @@ public class NewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new);
+        findViewById(R.id.button).setOnClickListener(null);
     }
 }

@@ -5,7 +5,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import cn.rainbow.sdk.analytics.Config;
+import cn.rainbow.sdk.analytics.CrashHandler;
 import cn.rainbow.sdk.analytics.track.AppTracker;
+import cn.rainbow.sdk.analytics.track.CrashTracker;
 import cn.rainbow.sdk.analytics.track.DefaultEventTracker;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
 import cn.rainbow.sdk.analytics.track.PageTracker;
@@ -20,9 +22,10 @@ public class TrackerImpl implements Tracker{
     private AbsEventTracker mEventTracker;
     private AppTracker mAppTracker;
     private PageTracker mPageTracker;
+    private CrashTracker mCrashTracker;
     private String mPageName;
     private Context mContext;
-    private Config mConfig = new Config();//empty config
+    private Config mConfig = new Config();//empty setConfig
 
     @Override
     public void attachContext(Context context) {
@@ -116,7 +119,12 @@ public class TrackerImpl implements Tracker{
     }
 
     @Override
-    public void logCrashInfo(int appId, String platform, String crash_log) {
+    public void logCrashInfo(Context context, String log) {
 
+        if (mCrashTracker == null) {
+            mCrashTracker = new CrashTracker(context);
+        }
+        cn.rainbow.sdk.analytics.utils.Log.d(TAG+"#logCrashInfo",log);
+        mCrashTracker.onCrash(log);
     }
 }
