@@ -80,7 +80,7 @@ public class TrackerImpl implements Tracker{
 
     @Override
     public void endLogPage(Context context) {
-        mPageName = context.getClass().getSimpleName();
+        mPageName = context.getClass().getName();
         if (mPageTracker == null) {
             throw new RuntimeException("page track must call when begin");
         }
