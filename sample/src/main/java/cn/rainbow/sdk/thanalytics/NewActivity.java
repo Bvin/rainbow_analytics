@@ -23,6 +23,7 @@ public class NewActivity extends BaseActivity {
             @Override
             public void onClick(View view) {//崩溃统计测试
                 ImageButton ib = (ImageButton) findViewById(R.id.button2);
+                //崩溃统计测试
             }
         });
     }
