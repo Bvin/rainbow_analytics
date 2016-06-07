@@ -71,6 +71,10 @@ public abstract class AbsEventTracker<T extends Event> {
         table.save(mEvent);
     }
 
+    protected void push(){
+
+    }
+
     private String getCurrentDate(){
         if (mDateFormat == null) {
             mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
