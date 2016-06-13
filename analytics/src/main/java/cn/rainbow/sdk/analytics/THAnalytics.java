@@ -48,4 +48,8 @@ public class THAnalytics {
     public static void reportCrash(Context context, String log) {
         mTracker.logCrashInfo(context, log);
     }
+
+    public static void reportAPV(){
+
+    }
 }
