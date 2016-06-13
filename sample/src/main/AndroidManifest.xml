@@ -3,6 +3,7 @@
           package="cn.rainbow.sdk.thanalytics">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -18,6 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".NewActivity">
+        </activity>
+        <activity android:name=".GoodsActivity">
         </activity>
     </application>
 

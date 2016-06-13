@@ -7,7 +7,7 @@ import cn.rainbow.sdk.analytics.Config;
 /**
  * Created by 32967 on 2016/5/27.
  */
-public interface Tracker {
+public interface Tracker extends Business{
 
     void attachContext(Context context);
 

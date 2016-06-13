@@ -1,9 +1,12 @@
-package cn.rainbow.sdk.analytics.event;
+package cn.rainbow.sdk.analytics.event.marketing;
+
+import cn.rainbow.sdk.analytics.event.PageEvent;
 
 /**
  * Created by bvin on 2016/6/12.
+ * <p>营销平台APV事件
  */
-public class MarketingPageEvent extends PageEvent{
+public class MarketingPageEvent extends PageEvent {
 
     private String mChannelId;
     private String mMerchantId;

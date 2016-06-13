@@ -5,18 +5,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import cn.rainbow.sdk.analytics.Config;
-import cn.rainbow.sdk.analytics.CrashHandler;
-import cn.rainbow.sdk.analytics.data.remote.Api;
-import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.event.marketing.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.track.AppTracker;
 import cn.rainbow.sdk.analytics.track.CrashTracker;
 import cn.rainbow.sdk.analytics.track.DefaultEventTracker;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
-import cn.rainbow.sdk.analytics.track.MarketingPageTracker;
-import cn.rainbow.sdk.analytics.track.MarketingTracker;
+import cn.rainbow.sdk.analytics.track.marketing.GoodsPagerTracker;
+import cn.rainbow.sdk.analytics.track.marketing.MarketingPageTracker;
 import cn.rainbow.sdk.analytics.track.PageTracker;
-import retrofit2.Call;
-import retrofit2.http.Field;
 
 /**
  * Created by 32967 on 2016/5/27.
@@ -29,6 +25,7 @@ public class TrackerImpl implements Tracker{
     private AppTracker mAppTracker;
     private PageTracker mPageTracker;
     private MarketingPageTracker mMarketingPageTracker;
+    private GoodsPagerTracker mGoodsPagerTracker;
     private CrashTracker mCrashTracker;
     private String mPageName;
     private Context mContext;
@@ -70,6 +67,7 @@ public class TrackerImpl implements Tracker{
         if (mMarketingPageTracker == null) {
             mMarketingPageTracker = new MarketingPageTracker(context);
         }
+        printDebugLog(TAG, "beginLogPage: 上一页->" + mPageName);
         beginPageTrack(mPageTracker);
         beginPageTrack(mMarketingPageTracker);
     }
@@ -80,7 +78,6 @@ public class TrackerImpl implements Tracker{
         } else {
             pageTracker.onPageStartAfter(mPageName);
         }
-        printDebugLog(TAG, "beginLogPage: 上一页->" + mPageName);
     }
 
     private void printDebugLog(String tag, String content) {
@@ -94,6 +91,7 @@ public class TrackerImpl implements Tracker{
     @Override
     public void endLogPage(Context context) {
         mPageName = context.getClass().getName();
+        printDebugLog(TAG,"endLogPage:当前页—> "+mPageName);
         endPageTrack(mPageTracker);
         endPageTrack(mMarketingPageTracker);
     }
@@ -103,7 +101,6 @@ public class TrackerImpl implements Tracker{
             throw new RuntimeException("page track must call when begin");
         }
         pageTracker.onPageEnd();
-        printDebugLog(TAG,"endLogPage:当前页—> "+mPageName);
         pageTracker = null;
     }
 
@@ -144,5 +141,18 @@ public class TrackerImpl implements Tracker{
         }
         cn.rainbow.sdk.analytics.utils.Log.d(TAG+"#logCrashInfo",log);
         mCrashTracker.onCrash(log);
+    }
+
+    @Override
+    public void startGoodsPage(Context context, GoodsViewEvent eventData) {
+        if (mGoodsPagerTracker == null) {
+            mGoodsPagerTracker = new GoodsPagerTracker(context);
+        }
+        mGoodsPagerTracker.startGoodsPage(eventData);
+    }
+
+    @Override
+    public void stopGoodsPage() {
+        endPageTrack(mGoodsPagerTracker);
     }
 }

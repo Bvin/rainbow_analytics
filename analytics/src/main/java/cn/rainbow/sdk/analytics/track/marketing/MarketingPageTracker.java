@@ -1,19 +1,18 @@
-package cn.rainbow.sdk.analytics.track;
+package cn.rainbow.sdk.analytics.track.marketing;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
-import android.util.DisplayMetrics;
 
-import cn.rainbow.sdk.analytics.BuildConfig;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.remote.Api;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.data.remote.RetrofitClient;
-import cn.rainbow.sdk.analytics.event.MarketingPageEvent;
+import cn.rainbow.sdk.analytics.event.marketing.MarketingPageEvent;
 import cn.rainbow.sdk.analytics.event.PageEvent;
+import cn.rainbow.sdk.analytics.track.PageTracker;
 import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
 import cn.rainbow.sdk.analytics.utils.Log;
 import retrofit2.Call;
@@ -48,6 +47,12 @@ public class MarketingPageTracker extends PageTracker implements Callback<Model>
     public void onPageEnd() {
         super.onPageEnd();
         reportAPV();
+    }
+
+    @Override
+    protected void save() {
+        //super.save();
+        //暂时不存库
     }
 
     private void collectInfo() {

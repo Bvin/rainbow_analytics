@@ -1,5 +1,7 @@
 package cn.rainbow.sdk.analytics.data.remote;
 
+import android.util.Log;
+
 import cn.rainbow.sdk.analytics.BuildConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -11,8 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitClient {
 
-    private static final boolean ENABLE_ENCODE = true;
-
+    private static final String TAG = "RetrofitClient";
     /**
      * OkHttpClient配置请求拦截器
      * @return
@@ -20,12 +21,11 @@ public class RetrofitClient {
     private static OkHttpClient configClient() {
         OkHttpClient.Builder requestBuilder = new OkHttpClient.Builder();
 
-        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "configClient: ");
             //log interceptor
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             requestBuilder.addInterceptor(loggingInterceptor);
-        }
 
         return requestBuilder.build();
     }

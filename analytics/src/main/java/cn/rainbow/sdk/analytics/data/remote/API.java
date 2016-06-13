@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 public interface Api {
 
     String HOST_TEST = "http://192.168.163.162:8010/";//http://dev.report.honglingjin.cn
-    String HOST_OFFCIAL = "";
+    String HOST_OFFCIAL = "http://report.honglingjin.cn ";
     String HOST = HOST_TEST;
 
     String URL_APP_PV = "report_apv";
@@ -40,6 +40,7 @@ public interface Api {
                                   device, @Query("o") String os, @Query("ov") String osVersion, @Query("id") String id);
 
 
+    @GET(URL_GOODS_PV)
     Call<Model> reportGPV(@Query("c") String channel, @Query("mid") String merchant, @Query("gid") String goodsId, @Query("gn") String goodsName,
                           @Query("gi") String goodsImage, @Query("et") String enterTime, @Query("lt") String leavingTime, @Query("gc1") String
                                   goodsCategory1, @Query("gc1") String goodsCategory2, @Query("gc1") String goodsCategory3, @Query("id") String id,

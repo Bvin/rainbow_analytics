@@ -69,6 +69,7 @@ public abstract class AbsEventTracker<T extends Event> {
         DBHelper dbHelper = new DBHelper(mContext);
         SQLTable table = createTable(mEvent, dbHelper.getWritableDatabase());
         table.save(mEvent);
+        //table.close();
     }
 
     protected void push(){

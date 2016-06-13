@@ -35,6 +35,10 @@ public class SQLTable {
         return this;
     }
 
+    public void close(){
+        mDatabase.close();
+    }
+
     private String toCreateSql(TableCreator tableCreator) {
 
         return "CREATE TABLE IF NOT EXISTS " + tableCreator.tableName() +

@@ -2,6 +2,7 @@ package cn.rainbow.sdk.analytics;
 
 import android.content.Context;
 
+import cn.rainbow.sdk.analytics.event.marketing.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.proxy.Tracker;
 import cn.rainbow.sdk.analytics.proxy.TrackerImpl;
 
@@ -49,7 +50,16 @@ public class THAnalytics {
         mTracker.logCrashInfo(context, log);
     }
 
-    public static void reportAPV(){
+    /**
+     *
+     * @param context 上下文
+     * @param receiverData 接收数据（商品信息和用户信息等）
+     */
+    public static void startGoodsPage(Context context, GoodsViewEvent receiverData){
+        mTracker.startGoodsPage(context,receiverData);
+    }
 
+    public static void stopGoodsPage(){
+        mTracker.stopGoodsPage();
     }
 }
