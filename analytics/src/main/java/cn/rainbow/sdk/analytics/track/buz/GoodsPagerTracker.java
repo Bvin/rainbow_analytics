@@ -3,7 +3,9 @@ package cn.rainbow.sdk.analytics.track.buz;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -59,9 +61,18 @@ public class GoodsPagerTracker extends THPageTracker {
         HttpLiteBuilder mBuilder = URLite.create();
         HttpLite httpLite = mBuilder.addResponseParser(new GsonParser()).build();
         Api api = httpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportGPV(mEvent.getChannelId(), mEvent.getMerchantId(), mEvent.getGoodsId(), mEvent.getGoodsName(), mEvent.getGoodsImage(),
+        api.reportGPV(mEvent.getChannelId(), mEvent.getMerchantId(), mEvent.getGoodsId(), urlEncode(mEvent.getGoodsName()), urlEncode(mEvent.getGoodsImage()),
                 mEvent.getStartDate(), mEvent.getEndDate(), mEvent.getCategory1(), mEvent.getCategory2(), mEvent.getCategory3(), mEvent.getId()
                 , mEvent.getUid(),new BaseResponseCallback(this));
+    }
+
+    private String urlEncode(String content){
+        try {
+            return URLEncoder.encode(content,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return content;
+        }
     }
 
     @Override

@@ -6,7 +6,9 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +48,7 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
         if (mEvent == null) {
             mEvent = new THPageEvent();
         }
-        mEvent.setUrl(mContext.getClass().getSimpleName());
+        mEvent.setUrl(mContext.getClass().getName());
         onEventStart();
         collectInfo();
     }
@@ -86,7 +88,7 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
         return null;
     }
 
-    private void reportAPV() {
+    private void reportAPV(){
         /*Retrofit retrofit = RetrofitClient.getInstance();
         Api mApi = retrofit.create(Api.class);
         Call<Model> call = mApi.reportAPV(mEvent.getChannelId(), mEvent.getMerchantId(), mEvent.getUrl(), mEvent.getAppVersion(), mEvent.getStartDate(),
@@ -95,7 +97,13 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
         HttpLiteBuilder mBuilder = URLite.create();
         HttpLite httpLite = mBuilder.addResponseParser(new GsonParser()).build();
         Api api = httpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportAPV(mEvent.getChannelId(), mEvent.getMerchantId(), mEvent.getUrl(), mEvent.getAppVersion(), mEvent.getStartDate(),
+        String pageName = mEvent.getUrl();
+        try {
+            pageName = URLEncoder.encode(pageName, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        api.reportAPV(mEvent.getChannelId(), mEvent.getMerchantId(), pageName, mEvent.getAppVersion(), mEvent.getStartDate(),
                 mEvent.getEndDate(), mEvent.getDevice(), mEvent.getSystem(), mEvent.getSystemVersion(), mEvent.getDeviceId(),new BaseResponseCallback(this));
     }
 

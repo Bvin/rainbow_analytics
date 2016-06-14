@@ -3,7 +3,9 @@ package cn.rainbow.sdk.analytics.track.buz;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -51,9 +53,18 @@ public class CartTracker extends AbsEventTracker<CartEvent> implements alexclin.
         HttpLiteBuilder mBuilder = URLite.create();
         HttpLite httpLite = mBuilder.addResponseParser(new GsonParser()).build();
         Api api = httpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportCart(mEvent.getChannelId(), mEvent.getMerchantId(), mEvent.getGoodsId(), mEvent.getGoodsSkuCode(), mEvent.getGoodsName()
-                , mEvent.getGoodsImage(), mEvent.getGoodsPrice(), mEvent.getGoodsSellPrice(), mEvent.getGoodsCount(), mEvent.getCouponAmount(), mEvent.getId(),
+        api.reportCart(mEvent.getChannelId(), mEvent.getMerchantId(), mEvent.getGoodsId(), mEvent.getGoodsSkuCode(),urlEncode( mEvent.getGoodsName())
+                , urlEncode(mEvent.getGoodsImage()), mEvent.getGoodsPrice(), mEvent.getGoodsSellPrice(), mEvent.getGoodsCount(), mEvent.getCouponAmount(), mEvent.getId(),
                 mEvent.getUid(), mEvent.getOperation(),new BaseResponseCallback(this));
+    }
+
+    private String urlEncode(String content){
+        try {
+            return URLEncoder.encode(content,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return content;
+        }
     }
 
     @Override
