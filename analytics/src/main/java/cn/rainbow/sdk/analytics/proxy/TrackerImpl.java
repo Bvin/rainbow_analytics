@@ -99,7 +99,9 @@ public class TrackerImpl implements Tracker{
         mPageName = context.getClass().getName();
         printDebugLog(TAG,"endLogPage:当前页—> "+mPageName);
         endPageTrack(mPageTracker);
+        mPageTracker = null;
         endPageTrack(mMarketingPageTracker);
+        mMarketingPageTracker = null;
     }
 
     private void endPageTrack(PageTracker pageTracker){
@@ -107,7 +109,6 @@ public class TrackerImpl implements Tracker{
             throw new RuntimeException("page track must call when begin");
         }
         pageTracker.onPageEnd();
-        pageTracker = null;
     }
 
     @Override
