@@ -1,4 +1,4 @@
-package cn.rainbow.sdk.analytics.track.marketing;
+package cn.rainbow.sdk.analytics.track.buz;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -10,7 +10,7 @@ import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.remote.Api;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.data.remote.RetrofitClient;
-import cn.rainbow.sdk.analytics.event.marketing.MarketingPageEvent;
+import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 import cn.rainbow.sdk.analytics.track.PageTracker;
 import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
@@ -24,11 +24,11 @@ import retrofit2.Retrofit;
 /**
  * Created by bvin on 2016/6/12.
  */
-public class MarketingPageTracker extends PageTracker implements Callback<Model> {
+public class THPageTracker extends PageTracker implements Callback<Model> {
 
-    private MarketingPageEvent mEvent;
+    private THPageEvent mEvent;
 
-    public MarketingPageTracker(Context context) {
+    public THPageTracker(Context context) {
         super(context);
     }
 
@@ -36,7 +36,7 @@ public class MarketingPageTracker extends PageTracker implements Callback<Model>
     public void onPageStartAfter(String previousPage) {
         //super.onPageStartAfter(previousPage);
         if (mEvent == null) {
-            mEvent = new MarketingPageEvent();
+            mEvent = new THPageEvent();
         }
         mEvent.setUrl(mContext.getClass().getSimpleName());
         onEventStart();

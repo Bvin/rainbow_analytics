@@ -1,9 +1,10 @@
-package cn.rainbow.sdk.analytics.event.marketing;
+package cn.rainbow.sdk.analytics.event.buz;
 
 import cn.rainbow.sdk.analytics.event.Event;
 
 /**
  * Created by bvin on 2016/6/14.
+ * <p>购物车事件.
  */
 public class CartEvent extends Event{
 

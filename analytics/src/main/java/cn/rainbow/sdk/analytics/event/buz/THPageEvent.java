@@ -1,12 +1,12 @@
-package cn.rainbow.sdk.analytics.event.marketing;
+package cn.rainbow.sdk.analytics.event.buz;
 
 import cn.rainbow.sdk.analytics.event.PageEvent;
 
 /**
  * Created by bvin on 2016/6/12.
- * <p>营销平台APV事件
+ * <p>天虹页面统计事件
  */
-public class MarketingPageEvent extends PageEvent {
+public class THPageEvent extends PageEvent {
 
     private String mChannelId;
     private String mMerchantId;

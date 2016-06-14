@@ -1,4 +1,4 @@
-package cn.rainbow.sdk.analytics.track.marketing;
+package cn.rainbow.sdk.analytics.track.buz;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,7 +8,7 @@ import cn.rainbow.sdk.analytics.data.remote.Api;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.data.remote.RetrofitClient;
 import cn.rainbow.sdk.analytics.event.PageEvent;
-import cn.rainbow.sdk.analytics.event.marketing.GoodsViewEvent;
+import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -16,7 +16,7 @@ import retrofit2.Retrofit;
 /**
  * Created by bvin on 2016/6/13.
  */
-public class GoodsPagerTracker extends MarketingPageTracker{
+public class GoodsPagerTracker extends THPageTracker {
 
     private GoodsViewEvent mEvent;
 

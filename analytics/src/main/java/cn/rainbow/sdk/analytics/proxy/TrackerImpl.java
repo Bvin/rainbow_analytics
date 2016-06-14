@@ -5,20 +5,20 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import cn.rainbow.sdk.analytics.Config;
-import cn.rainbow.sdk.analytics.event.marketing.CartEvent;
-import cn.rainbow.sdk.analytics.event.marketing.FavoriteEvent;
-import cn.rainbow.sdk.analytics.event.marketing.GoodsViewEvent;
-import cn.rainbow.sdk.analytics.event.marketing.OrderEvent;
+import cn.rainbow.sdk.analytics.event.buz.CartEvent;
+import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
+import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
+import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
 import cn.rainbow.sdk.analytics.track.AppTracker;
 import cn.rainbow.sdk.analytics.track.CrashTracker;
 import cn.rainbow.sdk.analytics.track.DefaultEventTracker;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
-import cn.rainbow.sdk.analytics.track.marketing.CartTracker;
-import cn.rainbow.sdk.analytics.track.marketing.FavTracker;
-import cn.rainbow.sdk.analytics.track.marketing.GoodsPagerTracker;
-import cn.rainbow.sdk.analytics.track.marketing.MarketingPageTracker;
+import cn.rainbow.sdk.analytics.track.buz.CartTracker;
+import cn.rainbow.sdk.analytics.track.buz.FavTracker;
+import cn.rainbow.sdk.analytics.track.buz.GoodsPagerTracker;
+import cn.rainbow.sdk.analytics.track.buz.THPageTracker;
 import cn.rainbow.sdk.analytics.track.PageTracker;
-import cn.rainbow.sdk.analytics.track.marketing.OrderTracker;
+import cn.rainbow.sdk.analytics.track.buz.OrderTracker;
 
 /**
  * Created by 32967 on 2016/5/27.
@@ -30,7 +30,7 @@ public class TrackerImpl implements Tracker{
     private AbsEventTracker mEventTracker;
     private AppTracker mAppTracker;
     private PageTracker mPageTracker;
-    private MarketingPageTracker mMarketingPageTracker;
+    private THPageTracker mMarketingPageTracker;
     private GoodsPagerTracker mGoodsPagerTracker;
     private CrashTracker mCrashTracker;
     private String mPageName;
@@ -71,7 +71,7 @@ public class TrackerImpl implements Tracker{
             mPageTracker = new PageTracker(context);
         }
         if (mMarketingPageTracker == null) {
-            mMarketingPageTracker = new MarketingPageTracker(context);
+            mMarketingPageTracker = new THPageTracker(context);
         }
         printDebugLog(TAG, "beginLogPage: 上一页->" + mPageName);
         beginPageTrack(mPageTracker);

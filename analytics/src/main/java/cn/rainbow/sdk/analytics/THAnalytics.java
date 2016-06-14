@@ -2,10 +2,10 @@ package cn.rainbow.sdk.analytics;
 
 import android.content.Context;
 
-import cn.rainbow.sdk.analytics.event.marketing.CartEvent;
-import cn.rainbow.sdk.analytics.event.marketing.FavoriteEvent;
-import cn.rainbow.sdk.analytics.event.marketing.GoodsViewEvent;
-import cn.rainbow.sdk.analytics.event.marketing.OrderEvent;
+import cn.rainbow.sdk.analytics.event.buz.CartEvent;
+import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
+import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
+import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
 import cn.rainbow.sdk.analytics.proxy.Tracker;
 import cn.rainbow.sdk.analytics.proxy.TrackerImpl;
 
@@ -54,7 +54,8 @@ public class THAnalytics {
     }
 
     /**
-     *
+     * 开始统计商品页面.
+     * <P>在Activity或Fragment的onResume()调用（需要准备数据）.
      * @param context 上下文
      * @param receiverData 接收数据（商品信息和用户信息等）
      */
@@ -62,18 +63,37 @@ public class THAnalytics {
         mTracker.startGoodsPage(context,receiverData);
     }
 
+    /**
+     * 结束统计商品页面.
+     * <P>在商品详情页面的onPause()方法调用.
+     */
     public static void stopGoodsPage(){
         mTracker.stopGoodsPage();
     }
 
+    /**
+     * 统计购物车（在添加/删除商品/提交购物车时调用）.
+     * @param context 上下文
+     * @param event 购物车事件
+     */
     public static void trackCart(Context context, CartEvent event){
         mTracker.trackCart(context,event);
     }
 
-    public static void trackFav(Context context, FavoriteEvent event){
+    /**
+     * 统计商品收藏（在收藏/取消收藏商品时调用）.
+     * @param context 上下文
+     * @param event 收藏事件
+     */
+    public static void trackFavorate(Context context, FavoriteEvent event){
         mTracker.trackFav(context,event);
     }
 
+    /**
+     * 统计订单（在提交/支付/支付完成/取消/退货/退款时调用）.
+     * @param context 上下文
+     * @param event 订单事件
+     */
     public static void trackOrder(Context context, OrderEvent event){
         mTracker.trackOrder(context,event);
     }

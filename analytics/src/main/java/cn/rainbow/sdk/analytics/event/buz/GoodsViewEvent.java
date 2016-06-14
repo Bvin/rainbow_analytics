@@ -1,9 +1,10 @@
-package cn.rainbow.sdk.analytics.event.marketing;
+package cn.rainbow.sdk.analytics.event.buz;
 
 /**
  * Created by bvin on 2016/6/13.
+ * <p>商品浏览事件.
  */
-public class GoodsViewEvent extends MarketingPageEvent{
+public class GoodsViewEvent extends THPageEvent {
 
     private String mGoodsId;
     private String mGoodsName;

@@ -2,15 +2,14 @@ package cn.rainbow.sdk.thanalytics;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import cn.rainbow.sdk.analytics.THAnalytics;
-import cn.rainbow.sdk.analytics.event.marketing.CartEvent;
-import cn.rainbow.sdk.analytics.event.marketing.FavoriteEvent;
-import cn.rainbow.sdk.analytics.event.marketing.GoodsViewEvent;
-import cn.rainbow.sdk.analytics.event.marketing.OrderEvent;
+import cn.rainbow.sdk.analytics.event.buz.CartEvent;
+import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
+import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
+import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
 
 public class GoodsActivity extends BaseActivity {
 

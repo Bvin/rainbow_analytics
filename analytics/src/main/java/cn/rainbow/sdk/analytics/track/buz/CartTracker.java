@@ -1,4 +1,4 @@
-package cn.rainbow.sdk.analytics.track.marketing;
+package cn.rainbow.sdk.analytics.track.buz;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,7 +7,7 @@ import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.remote.Api;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.data.remote.RetrofitClient;
-import cn.rainbow.sdk.analytics.event.marketing.CartEvent;
+import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
 import cn.rainbow.sdk.analytics.utils.Log;
 import retrofit2.Call;
