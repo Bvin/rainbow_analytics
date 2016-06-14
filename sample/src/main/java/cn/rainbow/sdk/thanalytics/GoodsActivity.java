@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.rainbow.sdk.analytics.THAnalytics;
-import cn.rainbow.sdk.analytics.data.remote.httplite.TestApi;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
@@ -55,15 +57,23 @@ public class GoodsActivity extends BaseActivity {
         orderEvent.setOrderAddress("order address");
         orderEvent.setOrderPrice("121");
         orderEvent.setOrderNumber("#4165434");
+        List<OrderEvent.Goods> list = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            OrderEvent.Goods goods = new OrderEvent.Goods(i);
+            goods.setGoodsName("gn");
+            goods.setGoodsId("gi");
+            goods.setGoodsCount(""+i);
+            list.add(goods);
+        }
+        orderEvent.setGoodsList(list);
         THAnalytics.trackOrder(this,orderEvent);
     }
 
     public void trackFav(View view){
-        /*FavoriteEvent favoriteEvent = new FavoriteEvent(FavoriteEvent.OP_ADD_FAV);
+        FavoriteEvent favoriteEvent = new FavoriteEvent(FavoriteEvent.OP_ADD_FAV);
         favoriteEvent.setGoodsName("goods name");
         favoriteEvent.setGoodsId("65454");
         favoriteEvent.setGoodsImage("agsdhsasfg");
-        THAnalytics.trackFav(this,favoriteEvent);*/
-        new TestApi().test();
+        THAnalytics.trackFavorate(this,favoriteEvent);
     }
 }

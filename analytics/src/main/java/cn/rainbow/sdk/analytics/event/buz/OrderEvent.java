@@ -1,7 +1,13 @@
 package cn.rainbow.sdk.analytics.event.buz;
 
-import java.util.List;
+import android.content.ContentValues;
+import android.text.TextUtils;
 
+import java.util.List;
+import java.util.Map;
+
+import cn.rainbow.sdk.analytics.data.local.db.buz.GoodsTable;
+import cn.rainbow.sdk.analytics.data.local.db.buz.OrderTable;
 import cn.rainbow.sdk.analytics.event.Event;
 
 /**
@@ -29,7 +35,7 @@ public class OrderEvent extends Event{
     private String mOrderNumber;
     private String mSubOrderNumber;
     private String mOrderState;
-    private String mOrderUser;
+    private String mOrderUserId;
     private String mOrderPrice;
     private String mOrderAddress;
     private String mCouponPrice;
@@ -38,6 +44,8 @@ public class OrderEvent extends Event{
     private List<Goods> mGoodsList;
 
     private int mOperation;
+
+    private ContentValues mValues;
 
     /**
      * 订单事件.
@@ -67,8 +75,8 @@ public class OrderEvent extends Event{
         mOrderState = orderState;
     }
 
-    public void setOrderUser(String orderUser) {
-        mOrderUser = orderUser;
+    public void setOrderUserId(String orderUserId) {
+        mOrderUserId = orderUserId;
     }
 
     public void setOrderPrice(String orderPrice) {
@@ -115,8 +123,8 @@ public class OrderEvent extends Event{
         return mOrderState;
     }
 
-    public String getOrderUser() {
-        return mOrderUser;
+    public String getOrderUserId() {
+        return mOrderUserId;
     }
 
     public String getOrderPrice() {
@@ -147,12 +155,51 @@ public class OrderEvent extends Event{
         return mOperation;
     }
 
-    public class Goods{
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        ContentValues cv = saveValues();
+        for (Map.Entry<String, Object> entry : cv.valueSet()) {
+            sb.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+        }
+        /*if (sb.toString().endsWith("&")) {
+            return sb.substring(sb.toString().length() - 1, sb.toString().length());
+        }*/
+        return sb.toString();
+    }
+
+    @Override
+    public ContentValues saveValues() {
+        if (mValues == null) {
+            mValues = new ContentValues();
+            putValidInt(mValues, OrderTable.Keys.CHANNEL_ID, mChannelId);
+            putValidString(mValues, OrderTable.Keys.MERCHANT_ID, mMerchantId);
+            putValidString(mValues, OrderTable.Keys.ORDER_NUMBER, mOrderNumber);
+            putValidString(mValues, OrderTable.Keys.SUB_ORDER_NUMBER, mSubOrderNumber);
+            putValidString(mValues, OrderTable.Keys.ORDER_STATE, mOrderState);
+            putValidString(mValues, OrderTable.Keys.ORDER_USER, mOrderUserId);
+            putValidString(mValues, OrderTable.Keys.ORDER_PRICE, mOrderPrice);
+            putValidString(mValues, OrderTable.Keys.ORDER_ADDRESS, mOrderAddress);
+            putValidString(mValues, OrderTable.Keys.COUPON_PRICE, mCouponPrice);
+            putValidString(mValues, OrderTable.Keys.GOODS_COUNT, mGoodsCount);
+            putValidString(mValues, OrderTable.Keys.FREIGHT_PRICE, mFreightPrice);
+            putValidInt(mValues, OrderTable.Keys.OPERATION_TYPE, mOperation);
+        }
+        return mValues;
+    }
+
+    public static class Goods{
         private String mGoodsId;
         private String mGoodsSkuCode;
         private String mGoodsCount;
         private String mGoodsName;
         private String mSkuImage;
+
+        private int mIndex;
+
+        public Goods(int index) {
+            mIndex = index;
+        }
 
         public void setGoodsId(String goodsId) {
             mGoodsId = goodsId;
@@ -192,6 +239,24 @@ public class OrderEvent extends Event{
 
         public String getSkuImage() {
             return mSkuImage;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(put(GoodsTable.Keys.GOODS_ID,mGoodsId));
+            sb.append(put(GoodsTable.Keys.GOODS_NAME,mGoodsName));
+            sb.append(put(GoodsTable.Keys.GOODS_SKU_CODE,mGoodsSkuCode));
+            sb.append(put(GoodsTable.Keys.GOODS_COUNT,mGoodsCount));
+            sb.append(put(GoodsTable.Keys.GOODS_IMAGE,mSkuImage));
+            return sb.toString();
+        }
+
+        private String put(String key,String value){
+            if (!TextUtils.isEmpty(value)){
+                return "i["+mIndex+"]["+key+"]="+value+"&";
+            }
+            return "";
         }
     }
 }
