@@ -17,6 +17,8 @@ import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
 import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
 import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
+import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
 import cn.rainbow.sdk.analytics.utils.Log;
@@ -49,30 +51,18 @@ public class FavTracker extends AbsEventTracker<FavoriteEvent> implements Callba
         call.enqueue(this);*/
         HttpLiteBuilder mBuilder = URLite.create();
         HttpLite httpLite = mBuilder.addResponseParser(new GsonParser()).build();
-        Api api = httpLite.retrofit(Api.class, new RequestListener() {
-            @Override
-            public void onRequest(HttpLite lite, Request request, Type resultType) {
-                Log.d("onRequest",request.toString());
-            }
-        });
+        Api api = httpLite.retrofit(Api.class, new PreRequestListener());
         api.reportFav(mEvent.getChannelId(),mEvent.getMerchantId(), mEvent.getGoodsId(), mEvent.getGoodsSkuCode(), mEvent.getGoodsName()
                 , mEvent.getGoodsImage(), mEvent.getId(),
-                mEvent.getUid(), mEvent.getOperation(),this);
+                mEvent.getUid(), mEvent.getOperation(),new BaseResponseCallback(this));
     }
 
     @Override
     public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-        if (model != null) {
-            if (model.getRet() == 200) {
-                Log.d("reportFav-response:", model.getMessage());
-            }
-        }
     }
 
     @Override
     public void onFailed(Request request, Exception e) {
-        //失败应重传...
-        Log.e("FavTracker", "onFailure: ", e);
     }
 
     @Override
