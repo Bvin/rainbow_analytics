@@ -5,14 +5,20 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import cn.rainbow.sdk.analytics.Config;
+import cn.rainbow.sdk.analytics.event.marketing.CartEvent;
+import cn.rainbow.sdk.analytics.event.marketing.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.marketing.GoodsViewEvent;
+import cn.rainbow.sdk.analytics.event.marketing.OrderEvent;
 import cn.rainbow.sdk.analytics.track.AppTracker;
 import cn.rainbow.sdk.analytics.track.CrashTracker;
 import cn.rainbow.sdk.analytics.track.DefaultEventTracker;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
+import cn.rainbow.sdk.analytics.track.marketing.CartTracker;
+import cn.rainbow.sdk.analytics.track.marketing.FavTracker;
 import cn.rainbow.sdk.analytics.track.marketing.GoodsPagerTracker;
 import cn.rainbow.sdk.analytics.track.marketing.MarketingPageTracker;
 import cn.rainbow.sdk.analytics.track.PageTracker;
+import cn.rainbow.sdk.analytics.track.marketing.OrderTracker;
 
 /**
  * Created by 32967 on 2016/5/27.
@@ -154,5 +160,20 @@ public class TrackerImpl implements Tracker{
     @Override
     public void stopGoodsPage() {
         endPageTrack(mGoodsPagerTracker);
+    }
+
+    @Override
+    public void trackCart(Context context, CartEvent eventData) {
+        new CartTracker().startTrack(context, eventData);
+    }
+
+    @Override
+    public void trackFav(Context context, FavoriteEvent eventData) {
+        new FavTracker().startTrack(context, eventData);
+    }
+
+    @Override
+    public void trackOrder(Context context, OrderEvent eventData) {
+        new OrderTracker().startTrack(context, eventData);
     }
 }

@@ -2,7 +2,10 @@ package cn.rainbow.sdk.analytics;
 
 import android.content.Context;
 
+import cn.rainbow.sdk.analytics.event.marketing.CartEvent;
+import cn.rainbow.sdk.analytics.event.marketing.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.marketing.GoodsViewEvent;
+import cn.rainbow.sdk.analytics.event.marketing.OrderEvent;
 import cn.rainbow.sdk.analytics.proxy.Tracker;
 import cn.rainbow.sdk.analytics.proxy.TrackerImpl;
 
@@ -61,5 +64,17 @@ public class THAnalytics {
 
     public static void stopGoodsPage(){
         mTracker.stopGoodsPage();
+    }
+
+    public static void trackCart(Context context, CartEvent event){
+        mTracker.trackCart(context,event);
+    }
+
+    public static void trackFav(Context context, FavoriteEvent event){
+        mTracker.trackFav(context,event);
+    }
+
+    public static void trackOrder(Context context, OrderEvent event){
+        mTracker.trackOrder(context,event);
     }
 }

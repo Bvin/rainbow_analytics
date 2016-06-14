@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import cn.rainbow.sdk.analytics.THAnalytics;
+import cn.rainbow.sdk.analytics.event.marketing.CartEvent;
+import cn.rainbow.sdk.analytics.event.marketing.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.marketing.GoodsViewEvent;
+import cn.rainbow.sdk.analytics.event.marketing.OrderEvent;
 
 public class GoodsActivity extends BaseActivity {
 
@@ -37,5 +41,28 @@ public class GoodsActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         THAnalytics.stopGoodsPage();
+    }
+
+    public void trackCart(View view){
+        CartEvent cartEvent = new CartEvent(CartEvent.OP_ADD_GOODS);
+        cartEvent.setGoodsImage("goodsImage");
+        cartEvent.setGoodsName("goodsName");
+        THAnalytics.trackCart(this,cartEvent);
+    }
+
+    public void trackOrder(View view){
+        OrderEvent orderEvent = new OrderEvent(OrderEvent.OP_COMMIT);
+        orderEvent.setOrderAddress("order address");
+        orderEvent.setOrderPrice("121");
+        orderEvent.setOrderNumber("#4165434");
+        THAnalytics.trackOrder(this,orderEvent);
+    }
+
+    public void trackFav(View view){
+        FavoriteEvent favoriteEvent = new FavoriteEvent(FavoriteEvent.OP_ADD_FAV);
+        favoriteEvent.setGoodsName("goods name");
+        favoriteEvent.setGoodsId("65454");
+        favoriteEvent.setGoodsImage("agsdhsasfg");
+        THAnalytics.trackFav(this,favoriteEvent);
     }
 }

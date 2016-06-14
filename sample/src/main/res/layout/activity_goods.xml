@@ -10,4 +10,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="cn.rainbow.sdk.thanalytics.GoodsActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="购物车统计"
+        android:id="@+id/button3"
+        android:onClick="trackCart"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="收藏统计"
+        android:id="@+id/button4"
+        android:onClick="trackFav"
+        android:layout_below="@+id/button3"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="订单统计"
+        android:onClick="trackOrder"
+        android:id="@+id/button5"
+        android:layout_below="@+id/button4"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

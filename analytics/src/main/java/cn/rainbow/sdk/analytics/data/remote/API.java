@@ -45,4 +45,20 @@ public interface Api {
                           @Query("gi") String goodsImage, @Query("et") String enterTime, @Query("lt") String leavingTime, @Query("gc1") String
                                   goodsCategory1, @Query("gc1") String goodsCategory2, @Query("gc1") String goodsCategory3, @Query("id") String id,
                           @Query("uid") String uid);
+
+    @GET(URL_CART)
+    Call<Model> reportCart(@Query("c") String channel, @Query("mid") String merchant, @Query("gid") String goodsId, @Query("gsku") String
+            goodsSkuCode, @Query("gn") String goodsName, @Query("gi") String goodsImage, @Query("gp") String goodsPrice,
+                           @Query("ga") String goodsSellPrice, @Query("gc") String goodsCount, @Query("ca") String couponAmount, @Query("id") String id,
+                           @Query("uid") String uid, @Query("op") int op);
+
+    @GET(URL_FAV)
+    Call<Model> reportFav(@Query("c") String channel, @Query("mid") String merchant, @Query("gid") String goodsId, @Query("gsku") String
+            goodsSkuCode, @Query("gn") String goodsName, @Query("gi") String goodsImage, @Query("id") String id,
+                          @Query("uid") String uid, @Query("op") int op);
+
+    @GET(URL_ORDER)
+    Call<Model> reportOrder(@Query("c") int channelId, @Query("mid") String merchant,@Query("on") String orderNumber,@Query("son")
+            String subOrderNumber,@Query("os") String orderState,@Query("ou") String orderUser,@Query("op") String orderPrice,@Query("oa") String orderAddress,
+            @Query("cp") String couponPrice,@Query("fp") String freightPrice,@Query("pn") String goodsCount, @Query("opt") int op);
 }
