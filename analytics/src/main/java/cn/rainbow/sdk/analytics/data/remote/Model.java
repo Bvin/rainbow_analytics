@@ -25,4 +25,12 @@ public class Model {
     public String getMessage() {
         return mMessage;
     }
+
+    @Override
+    public String toString() {
+        return "Model{" +
+                "mRet=" + mRet +
+                ", mMessage='" + mMessage + '\'' +
+                '}';
+    }
 }

@@ -16,7 +16,9 @@ public class THAnalytics {
 
     private static Tracker mTracker;
 
-    static {
+    private static THAnalytics sTHAnalytics = new THAnalytics();
+
+    private THAnalytics() {
         mTracker = new TrackerImpl();
     }
 

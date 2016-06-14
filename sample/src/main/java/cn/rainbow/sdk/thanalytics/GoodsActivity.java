@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import cn.rainbow.sdk.analytics.THAnalytics;
+import cn.rainbow.sdk.analytics.data.remote.httplite.TestApi;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
@@ -58,10 +59,11 @@ public class GoodsActivity extends BaseActivity {
     }
 
     public void trackFav(View view){
-        FavoriteEvent favoriteEvent = new FavoriteEvent(FavoriteEvent.OP_ADD_FAV);
+        /*FavoriteEvent favoriteEvent = new FavoriteEvent(FavoriteEvent.OP_ADD_FAV);
         favoriteEvent.setGoodsName("goods name");
         favoriteEvent.setGoodsId("65454");
         favoriteEvent.setGoodsImage("agsdhsasfg");
-        THAnalytics.trackFav(this,favoriteEvent);
+        THAnalytics.trackFav(this,favoriteEvent);*/
+        new TestApi().test();
     }
 }
