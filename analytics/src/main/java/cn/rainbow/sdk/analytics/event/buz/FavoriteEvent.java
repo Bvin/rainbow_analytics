@@ -13,7 +13,7 @@ public class FavoriteEvent extends Event{
     /**取消收藏*/
     public static final int OP_CANCEL_FAV = 2001;
 
-    private String mChannelId;
+    private int mChannelId;
     private String mMerchantId;
 
     private String mGoodsId;
@@ -34,7 +34,7 @@ public class FavoriteEvent extends Event{
         mOperation = operation;
     }
 
-    public void setChannelId(String channelId) {
+    public void setChannelId(int channelId) {
         mChannelId = channelId;
     }
 
@@ -66,7 +66,7 @@ public class FavoriteEvent extends Event{
         mUid = uid;
     }
 
-    public String getChannelId() {
+    public int getChannelId() {
         return mChannelId;
     }
 

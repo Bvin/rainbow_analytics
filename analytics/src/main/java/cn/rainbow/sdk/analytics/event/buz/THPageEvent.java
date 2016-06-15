@@ -8,7 +8,7 @@ import cn.rainbow.sdk.analytics.event.PageEvent;
  */
 public class THPageEvent extends PageEvent {
 
-    private String mChannelId;
+    private int mChannelId;
     private String mMerchantId;
     private String mUrl;
     private String mAppVersion;
@@ -17,7 +17,7 @@ public class THPageEvent extends PageEvent {
     private String mSystem;
     private String mSystemVersion;
 
-    public void setChannelId(String channelId) {
+    public void setChannelId(int channelId) {
         mChannelId = channelId;
     }
 
@@ -50,7 +50,7 @@ public class THPageEvent extends PageEvent {
     }
 
 
-    public String getChannelId() {
+    public int getChannelId() {
         return mChannelId;
     }
 

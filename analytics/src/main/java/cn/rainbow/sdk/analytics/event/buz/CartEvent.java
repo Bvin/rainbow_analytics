@@ -15,7 +15,7 @@ public class CartEvent extends Event{
     /**提交购物车*/
     public static final int OP_COMMIT = 1003;
 
-    private String mChannelId;
+    private int mChannelId;
     private String mMerchantId;
 
     private String mGoodsId;
@@ -40,7 +40,7 @@ public class CartEvent extends Event{
         mOperation = operation;
     }
 
-    public void setChannelId(String channelId) {
+    public void setChannelId(int channelId) {
         mChannelId = channelId;
     }
 
@@ -89,7 +89,7 @@ public class CartEvent extends Event{
     }
 
 
-    public String getChannelId() {
+    public int getChannelId() {
         return mChannelId;
     }
 
