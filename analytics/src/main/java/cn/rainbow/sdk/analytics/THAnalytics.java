@@ -16,6 +16,7 @@ public class THAnalytics {
 
     private static Tracker mTracker;
 
+    //new 本身是为了jar包在别的项目调用静态方法会出现ExceptionInInitializerError
     private static THAnalytics sTHAnalytics = new THAnalytics();
 
     private THAnalytics() {
@@ -87,7 +88,7 @@ public class THAnalytics {
      * @param context 上下文
      * @param event 收藏事件
      */
-    public static void trackFavorate(Context context, FavoriteEvent event){
+    public static void trackFavorite(Context context, FavoriteEvent event){
         mTracker.trackFav(context,event);
     }
 

@@ -1,6 +1,5 @@
 package cn.rainbow.sdk.analytics.data.remote.httplite;
 
-import alexclin.httplite.annotation.BaseURL;
 import alexclin.httplite.annotation.GET;
 import alexclin.httplite.annotation.Param;
 import alexclin.httplite.listener.Callback;
@@ -11,7 +10,6 @@ import cn.rainbow.sdk.analytics.data.remote.Model;
  * Created by bvin on 2016/6/14.
  */
 
-@BaseURL(ApiConfig.HOST)
 public interface Api {
 
 

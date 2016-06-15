@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
@@ -13,17 +12,16 @@ import alexclin.httplite.HttpLite;
 import alexclin.httplite.HttpLiteBuilder;
 import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
-import alexclin.httplite.listener.RequestListener;
 import alexclin.httplite.url.URLite;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
-import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
+import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
 import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
 import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
+import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
 import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
-import cn.rainbow.sdk.analytics.utils.Log;
 
 /**
  * Created by bvin on 2016/6/14.
@@ -45,14 +43,9 @@ public class FavTracker extends AbsEventTracker<FavoriteEvent> implements Callba
     }
 
     private void reportFav(){
-        /*Retrofit retrofit = RetrofitClient.getInstance();
-        Api api = retrofit.create(Api.class);
-        Call<Model> call = api.reportFav(mEvent.getChannelId(),mEvent.getMerchantId(), mEvent.getGoodsId(), mEvent.getGoodsSkuCode(), mEvent.getGoodsName()
-                , mEvent.getGoodsImage(), mEvent.getId(),
-                mEvent.getUid(), mEvent.getOperation());
-        call.enqueue(this);*/
         HttpLiteBuilder mBuilder = URLite.create();
         HttpLite httpLite = mBuilder.addResponseParser(new GsonParser()).build();
+        httpLite.setBaseUrl(ApiConfig.HOST);
         Api api = httpLite.retrofit(Api.class, new PreRequestListener());
         api.reportFav(mEvent.getChannelId(),mEvent.getMerchantId(), mEvent.getGoodsId(), mEvent.getGoodsSkuCode(), urlEncode(mEvent.getGoodsName())
                 , urlEncode(mEvent.getGoodsImage()), mEvent.getId(),

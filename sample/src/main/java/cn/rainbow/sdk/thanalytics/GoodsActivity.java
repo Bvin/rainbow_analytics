@@ -74,6 +74,6 @@ public class GoodsActivity extends BaseActivity {
         favoriteEvent.setGoodsName("goods name");
         favoriteEvent.setGoodsId("65454");
         favoriteEvent.setGoodsImage("agsdhsasfg");
-        THAnalytics.trackFavorate(this,favoriteEvent);
+        THAnalytics.trackFavorite(this,favoriteEvent);
     }
 }

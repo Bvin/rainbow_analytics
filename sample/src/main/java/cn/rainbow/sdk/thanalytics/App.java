@@ -16,6 +16,7 @@ public class App extends Application{
         Config config = new Config();
         config.enableDebugLog(true);//打开log
         config.enableCrashTrack(true);//开启崩溃收集
+        config.setTestEnv(false);
         THAnalytics.setConfig(config);
         THAnalytics.onAppStart(this);
     }

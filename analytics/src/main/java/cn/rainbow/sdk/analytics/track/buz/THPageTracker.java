@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
@@ -16,19 +15,18 @@ import alexclin.httplite.HttpLite;
 import alexclin.httplite.HttpLiteBuilder;
 import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
-import alexclin.httplite.listener.RequestListener;
 import alexclin.httplite.url.URLite;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
+import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
-import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
 import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
+import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
 import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
-import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.event.PageEvent;
+import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.track.PageTracker;
 import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
-import cn.rainbow.sdk.analytics.utils.Log;
 
 
 /**
@@ -89,13 +87,9 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
     }
 
     private void reportAPV(){
-        /*Retrofit retrofit = RetrofitClient.getInstance();
-        Api mApi = retrofit.create(Api.class);
-        Call<Model> call = mApi.reportAPV(mEvent.getChannelId(), mEvent.getMerchantId(), mEvent.getUrl(), mEvent.getAppVersion(), mEvent.getStartDate(),
-                mEvent.getEndDate(), mEvent.getDevice(), mEvent.getSystem(), mEvent.getSystemVersion(), mEvent.getDeviceId());
-        call.enqueue(this);*/
         HttpLiteBuilder mBuilder = URLite.create();
         HttpLite httpLite = mBuilder.addResponseParser(new GsonParser()).build();
+        httpLite.setBaseUrl(ApiConfig.HOST);
         Api api = httpLite.retrofit(Api.class, new PreRequestListener());
         String pageName = mEvent.getUrl();
         try {
