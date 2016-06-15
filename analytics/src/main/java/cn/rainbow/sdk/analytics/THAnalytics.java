@@ -8,11 +8,14 @@ import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
 import cn.rainbow.sdk.analytics.proxy.Tracker;
 import cn.rainbow.sdk.analytics.proxy.TrackerImpl;
+import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
 
 /**
  * Created by bvin on 2016/5/27.
  */
 public class THAnalytics {
+
+    public static final String TH_CHANNEL = "TH_CHANNEL";
 
     private static Tracker mTracker;
 
@@ -38,6 +41,9 @@ public class THAnalytics {
             CrashHandler crashHandler = new CrashHandler(context);
             Thread.setDefaultUncaughtExceptionHandler(crashHandler);
         }
+        InfoCollectHelper infoCollectHelper = new InfoCollectHelper(context);
+        int channelId = infoCollectHelper.getMetaDataIntValue(TH_CHANNEL);
+        mTracker.getCurrentConfig().setChannelId(channelId);
     }
 
     public static void onAppExit() {

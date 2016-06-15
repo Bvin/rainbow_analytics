@@ -11,6 +11,7 @@ import alexclin.httplite.HttpLite;
 import alexclin.httplite.HttpLiteBuilder;
 import alexclin.httplite.Request;
 import alexclin.httplite.url.URLite;
+import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
 import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
@@ -35,6 +36,7 @@ public class OrderTracker extends AbsEventTracker<OrderEvent> implements alexcli
     public void startTrack(Context context,OrderEvent event){
         attachContext(context);
         mEvent = event;
+        mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
         reportOrder();
     }
 

@@ -16,6 +16,7 @@ import alexclin.httplite.HttpLiteBuilder;
 import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
 import alexclin.httplite.url.URLite;
+import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
 import cn.rainbow.sdk.analytics.data.remote.Model;
@@ -34,7 +35,6 @@ import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
  */
 public class THPageTracker extends PageTracker implements Callback<Model> {
 
-    public static final String TH_CHANNEL = "TH_CHANNEL";
     public static final String OS = "android";
 
     private THPageEvent mEvent;
@@ -67,11 +67,8 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
     }
 
     private void collectInfo() {
-        InfoCollectHelper infoCollectHelper = new InfoCollectHelper(mContext);
-        int channelId = infoCollectHelper.getMetaDataIntValue(TH_CHANNEL);
-        if (channelId > 0) {
-            mEvent.setChannelId(channelId);//红领巾APP
-        }
+
+        mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());//红领巾APP
         //mEvent.setMerchantId("1");//商户id，不传默认为1：天虹
         PackageInfo packageInfo = getPackageInfo();
         if (packageInfo != null) {
@@ -80,7 +77,7 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
         mEvent.setSystem(OS);
         mEvent.setSystemVersion(Build.VERSION.RELEASE);
         mEvent.setDevice(Build.MODEL);
-        mEvent.setDeviceId(infoCollectHelper.getDeviceUUID());
+        mEvent.setDeviceId(new InfoCollectHelper(mContext).getDeviceUUID());
     }
 
     private PackageInfo getPackageInfo() {

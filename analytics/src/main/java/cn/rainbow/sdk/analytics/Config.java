@@ -8,6 +8,7 @@ public class Config {
     private boolean mEnableDebugLog;
     private boolean mEnableCrashTrack;
     private boolean mIsTestEnv;
+    private int mChannelId;
 
     public void enableDebugLog(boolean enable){
         mEnableDebugLog = enable;
@@ -40,5 +41,13 @@ public class Config {
      */
     public void setTestEnv(boolean testEnv) {
         mIsTestEnv = testEnv;
+    }
+
+    public void setChannelId(int channelId) {
+        mChannelId = channelId;
+    }
+
+    public int getChannelId() {
+        return mChannelId;
     }
 }

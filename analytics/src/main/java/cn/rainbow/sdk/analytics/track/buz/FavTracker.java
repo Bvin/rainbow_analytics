@@ -13,6 +13,7 @@ import alexclin.httplite.HttpLiteBuilder;
 import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
 import alexclin.httplite.url.URLite;
+import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
 import cn.rainbow.sdk.analytics.data.remote.Model;
@@ -39,6 +40,7 @@ public class FavTracker extends AbsEventTracker<FavoriteEvent> implements Callba
     public void startTrack(Context context,FavoriteEvent event){
         attachContext(context);
         mEvent = event;
+        mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
         reportFav();
     }
 
