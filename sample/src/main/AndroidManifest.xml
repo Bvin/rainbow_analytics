@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".GoodsActivity">
         </activity>
+        <meta-data android:name="TH_CHANNEL"  android:value="2006" />
     </application>
 
 </manifest>

@@ -34,6 +34,9 @@ import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
  */
 public class THPageTracker extends PageTracker implements Callback<Model> {
 
+    public static final String TH_CHANNEL = "TH_CHANNEL";
+    public static final String OS = "android";
+
     private THPageEvent mEvent;
 
     public THPageTracker(Context context) {
@@ -64,16 +67,20 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
     }
 
     private void collectInfo() {
-        mEvent.setChannelId("1");//红领巾APP
-        mEvent.setMerchantId("1");//商户id，不传默认为1：天虹
+        InfoCollectHelper infoCollectHelper = new InfoCollectHelper(mContext);
+        int channelId = infoCollectHelper.getMetaDataIntValue(TH_CHANNEL);
+        if (channelId > 0) {
+            mEvent.setChannelId(channelId);//红领巾APP
+        }
+        //mEvent.setMerchantId("1");//商户id，不传默认为1：天虹
         PackageInfo packageInfo = getPackageInfo();
         if (packageInfo != null) {
             mEvent.setAppVersion(packageInfo.versionName);
         }
-        mEvent.setSystem("android");
+        mEvent.setSystem(OS);
         mEvent.setSystemVersion(Build.VERSION.RELEASE);
         mEvent.setDevice(Build.MODEL);
-        mEvent.setDeviceId(new InfoCollectHelper(mContext).getDeviceID());
+        mEvent.setDeviceId(infoCollectHelper.getDeviceUUID());
     }
 
     private PackageInfo getPackageInfo() {

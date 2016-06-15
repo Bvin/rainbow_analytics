@@ -29,25 +29,25 @@ public interface Api {
      */
 
     @GET(ApiConfig.URL_APP_PV)
-    void reportAPV(@Param("c") String channel, @Param("mid") String merchant, @Param("u") String url, @Param("v") String version,
+    void reportAPV(@Param("c") int channel, @Param("mid") String merchant, @Param("u") String url, @Param("v") String version,
                     @Param("et") String enterTime, @Param("lt") String leavingTime, @Param("mb") String
                                   device, @Param("o") String os, @Param("ov") String osVersion, @Param("id") String id, Callback<Model> callback);
 
 
     @GET(ApiConfig.URL_GOODS_PV)
-    void reportGPV(@Param("c") String channel, @Param("mid") String merchant, @Param("gid") String goodsId, @Param("gn") String goodsName,
+    void reportGPV(@Param("c") int channel, @Param("mid") String merchant, @Param("gid") String goodsId, @Param("gn") String goodsName,
                           @Param("gi") String goodsImage, @Param("et") String enterTime, @Param("lt") String leavingTime, @Param("gc1") String
                                   goodsCategory1, @Param("gc1") String goodsCategory2, @Param("gc1") String goodsCategory3, @Param("id") String id,
                           @Param("uid") String uid, Callback<Model> callback);
 
     @GET(ApiConfig.URL_CART)
-    void reportCart(@Param("c") String channel, @Param("mid") String merchant, @Param("gid") String goodsId, @Param("gsku") String
+    void reportCart(@Param("c") int channel, @Param("mid") String merchant, @Param("gid") String goodsId, @Param("gsku") String
             goodsSkuCode, @Param("gn") String goodsName, @Param("gi") String goodsImage, @Param("gp") String goodsPrice,
                            @Param("ga") String goodsSellPrice, @Param("gc") String goodsCount, @Param("ca") String couponAmount, @Param("id") String id,
                            @Param("uid") String uid, @Param("op") int op, Callback<Model> callback);
 
     @GET(ApiConfig.URL_FAV)
-    void reportFav(@Param("c") String channel, @Param("mid") String merchant, @Param("gid") String goodsId, @Param("gsku") String
+    void reportFav(@Param("c") int channel, @Param("mid") String merchant, @Param("gid") String goodsId, @Param("gsku") String
             goodsSkuCode, @Param("gn") String goodsName, @Param("gi") String goodsImage, @Param("id") String id,
                           @Param("uid") String uid, @Param("op") int op, Callback<Model> callback);
 

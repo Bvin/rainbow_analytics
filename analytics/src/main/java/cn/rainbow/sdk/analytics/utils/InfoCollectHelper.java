@@ -8,6 +8,9 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 /**
  * Created by bvin on 2016/6/12.
@@ -56,6 +59,19 @@ public class InfoCollectHelper {
         return "";
     }
 
+    public int getMetaDataIntValue(String name) {
+        PackageManager localPackageManager = mContext.getPackageManager();
+        try {
+            ApplicationInfo localApplicationInfo = localPackageManager.getApplicationInfo(mContext.getPackageName(), PackageManager.GET_META_DATA);
+            if (localApplicationInfo != null) {
+                return localApplicationInfo.metaData.getInt(name);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return Integer.MIN_VALUE;
+    }
+
     public String getDeviceID() {
         if (mContext == null) {
             return "";
@@ -94,4 +110,42 @@ public class InfoCollectHelper {
         }
     }
 
+    /**
+     * 获取设备的UUID
+     *
+     * @return 获取设备的UUID
+     */
+    public String getDeviceUUID() {
+        final TelephonyManager tm = (TelephonyManager) mContext
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        final String tmDevice, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        androidId = ""
+                + android.provider.Settings.Secure.getString(mContext.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32));
+        String uniqueId = md5(deviceUuid.toString());
+        return uniqueId;
+    }
+
+    /** MD5 encrypt */
+    public static String md5(String str) {
+        try {
+            MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
+            localMessageDigest.update(str.getBytes());
+            byte[] arrayOfByte = localMessageDigest.digest();
+            StringBuffer localStringBuffer = new StringBuffer();
+            for (int i = 0; i < arrayOfByte.length; i++) {
+                int j = 0xFF & arrayOfByte[i];
+                if (j < 16)
+                    localStringBuffer.append("0");
+                localStringBuffer.append(Integer.toHexString(j));
+            }
+            return localStringBuffer.toString();
+        } catch (NoSuchAlgorithmException localNoSuchAlgorithmException) {
+            Log.e("MD5Utility", "getMD5 error");
+            localNoSuchAlgorithmException.printStackTrace();
+        }
+        return "";
+    }
 }
