@@ -19,8 +19,35 @@ public class CartReporter extends AbsEventReporter<CartEvent>{
     @Override
     public void report(CartEvent event, Callback callback) {
         Api api = mHttpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportCart(event.getChannelId(), event.getMerchantId(), event.getGoodsId(), event.getGoodsSkuCode(),urlEncode( event.getGoodsName())
-                , urlEncode(event.getGoodsImage()), event.getGoodsPrice(), event.getGoodsSellPrice(), event.getGoodsCount(), event.getCouponAmount(), event.getId(),
-                event.getUid(), event.getOperation(),new BaseResponseCallback(callback));
+        api.reportCart(event.getChannelId(),
+                event.getMerchantId(),
+                event.getGoodsId(),
+                event.getGoodsSkuCode(),
+                urlEncode( event.getGoodsName()),
+                urlEncode(event.getGoodsImage()),
+                event.getGoodsPrice(),
+                event.getGoodsSellPrice(),
+                event.getGoodsCount(),
+                event.getCouponAmount(),
+                event.getId(),
+                event.getUid(),
+                event.getOperation(),
+                new BaseResponseCallback(callback));
+    }
+
+    public class Keys{
+        public static final String CHANNEL_ID = "c";
+        public static final String MERCHANT_ID = "mid";
+        public static final String GOODS_ID = "gid";
+        public static final String GOODS_SKU_CODE = "gsku";
+        public static final String GOODS_NAME = "gn";
+        public static final String GOODS_IMAGE = "gi";
+        public static final String GOODS_PRICE = "gp";
+        public static final String GOODS_SELL_PRICE = "ga";
+        public static final String GOODS_COUNT = "gc";
+        public static final String COUPON_AMOUNT = "ca";
+        public static final String DEVICE_ID = "id";
+        public static final String USER_ID = "uid";
+        public static final String OPERATION = "op";
     }
 }

@@ -1,6 +1,10 @@
 package cn.rainbow.sdk.analytics.event.buz;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import cn.rainbow.sdk.analytics.event.Event;
+import cn.rainbow.sdk.analytics.track.report.CartReporter;
 
 /**
  * Created by bvin on 2016/6/14.
@@ -31,6 +35,8 @@ public class CartEvent extends Event{
     private String mUid;
 
     private int mOperation;
+    
+    private ContentValues mValues;
 
     /**
      * 购物车事件.
@@ -38,6 +44,24 @@ public class CartEvent extends Event{
      */
     public CartEvent(int operation) {
         mOperation = operation;
+    }
+
+    public CartEvent(Cursor cursor) {
+        if (cursor != null) {
+            mOperation = cursor.getInt(cursor.getColumnIndex(CartReporter.Keys.OPERATION));
+            mChannelId = cursor.getInt(cursor.getColumnIndex(CartReporter.Keys.CHANNEL_ID));
+            mMerchantId = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.MERCHANT_ID));
+            mGoodsId = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.GOODS_ID));
+            mGoodsName = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.GOODS_NAME));
+            mGoodsImage = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.GOODS_IMAGE));
+            mGoodsSkuCode = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.GOODS_SKU_CODE));
+            mGoodsPrice = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.GOODS_PRICE));
+            mGoodsSellPrice = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.GOODS_SELL_PRICE));
+            mGoodsCount = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.GOODS_COUNT));
+            mCouponAmount = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.COUPON_AMOUNT));
+            mId = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.DEVICE_ID));
+            mUid = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.USER_ID));
+        }
     }
 
     public void setChannelId(int channelId) {
@@ -88,6 +112,26 @@ public class CartEvent extends Event{
         mUid = uid;
     }
 
+    @Override
+    public ContentValues saveValues() {
+        if (mValues == null) {
+            mValues = new ContentValues();
+            putValidInt(mValues, CartReporter.Keys.CHANNEL_ID, mChannelId);
+            putValidInt(mValues, CartReporter.Keys.OPERATION, mOperation);
+            putValidString(mValues, CartReporter.Keys.MERCHANT_ID, mMerchantId);
+            putValidString(mValues, CartReporter.Keys.GOODS_ID, mGoodsId);
+            putValidString(mValues, CartReporter.Keys.GOODS_NAME, mGoodsName);
+            putValidString(mValues, CartReporter.Keys.GOODS_IMAGE, mGoodsImage);
+            putValidString(mValues, CartReporter.Keys.GOODS_SKU_CODE, mGoodsSkuCode);
+            putValidString(mValues, CartReporter.Keys.GOODS_PRICE, mGoodsId);
+            putValidString(mValues, CartReporter.Keys.GOODS_SELL_PRICE, mGoodsName);
+            putValidString(mValues, CartReporter.Keys.GOODS_COUNT, mGoodsImage);
+            putValidString(mValues, CartReporter.Keys.COUPON_AMOUNT, mGoodsSkuCode);
+            putValidString(mValues, CartReporter.Keys.USER_ID, mUid);
+            putValidString(mValues, CartReporter.Keys.DEVICE_ID, mId);
+        }
+        return mValues;
+    }
 
     public int getChannelId() {
         return mChannelId;

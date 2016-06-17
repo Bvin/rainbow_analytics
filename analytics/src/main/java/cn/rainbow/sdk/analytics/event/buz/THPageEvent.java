@@ -1,6 +1,10 @@
 package cn.rainbow.sdk.analytics.event.buz;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import cn.rainbow.sdk.analytics.event.PageEvent;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 
 /**
  * Created by bvin on 2016/6/12.
@@ -8,14 +12,33 @@ import cn.rainbow.sdk.analytics.event.PageEvent;
  */
 public class THPageEvent extends PageEvent {
 
-    private int mChannelId;
-    private String mMerchantId;
+    protected int mChannelId;
+    protected String mMerchantId;
     private String mUrl;
     private String mAppVersion;
     private String mDevice;
     private String mDeviceId;
     private String mSystem;
     private String mSystemVersion;
+    private ContentValues mValues;
+
+    public THPageEvent() {
+    }
+
+    public THPageEvent(Cursor cursor) {
+        if (cursor != null) {
+            mChannelId = cursor.getInt(cursor.getColumnIndex(ApvReporter.Keys.CHANNEL_ID));
+            mMerchantId = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.MERCHANT_ID));
+            mUrl = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.PAGE));
+            mAppVersion = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.APP_VERSION));
+            mDevice = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.MOBILE));
+            mDeviceId = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.DEVICE_ID));
+            mSystem = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.OS));
+            mSystemVersion = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.OS_VERSION));
+            mStartDate = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.ENTER_TIME));
+            mEndDate = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.LEAVE_TIME));
+        }
+    }
 
     public void setChannelId(int channelId) {
         mChannelId = channelId;
@@ -49,6 +72,23 @@ public class THPageEvent extends PageEvent {
         mSystemVersion = systemVersion;
     }
 
+    @Override
+    public ContentValues saveValues() {
+        if (mValues == null) {
+            mValues = new ContentValues();
+            putValidInt(mValues, ApvReporter.Keys.CHANNEL_ID, mChannelId);
+            putValidString(mValues, ApvReporter.Keys.MERCHANT_ID, mMerchantId);
+            putValidString(mValues, ApvReporter.Keys.PAGE, mUrl);
+            putValidString(mValues, ApvReporter.Keys.APP_VERSION, mAppVersion);
+            putValidString(mValues, ApvReporter.Keys.ENTER_TIME, mStartDate);
+            putValidString(mValues, ApvReporter.Keys.LEAVE_TIME, mEndDate);
+            putValidString(mValues, ApvReporter.Keys.MOBILE, mDevice);
+            putValidString(mValues, ApvReporter.Keys.OS, mSystem);
+            putValidString(mValues, ApvReporter.Keys.OS_VERSION, mSystemVersion);
+            putValidString(mValues, ApvReporter.Keys.DEVICE_ID, mDeviceId);
+        }
+        return mValues;
+    }
 
     public int getChannelId() {
         return mChannelId;

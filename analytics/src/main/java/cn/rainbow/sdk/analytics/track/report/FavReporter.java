@@ -19,8 +19,27 @@ public class FavReporter extends AbsEventReporter<FavoriteEvent>{
     @Override
     public void report(FavoriteEvent event, Callback callback) {
         Api api = mHttpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportFav(event.getChannelId(),event.getMerchantId(), event.getGoodsId(), event.getGoodsSkuCode(), urlEncode(event.getGoodsName())
-                , urlEncode(event.getGoodsImage()), event.getId(),
-                event.getUid(), event.getOperation(),new BaseResponseCallback(callback));
+        api.reportFav(event.getChannelId(),
+                event.getMerchantId(),
+                event.getGoodsId(),
+                event.getGoodsSkuCode(),
+                urlEncode(event.getGoodsName()),
+                urlEncode(event.getGoodsImage()),
+                event.getId(),
+                event.getUid(),
+                event.getOperation(),
+                new BaseResponseCallback(callback));
+    }
+
+    public class Keys{
+        public static final String CHANNEL_ID = "c";
+        public static final String MERCHANT_ID = "mid";
+        public static final String GOODS_ID = "gid";
+        public static final String GOODS_SKU_CODE = "gsku";
+        public static final String GOODS_NAME = "gn";
+        public static final String GOODS_IMAGE = "gi";
+        public static final String DEVICE_ID = "id";
+        public static final String USER_ID = "uid";
+        public static final String OPERATION = "op";
     }
 }

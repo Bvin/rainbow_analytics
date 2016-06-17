@@ -31,4 +31,26 @@ public class OrderReporter extends AbsEventReporter<OrderEvent>{
         if (!TextUtils.isEmpty(sb.toString()))//不用retrofit是因为此接口参数不固定
             mHttpLite.url(sb.toString()).get().async(new BaseResponseCallback(callback,true));
     }
+
+    public static class Keys {
+        public static final String CHANNEL_ID = "c";
+        public static final String MERCHANT_ID = "mid";
+        public static final String ORDER_NUMBER = "on";
+        public static final String SUB_ORDER_NUMBER = "son";
+        public static final String ORDER_STATE = "os";
+        public static final String ORDER_USER = "ou";
+        public static final String ORDER_PRICE = "op";
+        public static final String ORDER_ADDRESS = "oa";
+        public static final String COUPON_PRICE = "cp";
+        public static final String FREIGHT_PRICE = "fp";
+        public static final String GOODS_TOTAL = "pn";
+        public static final String OPERATION_TYPE = "opt";
+        public static final String GOODS_LIST = "i";
+
+        public static final String GOODS_ID = "gi";
+        public static final String GOODS_SKU_CODE = "gs";
+        public static final String GOODS_COUNT = "gc";
+        public static final String GOODS_NAME = "gn";
+        public static final String GOODS_IMAGE = "gm";
+    }
 }

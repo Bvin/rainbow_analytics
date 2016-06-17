@@ -19,8 +19,33 @@ public class GpvReporter extends AbsEventReporter<GoodsViewEvent>{
     @Override
     public void report(GoodsViewEvent event, Callback callback) {
         Api api = mHttpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportGPV(event.getChannelId(), event.getMerchantId(), event.getGoodsId(), urlEncode(event.getGoodsName()), urlEncode(event.getGoodsImage()),
-                event.getStartDate(), event.getEndDate(), event.getCategory1(), event.getCategory2(), event.getCategory3(), event.getId()
-                , event.getUid(),new BaseResponseCallback(callback));
+        api.reportGPV(event.getChannelId(),
+                event.getMerchantId(),
+                event.getGoodsId(),
+                urlEncode(event.getGoodsName()),
+                urlEncode(event.getGoodsImage()),
+                event.getStartDate(),
+                event.getEndDate(),
+                event.getCategory1(),
+                event.getCategory2(),
+                event.getCategory3(),
+                event.getId(),
+                event.getUid(),
+                new BaseResponseCallback(callback));
+    }
+
+    public static class Keys {
+        public static final String CHANNEL_ID = "c";
+        public static final String MERCHANT_ID = "mid";
+        public static final String GOODS_ID = "gi";
+        public static final String GOODS_NAME = "gn";
+        public static final String GOODS_IMAGE = "gm";
+        public static final String GOODS_CATEGORY1 = "gc1";
+        public static final String GOODS_CATEGORY2 = "gc2";
+        public static final String GOODS_CATEGORY3 = "gc3";
+        public static final String ENTER_TIME = "et";
+        public static final String LEAVE_TIME = "lt";
+        public static final String DEVICE_ID = "id";
+        public static final String USER_ID = "uid";
     }
 }

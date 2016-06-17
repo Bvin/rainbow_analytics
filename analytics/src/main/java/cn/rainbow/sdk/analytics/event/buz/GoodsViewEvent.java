@@ -1,5 +1,10 @@
 package cn.rainbow.sdk.analytics.event.buz;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import cn.rainbow.sdk.analytics.track.report.GpvReporter;
+
 /**
  * Created by bvin on 2016/6/13.
  * <p>商品浏览事件.
@@ -16,6 +21,24 @@ public class GoodsViewEvent extends THPageEvent {
     private String mCategory1;
     private String mCategory2;
     private String mCategory3;
+    private ContentValues mValues;
+
+    public GoodsViewEvent(Cursor cursor) {
+        if (cursor != null) {
+            mChannelId = cursor.getInt(cursor.getColumnIndex(GpvReporter.Keys.CHANNEL_ID));
+            mMerchantId = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.MERCHANT_ID));
+            mGoodsId = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_ID));
+            mGoodsName = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_NAME));
+            mGoodsImage = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_IMAGE));
+            mCategory1 = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_CATEGORY1));
+            mCategory2 = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_CATEGORY2));
+            mCategory3 = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_CATEGORY3));
+            mStartDate = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.ENTER_TIME));
+            mEndDate = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.LEAVE_TIME));
+            mId = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.DEVICE_ID));
+            mUid = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.USER_ID));
+        }
+    }
 
     public void setGoodsId(String goodsId) {
         mGoodsId = goodsId;
@@ -47,6 +70,26 @@ public class GoodsViewEvent extends THPageEvent {
 
     public void setCategory3(String category3) {
         mCategory3 = category3;
+    }
+
+    @Override
+    public ContentValues saveValues() {
+        if (mValues == null) {
+            mValues = new ContentValues();
+            putValidInt(mValues, GpvReporter.Keys.CHANNEL_ID, mChannelId);
+            putValidString(mValues, GpvReporter.Keys.MERCHANT_ID, mMerchantId);
+            putValidString(mValues, GpvReporter.Keys.GOODS_ID, mGoodsId);
+            putValidString(mValues, GpvReporter.Keys.ENTER_TIME, mStartDate);
+            putValidString(mValues, GpvReporter.Keys.LEAVE_TIME, mEndDate);
+            putValidString(mValues, GpvReporter.Keys.GOODS_NAME, mGoodsName);
+            putValidString(mValues, GpvReporter.Keys.GOODS_IMAGE, mGoodsImage);
+            putValidString(mValues, GpvReporter.Keys.GOODS_CATEGORY1, mCategory1);
+            putValidString(mValues, GpvReporter.Keys.GOODS_CATEGORY2, mCategory2);
+            putValidString(mValues, GpvReporter.Keys.GOODS_CATEGORY3, mCategory3);
+            putValidString(mValues, GpvReporter.Keys.USER_ID, mUid);
+            putValidString(mValues, GpvReporter.Keys.DEVICE_ID, mId);
+        }
+        return mValues;
     }
 
     public String getGoodsId() {

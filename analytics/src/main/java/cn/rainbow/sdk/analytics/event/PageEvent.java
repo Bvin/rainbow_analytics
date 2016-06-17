@@ -1,6 +1,7 @@
 package cn.rainbow.sdk.analytics.event;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.text.TextUtils;
 
 import cn.rainbow.sdk.analytics.data.local.db.EventTable;
@@ -23,6 +24,10 @@ public class PageEvent extends Event{
     public PageEvent(String page) {
         super(EVENT_ID);
         mCurrentPage = page;
+    }
+
+    public PageEvent(Cursor cursor) {
+        super(cursor);
     }
 
     public void setPreviousPage(String previousPage) {

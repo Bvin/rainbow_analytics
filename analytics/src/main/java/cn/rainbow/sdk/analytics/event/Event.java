@@ -1,6 +1,7 @@
 package cn.rainbow.sdk.analytics.event;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.text.TextUtils;
 
 import cn.rainbow.sdk.analytics.data.local.db.EventTable;
@@ -32,6 +33,22 @@ public class Event implements TableSave{
         mEventId = eventId;
         mEventName = eventName;
         mEventDesc = eventDesc;
+    }
+
+    /**
+     * 通过数据库结果集还原事件.
+     * @param cursor 不要对cursor做任何写操作，只能做读操作
+     */
+    public Event(Cursor cursor){
+        if (cursor != null) {
+            mEventId = cursor.getLong(cursor.getColumnIndex(EventTable.Columns.EVENT_ID));
+            mEventName = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_NAME));
+            mEventDesc = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_DESC));
+            mEventType = cursor.getInt(cursor.getColumnIndex(EventTable.Columns.EVENT_TYPE));
+            mStartDate = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_START_DATE));
+            mEndDate = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_END_DATE));
+            mDuration = cursor.getLong(cursor.getColumnIndex(EventTable.Columns.EVENT_DURATION));
+        }
     }
 
     public void setEventType(int eventType) {

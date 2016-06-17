@@ -1,6 +1,11 @@
 package cn.rainbow.sdk.analytics.event.buz;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import cn.rainbow.sdk.analytics.event.Event;
+import cn.rainbow.sdk.analytics.track.report.FavReporter;
+import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 
 /**
  * Created by bvin on 2016/6/14.
@@ -25,6 +30,21 @@ public class FavoriteEvent extends Event{
     private String mUid;
 
     private int mOperation;
+    private ContentValues mValues;
+
+    public FavoriteEvent(Cursor cursor) {
+        if (cursor != null) {
+            mOperation = cursor.getInt(cursor.getColumnIndex(FavReporter.Keys.OPERATION));
+            mChannelId = cursor.getInt(cursor.getColumnIndex(FavReporter.Keys.CHANNEL_ID));
+            mMerchantId = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.MERCHANT_ID));
+            mGoodsId = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.GOODS_ID));
+            mGoodsName = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.GOODS_NAME));
+            mGoodsImage = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.GOODS_IMAGE));
+            mGoodsSkuCode = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.GOODS_SKU_CODE));
+            mId = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.DEVICE_ID));
+            mUid = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.USER_ID));
+        }
+    }
 
     /**
      * 商品收藏事件.
@@ -64,6 +84,23 @@ public class FavoriteEvent extends Event{
 
     public void setUid(String uid) {
         mUid = uid;
+    }
+
+    @Override
+    public ContentValues saveValues() {
+        if (mValues == null) {
+            mValues = new ContentValues();
+            putValidInt(mValues, FavReporter.Keys.CHANNEL_ID, mChannelId);
+            putValidInt(mValues, FavReporter.Keys.OPERATION, mOperation);
+            putValidString(mValues, FavReporter.Keys.MERCHANT_ID, mMerchantId);
+            putValidString(mValues, FavReporter.Keys.GOODS_ID, mGoodsId);
+            putValidString(mValues, FavReporter.Keys.GOODS_NAME, mGoodsName);
+            putValidString(mValues, FavReporter.Keys.GOODS_IMAGE, mGoodsImage);
+            putValidString(mValues, FavReporter.Keys.GOODS_SKU_CODE, mGoodsSkuCode);
+            putValidString(mValues, FavReporter.Keys.USER_ID, mUid);
+            putValidString(mValues, FavReporter.Keys.DEVICE_ID, mId);
+        }
+        return mValues;
     }
 
     public int getChannelId() {

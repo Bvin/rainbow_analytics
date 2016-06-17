@@ -1,8 +1,5 @@
 package cn.rainbow.sdk.analytics.track.report;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.data.remote.AbsEventReporter;
 import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
@@ -23,7 +20,29 @@ public class ApvReporter extends AbsEventReporter<THPageEvent> {
     public void report(THPageEvent event, Callback callback) {
         Api api = mHttpLite.retrofit(Api.class, new PreRequestListener());
         String pageName = urlEncode(event.getUrl());
-        api.reportAPV(event.getChannelId(), event.getMerchantId(), pageName, event.getAppVersion(), event.getStartDate(),
-                event.getEndDate(), event.getDevice(), event.getSystem(), event.getSystemVersion(), event.getDeviceId(), new BaseResponseCallback(callback));
+        api.reportAPV(event.getChannelId(),
+                event.getMerchantId(),
+                pageName,
+                event.getAppVersion(),
+                event.getStartDate(),
+                event.getEndDate(),
+                event.getDevice(),
+                event.getSystem(),
+                event.getSystemVersion(),
+                event.getDeviceId(),
+                new BaseResponseCallback(callback));
+    }
+
+    public class Keys {
+        public static final String CHANNEL_ID = "c";
+        public static final String MERCHANT_ID = "mid";
+        public static final String PAGE = "u";
+        public static final String APP_VERSION = "v";
+        public static final String ENTER_TIME = "et";
+        public static final String LEAVE_TIME = "lt";
+        public static final String MOBILE = "mb";
+        public static final String OS = "o";
+        public static final String OS_VERSION = "ov";
+        public static final String DEVICE_ID = "id";
     }
 }
