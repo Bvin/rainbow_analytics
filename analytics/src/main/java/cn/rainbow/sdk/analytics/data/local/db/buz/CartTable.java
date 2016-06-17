@@ -17,6 +17,7 @@ public class CartTable extends AbsEventTable<CartEvent> implements TableCreator{
 
     public CartTable(SQLiteDatabase database) {
         super(database);
+        setTableCreator(this);
     }
 
     @Override

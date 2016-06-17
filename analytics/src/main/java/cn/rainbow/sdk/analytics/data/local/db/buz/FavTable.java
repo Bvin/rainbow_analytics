@@ -18,6 +18,7 @@ public class FavTable extends AbsEventTable<FavoriteEvent> implements TableCreat
 
     public FavTable(SQLiteDatabase database) {
         super(database);
+        setTableCreator(this);
     }
 
     @Override

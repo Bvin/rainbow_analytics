@@ -17,6 +17,7 @@ public class OrderTable extends AbsEventTable<OrderEvent> implements TableCreato
 
     public OrderTable(SQLiteDatabase database) {
         super(database);
+        setTableCreator(this);
     }
 
     @Override

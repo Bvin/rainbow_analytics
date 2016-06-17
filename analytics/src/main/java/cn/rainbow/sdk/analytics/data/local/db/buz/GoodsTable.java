@@ -19,6 +19,7 @@ public class GoodsTable extends AbsEventTable<GoodsViewEvent> implements TableCr
 
     public GoodsTable(SQLiteDatabase database) {
         super(database);
+        setTableCreator(this);
     }
 
     @Override

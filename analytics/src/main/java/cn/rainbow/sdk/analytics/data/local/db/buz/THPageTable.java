@@ -17,6 +17,7 @@ public class THPageTable extends AbsEventTable<THPageEvent> implements TableCrea
 
     public THPageTable(SQLiteDatabase database) {
         super(database);
+        setTableCreator(this);
     }
 
     @Override
