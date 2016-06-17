@@ -6,9 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import cn.rainbow.sdk.analytics.Config;
+import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.Event;
+import cn.rainbow.sdk.analytics.utils.NetworkHelper;
 
 /**
  * Created by bvin on 2016/5/31.
@@ -61,8 +64,21 @@ public abstract class AbsEventTracker<T extends Event> {
         mEvent.setEndDate(getCurrentDate());
         long duration = System.currentTimeMillis() - mStartMillis;
         mEvent.setDuration(duration);
-
-        save();
+        if(THAnalytics.getCurrentConfig().isSaveLocalEnable()) {
+            save();
+        }
+        if (THAnalytics.getCurrentConfig().isPushRemoteEnable()){//开启上报服务器
+            if (THAnalytics.getCurrentConfig().getPushStrategy() == Config.PUSH_STRATEGY_REAL_TIME){
+                //实时推送
+                if (THAnalytics.getCurrentConfig().isPushOnlyWifi()){
+                    if (new NetworkHelper(mContext).inWifiNetwork()){
+                        //若设置了只在在wifi下传输，就不推先存到本地，到下次批量推
+                    }
+                }else {
+                    push();
+                }
+            }
+        }
     }
 
     protected void save() {
@@ -73,7 +89,7 @@ public abstract class AbsEventTracker<T extends Event> {
     }
 
     protected void push(){
-
+        //empty implement
     }
 
     private String getCurrentDate(){

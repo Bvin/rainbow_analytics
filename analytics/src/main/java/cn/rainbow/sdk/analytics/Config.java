@@ -5,10 +5,22 @@ package cn.rainbow.sdk.analytics;
  */
 public class Config {
 
+    /**启动时批量发送*/
+    public static final int PUSH_STRATEGY_BATCH_BOOTSTRAP = 0;
+    /**实时发送*/
+    public static final int PUSH_STRATEGY_REAL_TIME = 1;
+    /**实时发送仅wifi*/
+    public static final int PUSH_STRATEGY_REAL_TIME_WIFI_ONLY = 2;
+
+    private boolean mEnable;
     private boolean mEnableDebugLog;
     private boolean mEnableCrashTrack;
     private boolean mIsTestEnv;
     private int mChannelId;
+    private boolean mSaveLocal;
+    private boolean mPushRemote;
+    private boolean mPushOnlyWifi;
+    private int mPushStrategy;
 
     public void enableDebugLog(boolean enable){
         mEnableDebugLog = enable;
@@ -49,5 +61,77 @@ public class Config {
 
     public int getChannelId() {
         return mChannelId;
+    }
+
+    /**
+     * 统计总开关（默认开启）.
+     * @param enable true开启,false关闭
+     */
+    public void enable(boolean enable){
+        mEnable = enable;
+    }
+
+    /**
+     * 是否开启统计.
+     * @return
+     */
+    public boolean isEnable(){
+        return !mEnable;
+    }
+
+    /**
+     * 设置是否保存到本地数据库（默认开启）.
+     * @param saveLocal true开启,false关闭
+     */
+    public void setSaveLocal(boolean saveLocal) {
+        mSaveLocal = saveLocal;
+    }
+
+    /**
+     * 是否推送到远程服务器（默认开启）..
+     * @param pushRemote true开启,false关闭
+     */
+    public void setPushRemote(boolean pushRemote) {
+        mPushRemote = pushRemote;
+    }
+
+    /**
+     * 是否保存到本地.
+     * @return
+     */
+    public boolean isSaveLocalEnable() {
+        return mSaveLocal;
+    }
+
+    /**
+     * 是否发送到服务器.
+     * @return
+     */
+    public boolean isPushRemoteEnable() {
+        return mPushRemote;
+    }
+
+    public int getPushStrategy() {
+        return mPushStrategy;
+    }
+
+    /**
+     * 设置上报策略.
+     * @param pushStrategy 启动批量上报/实时上报
+     */
+    public void setPushStrategy(int pushStrategy) {
+        mPushStrategy = pushStrategy;
+    }
+
+    /**
+     * 设置是否只在wifi下上报.
+     * @param pushOnlyWifi
+     */
+    public void setPushOnlyWifi(boolean pushOnlyWifi) {
+        mPushOnlyWifi = pushOnlyWifi;
+    }
+
+    public boolean isPushOnlyWifi() {
+        return mPushOnlyWifi;
     }
 }

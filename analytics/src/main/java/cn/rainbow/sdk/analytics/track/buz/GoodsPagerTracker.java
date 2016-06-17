@@ -22,6 +22,7 @@ import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
 import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
+import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 
 /**
  * Created by bvin on 2016/6/13.
@@ -46,28 +47,8 @@ public class GoodsPagerTracker extends THPageTracker {
     }
 
     @Override
-    public void onPageEnd() {
-        onEventEnd();
-        reportGPV();
-    }
-
-    private void reportGPV() {
-        HttpLiteBuilder mBuilder = URLite.create();
-        HttpLite httpLite = mBuilder.addResponseParser(new GsonParser()).build();
-        httpLite.setBaseUrl(ApiConfig.HOST);
-        Api api = httpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportGPV(mEvent.getChannelId(), mEvent.getMerchantId(), mEvent.getGoodsId(), urlEncode(mEvent.getGoodsName()), urlEncode(mEvent.getGoodsImage()),
-                mEvent.getStartDate(), mEvent.getEndDate(), mEvent.getCategory1(), mEvent.getCategory2(), mEvent.getCategory3(), mEvent.getId()
-                , mEvent.getUid(),new BaseResponseCallback(this));
-    }
-
-    private String urlEncode(String content){
-        try {
-            return URLEncoder.encode(content,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return content;
-        }
+    protected void push() {
+        new GpvReporter(mEvent).push(this);
     }
 
     @Override

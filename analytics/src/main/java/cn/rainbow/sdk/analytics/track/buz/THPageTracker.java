@@ -6,27 +6,18 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
-import alexclin.httplite.HttpLite;
-import alexclin.httplite.HttpLiteBuilder;
 import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
-import alexclin.httplite.url.URLite;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
 import cn.rainbow.sdk.analytics.data.remote.Model;
-import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
-import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
-import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
-import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.track.PageTracker;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
 
 
@@ -51,22 +42,20 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
         }
         mEvent.setUrl(mContext.getClass().getName());
         onEventStart();
-        collectInfo();
+        collectExtraInfo();//收集附加信息
     }
 
     @Override
     public void onPageEnd() {
         super.onPageEnd();
-        reportAPV();
     }
 
     @Override
-    protected void save() {
-        //super.save();
-        //暂时不存库
+    protected void push() {
+        new ApvReporter(mEvent).push(this);
     }
 
-    private void collectInfo() {
+    private void collectExtraInfo() {
 
         mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());//红领巾APP
         //mEvent.setMerchantId("1");//商户id，不传默认为1：天虹
@@ -88,21 +77,6 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private void reportAPV(){
-        HttpLiteBuilder mBuilder = URLite.create();
-        HttpLite httpLite = mBuilder.addResponseParser(new GsonParser()).build();
-        httpLite.setBaseUrl(ApiConfig.HOST);
-        Api api = httpLite.retrofit(Api.class, new PreRequestListener());
-        String pageName = mEvent.getUrl();
-        try {
-            pageName = URLEncoder.encode(pageName, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        api.reportAPV(mEvent.getChannelId(), mEvent.getMerchantId(), pageName, mEvent.getAppVersion(), mEvent.getStartDate(),
-                mEvent.getEndDate(), mEvent.getDevice(), mEvent.getSystem(), mEvent.getSystemVersion(), mEvent.getDeviceId(),new BaseResponseCallback(this));
     }
 
     @Override

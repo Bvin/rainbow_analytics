@@ -19,6 +19,7 @@ import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
+import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 
 /**
  * Created by bvin on 2016/6/14.
@@ -37,24 +38,12 @@ public class OrderTracker extends AbsEventTracker<OrderEvent> implements alexcli
         attachContext(context);
         mEvent = event;
         mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
-        reportOrder();
+        onEventEnd();
     }
 
-    private void reportOrder(){
-        HttpLiteBuilder mBuilder = URLite.create();
-        HttpLite httpLite = mBuilder.addResponseParser(new GsonParser()).build();
-        httpLite.setBaseUrl(ApiConfig.HOST);
-        StringBuilder sb = new StringBuilder(ApiConfig.URL_ORDER);
-        sb.append("?");
-        sb.append(mEvent.toString());
-        for (OrderEvent.Goods goods : mEvent.getGoodsList()) {
-            sb.append(goods.toString());
-        }
-        if (sb.toString().endsWith("&")) {
-            sb.delete(sb.toString().length() - 1, sb.toString().length());
-        }
-        if (!TextUtils.isEmpty(sb.toString()))
-            httpLite.url(sb.toString()).get().async(new BaseResponseCallback(this,true));
+    @Override
+    protected void push() {
+       new OrderReporter(mEvent).push(this);
     }
 
     @Override
