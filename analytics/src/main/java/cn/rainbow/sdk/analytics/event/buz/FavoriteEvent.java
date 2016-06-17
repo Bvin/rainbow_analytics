@@ -11,7 +11,7 @@ public class FavoriteEvent extends Event{
     /**添加收藏*/
     public static final int OP_ADD_FAV = 2001;
     /**取消收藏*/
-    public static final int OP_CANCEL_FAV = 2001;
+    public static final int OP_CANCEL_FAV = 2002;
 
     private int mChannelId;
     private String mMerchantId;
