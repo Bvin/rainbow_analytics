@@ -41,7 +41,9 @@ public class FavTracker extends AbsEventTracker<FavoriteEvent> implements Callba
     public void startTrack(Context context,FavoriteEvent event){
         attachContext(context);
         mEvent = event;
+        onEventStart();
         mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
+        onEventEnd();
     }
 
     @Override

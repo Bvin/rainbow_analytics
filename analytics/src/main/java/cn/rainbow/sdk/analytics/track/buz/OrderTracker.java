@@ -37,8 +37,9 @@ public class OrderTracker extends AbsEventTracker<OrderEvent> implements alexcli
     public void startTrack(Context context,OrderEvent event){
         attachContext(context);
         mEvent = event;
+        onEventStart();//一定要调用，否则后面会传不到Event
         mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
-        onEventEnd();
+        onEventEnd();//一定要调用，否则不会保存数据库，也不会推送
     }
 
     @Override

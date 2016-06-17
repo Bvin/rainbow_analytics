@@ -13,7 +13,7 @@ import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
  */
 public interface Business {
     void startGoodsPage(Context context, GoodsViewEvent eventData);
-    void stopGoodsPage();
+    void stopGoodsPage()throws IllegalStateException;
 
     void trackCart(Context context, CartEvent eventData);
     void trackFav(Context context, FavoriteEvent eventData);

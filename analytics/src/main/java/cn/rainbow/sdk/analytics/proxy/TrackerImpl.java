@@ -104,9 +104,9 @@ public class TrackerImpl implements Tracker{
         mMarketingPageTracker = null;
     }
 
-    private void endPageTrack(PageTracker pageTracker){
+    private void endPageTrack(PageTracker pageTracker) throws IllegalStateException{
         if (pageTracker == null) {
-            throw new RuntimeException("page track must call when begin");
+            throw new IllegalStateException("page track must call when begin");
         }
         pageTracker.onPageEnd();
     }
@@ -159,7 +159,7 @@ public class TrackerImpl implements Tracker{
     }
 
     @Override
-    public void stopGoodsPage() {
+    public void stopGoodsPage() throws IllegalStateException{
         endPageTrack(mGoodsPagerTracker);
     }
 

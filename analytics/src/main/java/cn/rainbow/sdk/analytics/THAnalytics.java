@@ -76,7 +76,7 @@ public class THAnalytics {
      * 结束统计商品页面.
      * <P>在商品详情页面的onPause()方法调用.
      */
-    public static void stopGoodsPage(){
+    public static void stopGoodsPage()throws IllegalStateException{
         mTracker.stopGoodsPage();
     }
 

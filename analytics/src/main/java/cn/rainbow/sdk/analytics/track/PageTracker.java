@@ -48,7 +48,7 @@ public class PageTracker extends AbsEventTracker<PageEvent> {
         onEventStart();
     }
 
-    public void onPageEnd(){
+    public void onPageEnd()throws IllegalStateException{
         onEventEnd();//一定要调用onEventEnd()才会完成统计并且保存到数据库
     }
 

@@ -36,13 +36,17 @@ public class GoodsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        THAnalytics.startGoodsPage(this,mGoodsViewEventData);
+        //THAnalytics.startGoodsPage(this,mGoodsViewEventData);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        THAnalytics.stopGoodsPage();
+        try {
+            THAnalytics.stopGoodsPage();
+        }catch (IllegalStateException e){
+            e.printStackTrace();
+        }
     }
 
     public void trackCart(View view){

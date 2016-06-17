@@ -67,7 +67,7 @@ public class AppTracker extends AbsEventTracker<AppEvent>{
         return null;
     }
 
-    public void onExit(){
+    public void onExit()throws IllegalStateException{
         onEventEnd();//will call bellow save() method
     }
 

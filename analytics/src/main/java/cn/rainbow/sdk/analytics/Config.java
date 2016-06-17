@@ -12,15 +12,15 @@ public class Config {
     /**实时发送仅wifi*/
     public static final int PUSH_STRATEGY_REAL_TIME_WIFI_ONLY = 2;
 
-    private boolean mEnable;
+    private boolean mEnable = true;//默认开启
     private boolean mEnableDebugLog;
     private boolean mEnableCrashTrack;
     private boolean mIsTestEnv;
     private int mChannelId;
-    private boolean mSaveLocal;
-    private boolean mPushRemote;
+    private boolean mSaveLocal = true;//默认开启
+    private boolean mPushRemote = true;//默认开启
     private boolean mPushOnlyWifi;
-    private int mPushStrategy;
+    private int mPushStrategy = PUSH_STRATEGY_BATCH_BOOTSTRAP;//默认启动时发送
 
     public void enableDebugLog(boolean enable){
         mEnableDebugLog = enable;
@@ -76,7 +76,7 @@ public class Config {
      * @return
      */
     public boolean isEnable(){
-        return !mEnable;
+        return mEnable;
     }
 
     /**
@@ -133,5 +133,20 @@ public class Config {
 
     public boolean isPushOnlyWifi() {
         return mPushOnlyWifi;
+    }
+
+    @Override
+    public String toString() {
+        return "Config{" +
+                "mEnable=" + mEnable +
+                ", mEnableDebugLog=" + mEnableDebugLog +
+                ", mEnableCrashTrack=" + mEnableCrashTrack +
+                ", mIsTestEnv=" + mIsTestEnv +
+                ", mChannelId=" + mChannelId +
+                ", mSaveLocal=" + mSaveLocal +
+                ", mPushRemote=" + mPushRemote +
+                ", mPushOnlyWifi=" + mPushOnlyWifi +
+                ", mPushStrategy=" + mPushStrategy +
+                '}';
     }
 }

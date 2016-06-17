@@ -40,8 +40,9 @@ public class CartTracker extends AbsEventTracker<CartEvent> implements alexclin.
     public void startTrack(Context context,CartEvent event){
         attachContext(context);
         mEvent = event;
+        onEventStart();
         mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
-        onEventEnd();//一次性统计点
+        onEventEnd();
     }
 
     @Override

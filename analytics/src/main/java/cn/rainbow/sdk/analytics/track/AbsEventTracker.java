@@ -56,9 +56,9 @@ public abstract class AbsEventTracker<T extends Event> {
 
     }
 
-    public void onEventEnd(){
+    public void onEventEnd()throws IllegalStateException{
         if (mEvent == null)
-            throw new RuntimeException("event object may be not created or be recycled!");
+            throw new IllegalStateException("event object may be not created or be recycled!");
 
         //事件统计结束，保存到数据库
         mEvent.setEndDate(getCurrentDate());
