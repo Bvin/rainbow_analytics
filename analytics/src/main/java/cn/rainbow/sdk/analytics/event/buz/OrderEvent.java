@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.rainbow.sdk.analytics.data.local.db.buz.OrderTable;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 
@@ -63,7 +64,7 @@ public class OrderEvent extends Event{
     public OrderEvent(Cursor cursor) {
         mChannelId = cursor.getInt(cursor.getColumnIndex(OrderReporter.Keys.CHANNEL_ID));
         mMerchantId = cursor.getString(cursor.getColumnIndex(OrderReporter.Keys.MERCHANT_ID));
-        mOrderNumber = cursor.getString(cursor.getColumnIndex(OrderReporter.Keys.ORDER_NUMBER));
+        mOrderNumber = cursor.getString(cursor.getColumnIndex(OrderTable.Columns.ORDER_NUMBER));
         mSubOrderNumber = cursor.getString(cursor.getColumnIndex(OrderReporter.Keys.SUB_ORDER_NUMBER));
         mOrderState = cursor.getString(cursor.getColumnIndex(OrderReporter.Keys.ORDER_STATE));
         mOrderUserId = cursor.getString(cursor.getColumnIndex(OrderReporter.Keys.ORDER_USER));
@@ -184,7 +185,12 @@ public class OrderEvent extends Event{
         StringBuilder sb = new StringBuilder();
         ContentValues cv = saveValues();
         for (Map.Entry<String, Object> entry : cv.valueSet()) {
-            sb.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+            if (entry.getKey().equals(OrderTable.Columns.ORDER_NUMBER)) {
+                sb.append(OrderReporter.Keys.ORDER_NUMBER);//由于on是数据库表的保留字段需要转换一下
+            } else {
+                sb.append(entry.getKey());
+            }
+            sb.append("=").append(entry.getValue()).append("&");
         }
         /*if (sb.toString().endsWith("&")) {
             return sb.substring(sb.toString().length() - 1, sb.toString().length());
@@ -198,7 +204,7 @@ public class OrderEvent extends Event{
             mValues = new ContentValues();
             putValidInt(mValues, OrderReporter.Keys.CHANNEL_ID, mChannelId);
             putValidString(mValues, OrderReporter.Keys.MERCHANT_ID, mMerchantId);
-            putValidString(mValues, OrderReporter.Keys.ORDER_NUMBER, mOrderNumber);
+            putValidString(mValues, OrderTable.Columns.ORDER_NUMBER, mOrderNumber);
             putValidString(mValues, OrderReporter.Keys.SUB_ORDER_NUMBER, mSubOrderNumber);
             putValidString(mValues, OrderReporter.Keys.ORDER_STATE, mOrderState);
             putValidString(mValues, OrderReporter.Keys.ORDER_USER, mOrderUserId);

@@ -35,7 +35,7 @@ public class OrderTable extends AbsEventTable<OrderEvent> implements TableCreato
         return  OrderReporter.Keys.CHANNEL_ID + " INT," +
                 OrderReporter.Keys.MERCHANT_ID + " TEXT," +
                 OrderReporter.Keys.OPERATION_TYPE + " INT," +
-                OrderReporter.Keys.ORDER_NUMBER + " TEXT," +
+                Columns.ORDER_NUMBER + " TEXT," +
                 OrderReporter.Keys.SUB_ORDER_NUMBER + " TEXT," +
                 OrderReporter.Keys.ORDER_STATE + " TEXT," +
                 OrderReporter.Keys.ORDER_USER + " TEXT," +
@@ -47,4 +47,7 @@ public class OrderTable extends AbsEventTable<OrderEvent> implements TableCreato
                 OrderReporter.Keys.GOODS_LIST + " TEXT";
     }
 
+    public class Columns{
+        public static final String ORDER_NUMBER = "order_number";
+    }
 }
