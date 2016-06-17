@@ -23,6 +23,9 @@ public class GoodsViewEvent extends THPageEvent {
     private String mCategory3;
     private ContentValues mValues;
 
+    public GoodsViewEvent() {
+    }
+
     public GoodsViewEvent(Cursor cursor) {
         if (cursor != null) {
             mChannelId = cursor.getInt(cursor.getColumnIndex(GpvReporter.Keys.CHANNEL_ID));
