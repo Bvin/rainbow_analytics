@@ -1,5 +1,6 @@
 package cn.rainbow.sdk.analytics.data.local.db;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -33,6 +34,18 @@ public class SQLTable {
     public SQLTable save(TableSave tableSave) {
         mDatabase.insert(mTableCreator.tableName(), null, tableSave.saveValues());
         return this;
+    }
+
+    public Cursor query(String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+        return mDatabase.query(mTableCreator.tableName(), columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+    }
+
+    public Cursor queryFull() {
+        return query(null, null, null, null, null, null, null);
+    }
+
+    public Cursor query(String sql, String[] selectionArgs) {
+        return mDatabase.rawQuery(sql, selectionArgs);
     }
 
     public void close(){

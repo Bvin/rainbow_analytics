@@ -34,6 +34,10 @@ public class Event implements TableSave{
         mEventDesc = eventDesc;
     }
 
+    public void setEventType(int eventType) {
+        mEventType = eventType;
+    }
+
     public void setStartDate(String startDate) {
         mStartDate = startDate;
     }
