@@ -3,23 +3,14 @@ package cn.rainbow.sdk.analytics.track.buz;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
-import alexclin.httplite.HttpLite;
-import alexclin.httplite.HttpLiteBuilder;
 import alexclin.httplite.Request;
-import alexclin.httplite.url.URLite;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
+import cn.rainbow.sdk.analytics.data.local.db.buz.GoodsTable;
 import cn.rainbow.sdk.analytics.data.remote.Model;
-import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
-import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
-import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
-import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
@@ -30,6 +21,7 @@ import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 public class GoodsPagerTracker extends THPageTracker {
 
     private GoodsViewEvent mEvent;
+    private GoodsTable mTable;
 
     public GoodsPagerTracker(Context context) {
         super(context);
@@ -66,6 +58,9 @@ public class GoodsPagerTracker extends THPageTracker {
 
     @Override
     public SQLTable createTable(PageEvent event, SQLiteDatabase database) {
-        return super.createTable(event, database);
+        if (mTable == null) {
+            mTable = new GoodsTable(database);
+        }
+        return mTable;
     }
 }

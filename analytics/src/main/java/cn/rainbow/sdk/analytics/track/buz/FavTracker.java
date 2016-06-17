@@ -3,24 +3,15 @@ package cn.rainbow.sdk.analytics.track.buz;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
-import alexclin.httplite.HttpLite;
-import alexclin.httplite.HttpLiteBuilder;
 import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
-import alexclin.httplite.url.URLite;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
+import cn.rainbow.sdk.analytics.data.local.db.buz.FavTable;
 import cn.rainbow.sdk.analytics.data.remote.Model;
-import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
-import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
-import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
-import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
 import cn.rainbow.sdk.analytics.track.report.FavReporter;
@@ -33,6 +24,7 @@ public class FavTracker extends AbsEventTracker<FavoriteEvent> implements Callba
     public static final int EVENT_ID = 1131;
 
     private FavoriteEvent mEvent;
+    private FavTable mTable;
 
     public FavTracker() {
         super(EVENT_ID, "商品收藏统计");
@@ -66,12 +58,10 @@ public class FavTracker extends AbsEventTracker<FavoriteEvent> implements Callba
 
     @Override
     public SQLTable createTable(FavoriteEvent event, SQLiteDatabase database) {
-        return null;
-    }
-
-    @Override
-    protected void save() {
-        //super.save();
+        if (mTable == null) {
+            mTable = new FavTable(database);
+        }
+        return mTable;
     }
 
 }

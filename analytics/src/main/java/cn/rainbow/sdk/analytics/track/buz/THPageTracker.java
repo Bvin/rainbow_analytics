@@ -13,6 +13,7 @@ import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
+import cn.rainbow.sdk.analytics.data.local.db.buz.THPageTable;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
@@ -29,6 +30,7 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
     public static final String OS = "android";
 
     private THPageEvent mEvent;
+    private THPageTable mTable;
 
     public THPageTracker(Context context) {
         super(context);
@@ -47,7 +49,7 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
 
     @Override
     public void onPageEnd() {
-        super.onPageEnd();
+        onEventEnd();
     }
 
     @Override
@@ -94,7 +96,10 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
 
     @Override
     public SQLTable createTable(PageEvent event, SQLiteDatabase database) {
-        return super.createTable(event, database);
+        if (mTable == null) {
+            mTable = new THPageTable(database);
+        }
+        return mTable;
     }
 
 }

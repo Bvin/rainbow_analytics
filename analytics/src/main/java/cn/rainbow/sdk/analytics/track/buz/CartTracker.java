@@ -3,23 +3,14 @@ package cn.rainbow.sdk.analytics.track.buz;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
-import alexclin.httplite.HttpLite;
-import alexclin.httplite.HttpLiteBuilder;
 import alexclin.httplite.Request;
-import alexclin.httplite.url.URLite;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
+import cn.rainbow.sdk.analytics.data.local.db.buz.CartTable;
 import cn.rainbow.sdk.analytics.data.remote.Model;
-import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
-import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
-import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
-import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
 import cn.rainbow.sdk.analytics.track.report.CartReporter;
@@ -32,6 +23,7 @@ public class CartTracker extends AbsEventTracker<CartEvent> implements alexclin.
     public static final int EVENT_ID = 1040;
 
     private CartEvent mEvent;
+    private CartTable mTable;
 
     public CartTracker() {
         super(EVENT_ID, "购物车统计");
@@ -57,12 +49,10 @@ public class CartTracker extends AbsEventTracker<CartEvent> implements alexclin.
 
     @Override
     public SQLTable createTable(CartEvent event, SQLiteDatabase database) {
-        return null;
-    }
-
-    @Override
-    protected void save() {
-        //super.save();
+        if (mTable == null) {
+            mTable = new CartTable(database);
+        }
+        return mTable;
     }
 
     @Override
