@@ -391,6 +391,7 @@ public class OrderEvent extends Event{
          * @return 成功返回URL编码后的内容，否则返元原来内容
          */
         protected String urlEncode(String content){
+            if (TextUtils.isEmpty(content)) return content;
             try {
                 content = URLEncoder.encode(content, "utf-8");
             } catch (UnsupportedEncodingException e) {
