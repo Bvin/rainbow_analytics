@@ -62,6 +62,7 @@ public class OrderEvent extends Event{
     }
 
     public OrderEvent(Cursor cursor) {
+        initBaseColumns(cursor);
         mChannelId = cursor.getInt(cursor.getColumnIndex(OrderReporter.Keys.CHANNEL_ID));
         mMerchantId = cursor.getString(cursor.getColumnIndex(OrderReporter.Keys.MERCHANT_ID));
         mOrderNumber = cursor.getString(cursor.getColumnIndex(OrderTable.Columns.ORDER_NUMBER));

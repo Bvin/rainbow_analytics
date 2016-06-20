@@ -36,6 +36,7 @@ public class THAnalytics {
 
     //如果开启Crash跟踪，调用此方法将会开启...
     public static void onAppStart(Context context) {
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.initApp(context, 1208, 0, 0);
         if (mTracker.getCurrentConfig().isEnableCrashTrack()) {
             CrashHandler crashHandler = new CrashHandler(context);
@@ -47,18 +48,22 @@ public class THAnalytics {
     }
 
     public static void onAppExit() {
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.onAppExit();
     }
 
     public static void onResume(Context context) {
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.beginLogPage(context);
     }
 
     public static void onPause(Context context) {
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.endLogPage(context);
     }
 
     public static void reportCrash(Context context, String log) {
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.logCrashInfo(context, log);
     }
 
@@ -69,6 +74,7 @@ public class THAnalytics {
      * @param receiverData 接收数据（商品信息和用户信息等）
      */
     public static void startGoodsPage(Context context, GoodsViewEvent receiverData){
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.startGoodsPage(context,receiverData);
     }
 
@@ -77,6 +83,7 @@ public class THAnalytics {
      * <P>在商品详情页面的onPause()方法调用.
      */
     public static void stopGoodsPage()throws IllegalStateException{
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.stopGoodsPage();
     }
 
@@ -86,6 +93,7 @@ public class THAnalytics {
      * @param event 购物车事件
      */
     public static void trackCart(Context context, CartEvent event){
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.trackCart(context,event);
     }
 
@@ -95,6 +103,7 @@ public class THAnalytics {
      * @param event 收藏事件
      */
     public static void trackFavorite(Context context, FavoriteEvent event){
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.trackFav(context,event);
     }
 
@@ -104,6 +113,7 @@ public class THAnalytics {
      * @param event 订单事件
      */
     public static void trackOrder(Context context, OrderEvent event){
+        if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.trackOrder(context,event);
     }
 }

@@ -11,7 +11,7 @@ import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 /**
  * Created by bvin on 2016/6/17.
  */
-public class THPageTable extends AbsEventTable<THPageEvent> implements TableCreator{
+public class THPageTable extends AbsEventTable<THPageEvent>{
 
     private static final String NAME = "th_pages";
 

@@ -25,7 +25,7 @@ import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
 /**
  * Created by bvin on 2016/6/12.
  */
-public class THPageTracker extends PageTracker implements Callback<Model> {
+public class THPageTracker extends PageTracker{
 
     public static final String OS = "android";
 
@@ -79,14 +79,6 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Override
-    public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-    }
-
-    @Override
-    public void onFailed(Request request, Exception e) {
     }
 
     @Override

@@ -11,7 +11,7 @@ import cn.rainbow.sdk.analytics.event.Event;
 /**
  * Created by bvin on 2016/6/17.
  */
-public abstract class AbsEventTable<T extends Event> extends SQLTable{
+public abstract class AbsEventTable<T extends Event> extends SQLTable implements TableCreator{
 
     public AbsEventTable(SQLiteDatabase database) {
         super(database);
@@ -30,4 +30,10 @@ public abstract class AbsEventTable<T extends Event> extends SQLTable{
     }
 
     protected abstract T take(Cursor cursor);
+
+    public void delete(T t) {
+        if (t != null && t.getBaseColumns() > 0) {
+            mDatabase.delete(tableName(), SQLTable._ID + "=?", new String[]{t.getBaseColumns() + ""});
+        }
+    }
 }

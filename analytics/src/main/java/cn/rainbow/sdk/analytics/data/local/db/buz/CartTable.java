@@ -4,14 +4,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
-import cn.rainbow.sdk.analytics.data.local.db.TableCreator;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.track.report.CartReporter;
 
 /**
  * Created by bvin on 2016/6/17.
  */
-public class CartTable extends AbsEventTable<CartEvent> implements TableCreator{
+public class CartTable extends AbsEventTable<CartEvent> {
 
     private static final String TABLE_NAME = "carts";
 

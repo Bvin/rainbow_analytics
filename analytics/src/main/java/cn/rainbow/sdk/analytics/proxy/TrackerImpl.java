@@ -1,14 +1,30 @@
 package cn.rainbow.sdk.analytics.proxy;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.List;
+import java.util.Map;
+
+import alexclin.httplite.Request;
+import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
+import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
+import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
+import cn.rainbow.sdk.analytics.data.local.db.buz.CartTable;
+import cn.rainbow.sdk.analytics.data.local.db.buz.FavTable;
+import cn.rainbow.sdk.analytics.data.local.db.buz.GoodsTable;
+import cn.rainbow.sdk.analytics.data.local.db.buz.OrderTable;
+import cn.rainbow.sdk.analytics.data.local.db.buz.THPageTable;
+import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
+import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.track.AppTracker;
 import cn.rainbow.sdk.analytics.track.CrashTracker;
 import cn.rainbow.sdk.analytics.track.DefaultEventTracker;
@@ -19,6 +35,11 @@ import cn.rainbow.sdk.analytics.track.buz.GoodsPagerTracker;
 import cn.rainbow.sdk.analytics.track.buz.THPageTracker;
 import cn.rainbow.sdk.analytics.track.PageTracker;
 import cn.rainbow.sdk.analytics.track.buz.OrderTracker;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
+import cn.rainbow.sdk.analytics.track.report.CartReporter;
+import cn.rainbow.sdk.analytics.track.report.FavReporter;
+import cn.rainbow.sdk.analytics.track.report.GpvReporter;
+import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 
 /**
  * Created by 32967 on 2016/5/27.
@@ -58,6 +79,77 @@ public class TrackerImpl implements Tracker{
             mAppTracker = new AppTracker(context, appId);
         }
         mAppTracker.onStart();
+        uploadLog(context);//上传以前的统计日志
+    }
+
+    private void uploadLog(Context context) {
+        DBHelper dbHelper = new DBHelper(context);
+        uploadApv(dbHelper.getWritableDatabase());
+        uploadGpv(dbHelper.getWritableDatabase());
+        uploadCartEvents(dbHelper.getWritableDatabase());
+        uploadFavEvents(dbHelper.getWritableDatabase());
+        uploadOrderEvents(dbHelper.getWritableDatabase());
+    }
+
+    private void uploadApv(SQLiteDatabase db) {
+        THPageTable table = new THPageTable(db);
+        List<THPageEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (THPageEvent event : list) {
+            new ApvReporter(event).push(callback(event, table));
+        }
+    }
+
+    private void uploadGpv(SQLiteDatabase db) {
+        GoodsTable table = new GoodsTable(db);
+        List<GoodsViewEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (GoodsViewEvent event : list) {
+            new GpvReporter(event).push(callback(event, table));
+        }
+    }
+
+    private void uploadCartEvents(SQLiteDatabase db) {
+        CartTable table = new CartTable(db);
+        List<CartEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (CartEvent event : list) {
+            new CartReporter(event).push(callback(event, table));
+        }
+    }
+
+    private void uploadFavEvents(SQLiteDatabase db) {
+        FavTable table = new FavTable(db);
+        List<FavoriteEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (FavoriteEvent event : list) {
+            new FavReporter(event).push(callback(event, table));
+        }
+    }
+
+    private void uploadOrderEvents(SQLiteDatabase db) {
+        OrderTable table = new OrderTable(db);
+        List<OrderEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (OrderEvent event : list) {
+            new OrderReporter(event).push(callback(event, table));
+        }
+    }
+
+    private Callback<Model> callback(final Event event, final AbsEventTable table) {
+        return new Callback<Model>() {
+            @Override
+            public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
+                if (model != null && model.getRet() == 200) {
+                    table.delete(event);
+                }
+            }
+
+            @Override
+            public void onFailed(Request request, Exception e) {
+
+            }
+        };
     }
 
     @Override

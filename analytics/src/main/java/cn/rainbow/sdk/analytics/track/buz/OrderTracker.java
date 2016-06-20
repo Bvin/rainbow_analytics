@@ -18,7 +18,7 @@ import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 /**
  * Created by bvin on 2016/6/14.
  */
-public class OrderTracker extends AbsEventTracker<OrderEvent> implements alexclin.httplite.listener.Callback<Model> {
+public class OrderTracker extends AbsEventTracker<OrderEvent> {
 
     public static final int EVENT_ID = 1122;
 
@@ -40,14 +40,6 @@ public class OrderTracker extends AbsEventTracker<OrderEvent> implements alexcli
     @Override
     protected void push() {
        new OrderReporter(mEvent).push(this);
-    }
-
-    @Override
-    public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-    }
-
-    @Override
-    public void onFailed(Request request, Exception e) {
     }
 
     @Override

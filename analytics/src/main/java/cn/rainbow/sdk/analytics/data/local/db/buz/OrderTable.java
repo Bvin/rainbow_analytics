@@ -11,7 +11,7 @@ import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 /**
  * Created by bvin on 2016/6/14.
  */
-public class OrderTable extends AbsEventTable<OrderEvent> implements TableCreator{
+public class OrderTable extends AbsEventTable<OrderEvent>{
 
     private static final String TABLE_NAME = "orders";
 

@@ -13,7 +13,7 @@ import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 /**
  * Created by bvin on 2016/6/14.
  */
-public class GoodsTable extends AbsEventTable<GoodsViewEvent> implements TableCreator{
+public class GoodsTable extends AbsEventTable<GoodsViewEvent>{
 
     private static final String TABLE_NAME = "goods";
 

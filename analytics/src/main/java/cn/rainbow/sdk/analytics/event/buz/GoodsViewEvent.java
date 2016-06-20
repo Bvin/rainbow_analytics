@@ -28,6 +28,7 @@ public class GoodsViewEvent extends THPageEvent {
 
     public GoodsViewEvent(Cursor cursor) {
         if (cursor != null) {
+            initBaseColumns(cursor);
             mChannelId = cursor.getInt(cursor.getColumnIndex(GpvReporter.Keys.CHANNEL_ID));
             mMerchantId = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.MERCHANT_ID));
             mGoodsId = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_ID));

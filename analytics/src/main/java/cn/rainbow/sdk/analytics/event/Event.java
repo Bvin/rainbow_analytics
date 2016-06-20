@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import cn.rainbow.sdk.analytics.data.local.db.EventTable;
-import cn.rainbow.sdk.analytics.data.local.db.TableCreator;
+import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.local.db.TableSave;
 
 /**
@@ -13,6 +13,7 @@ import cn.rainbow.sdk.analytics.data.local.db.TableSave;
  */
 public class Event implements TableSave{
 
+    private int mBaseIndex = -1;
     private long mEventId;
     private String mEventName;
     private String mEventDesc;//data
@@ -41,6 +42,7 @@ public class Event implements TableSave{
      */
     public Event(Cursor cursor){
         if (cursor != null) {
+            initBaseColumns(cursor);
             mEventId = cursor.getLong(cursor.getColumnIndex(EventTable.Columns.EVENT_ID));
             mEventName = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_NAME));
             mEventDesc = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_DESC));
@@ -49,6 +51,14 @@ public class Event implements TableSave{
             mEndDate = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_END_DATE));
             mDuration = cursor.getLong(cursor.getColumnIndex(EventTable.Columns.EVENT_DURATION));
         }
+    }
+
+    protected void initBaseColumns(Cursor cursor){
+        mBaseIndex = cursor.getInt(cursor.getColumnIndex(SQLTable._ID));
+    }
+
+    public int getBaseColumns(){
+        return mBaseIndex;
     }
 
     public void setEventType(int eventType) {

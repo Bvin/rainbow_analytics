@@ -11,7 +11,7 @@ import cn.rainbow.sdk.analytics.track.report.FavReporter;
 /**
  * Created by bvin on 2016/6/17.
  */
-public class FavTable extends AbsEventTable<FavoriteEvent> implements TableCreator{
+public class FavTable extends AbsEventTable<FavoriteEvent>{
 
 
     private static final String TABLE_NAME = "favs";

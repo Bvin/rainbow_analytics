@@ -5,18 +5,23 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import alexclin.httplite.Request;
+import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
+import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.utils.NetworkHelper;
 
 /**
  * Created by bvin on 2016/5/31.
  */
-public abstract class AbsEventTracker<T extends Event> {
+public abstract class AbsEventTracker<T extends Event> implements Callback<Model> {
 
     private SimpleDateFormat mDateFormat;
     private long mStartMillis;
@@ -56,7 +61,7 @@ public abstract class AbsEventTracker<T extends Event> {
 
     }
 
-    public void onEventEnd()throws IllegalStateException{
+    public void onEventEnd() throws IllegalStateException {
         if (mEvent == null)
             throw new IllegalStateException("event object may be not created or be recycled!");
 
@@ -64,23 +69,32 @@ public abstract class AbsEventTracker<T extends Event> {
         mEvent.setEndDate(getCurrentDate());
         long duration = System.currentTimeMillis() - mStartMillis;
         mEvent.setDuration(duration);
-        if(THAnalytics.getCurrentConfig().isSaveLocalEnable()) {
-            save();
-        }
-        if (THAnalytics.getCurrentConfig().isPushRemoteEnable()){//开启上报服务器
-            if (THAnalytics.getCurrentConfig().getPushStrategy() == Config.PUSH_STRATEGY_REAL_TIME){
+
+        if (THAnalytics.getCurrentConfig().isPushRemoteEnable()) {//开启上报服务器
+            if (THAnalytics.getCurrentConfig().getPushStrategy() == Config.PUSH_STRATEGY_REAL_TIME) {
                 //实时推送
-                if (THAnalytics.getCurrentConfig().isPushOnlyWifi()){
-                    if (new NetworkHelper(mContext).inWifiNetwork()){
-                        //若设置了只在在wifi下传输，就不推先存到本地，到下次批量推
+                if (THAnalytics.getCurrentConfig().isPushOnlyWifi()) {
+                    if (new NetworkHelper(mContext).inWifiNetwork()) {
+                        push();
+                    } else {
+                        saveIfEnable();
                     }
-                }else {
+                } else {
                     push();
                 }
+            } else {
+                saveIfEnable();
             }
+        } else {//没开启上报服务器就先存本地
+            saveIfEnable();
         }
     }
 
+    private void saveIfEnable() {
+        if (THAnalytics.getCurrentConfig().isSaveLocalEnable()) {
+            save();
+        }
+    }
     protected void save() {
         DBHelper dbHelper = new DBHelper(mContext);
         SQLTable table = createTable(mEvent, dbHelper.getWritableDatabase());
@@ -90,6 +104,17 @@ public abstract class AbsEventTracker<T extends Event> {
 
     protected void push(){
         //empty implement
+    }
+
+    @Override
+    public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
+        //推送成功
+    }
+
+    @Override
+    public void onFailed(Request request, Exception e) {
+        //推送失败（保存到本地）
+        saveIfEnable();
     }
 
     private String getCurrentDate(){
