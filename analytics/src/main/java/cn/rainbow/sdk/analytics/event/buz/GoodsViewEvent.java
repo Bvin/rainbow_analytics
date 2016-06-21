@@ -3,6 +3,7 @@ package cn.rainbow.sdk.analytics.event.buz;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 
 /**
@@ -31,9 +32,9 @@ public class GoodsViewEvent extends THPageEvent {
             initBaseColumns(cursor);
             mChannelId = cursor.getInt(cursor.getColumnIndex(GpvReporter.Keys.CHANNEL_ID));
             mMerchantId = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.MERCHANT_ID));
-            mGoodsId = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_ID));
+            mGoodsId = cursor.getString(cursor.getColumnIndex(GoodsTable.Columns.GOODS_ID));
             mGoodsName = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_NAME));
-            mGoodsImage = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_IMAGE));
+            mGoodsImage = cursor.getString(cursor.getColumnIndex(GoodsTable.Columns.GOODS_IMAGE));
             mCategory1 = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_CATEGORY1));
             mCategory2 = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_CATEGORY2));
             mCategory3 = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.GOODS_CATEGORY3));
@@ -82,11 +83,11 @@ public class GoodsViewEvent extends THPageEvent {
             mValues = new ContentValues();
             putValidInt(mValues, GpvReporter.Keys.CHANNEL_ID, mChannelId);
             putValidString(mValues, GpvReporter.Keys.MERCHANT_ID, mMerchantId);
-            putValidString(mValues, GpvReporter.Keys.GOODS_ID, mGoodsId);
+            putValidString(mValues, GoodsTable.Columns.GOODS_ID, mGoodsId);
             putValidString(mValues, GpvReporter.Keys.ENTER_TIME, mStartDate);
             putValidString(mValues, GpvReporter.Keys.LEAVE_TIME, mEndDate);
             putValidString(mValues, GpvReporter.Keys.GOODS_NAME, mGoodsName);
-            putValidString(mValues, GpvReporter.Keys.GOODS_IMAGE, mGoodsImage);
+            putValidString(mValues, GoodsTable.Columns.GOODS_IMAGE, mGoodsImage);
             putValidString(mValues, GpvReporter.Keys.GOODS_CATEGORY1, mCategory1);
             putValidString(mValues, GpvReporter.Keys.GOODS_CATEGORY2, mCategory2);
             putValidString(mValues, GpvReporter.Keys.GOODS_CATEGORY3, mCategory3);
