@@ -1,7 +1,7 @@
-package cn.rainbow.sdk.analytics.data.local.db.buz;
+package cn.rainbow.sdk.analytics.data.local.db.table.buz;
 
+import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
@@ -12,15 +12,14 @@ import cn.rainbow.sdk.analytics.track.report.CartReporter;
  */
 public class CartTable extends AbsEventTable<CartEvent> {
 
-    private static final String TABLE_NAME = "carts";
+    public static final String TABLE_NAME = "carts";
 
-    public CartTable(SQLiteDatabase database) {
-        super(database);
-        setTableCreator(this);
+    public CartTable(Context context) {
+        super(context);
     }
 
     @Override
-    protected CartEvent take(Cursor cursor) {
+    protected CartEvent newEvent(Cursor cursor) {
         return new CartEvent(cursor);
     }
 

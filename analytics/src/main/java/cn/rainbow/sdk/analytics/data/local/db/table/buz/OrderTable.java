@@ -1,10 +1,9 @@
-package cn.rainbow.sdk.analytics.data.local.db.buz;
+package cn.rainbow.sdk.analytics.data.local.db.table.buz;
 
+import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
-import cn.rainbow.sdk.analytics.data.local.db.TableCreator;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
 import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 
@@ -13,15 +12,14 @@ import cn.rainbow.sdk.analytics.track.report.OrderReporter;
  */
 public class OrderTable extends AbsEventTable<OrderEvent>{
 
-    private static final String TABLE_NAME = "orders";
+    public static final String TABLE_NAME = "orders";
 
-    public OrderTable(SQLiteDatabase database) {
-        super(database);
-        setTableCreator(this);
+    public OrderTable(Context context) {
+        super(context);
     }
 
     @Override
-    protected OrderEvent take(Cursor cursor) {
+    protected OrderEvent newEvent(Cursor cursor) {
         return new OrderEvent(cursor);
     }
 

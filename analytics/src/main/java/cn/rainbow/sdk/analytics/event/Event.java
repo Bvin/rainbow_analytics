@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import cn.rainbow.sdk.analytics.data.local.db.EventTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.local.db.TableSave;
 

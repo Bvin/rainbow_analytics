@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import cn.rainbow.sdk.analytics.data.local.db.EventTable;
-import cn.rainbow.sdk.analytics.data.local.db.PageTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.PageTable;
 
 /**
  * Created by bvin on 2016/5/31.

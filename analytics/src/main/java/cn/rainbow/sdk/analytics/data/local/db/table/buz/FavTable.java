@@ -1,5 +1,6 @@
-package cn.rainbow.sdk.analytics.data.local.db.buz;
+package cn.rainbow.sdk.analytics.data.local.db.table.buz;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -13,16 +14,14 @@ import cn.rainbow.sdk.analytics.track.report.FavReporter;
  */
 public class FavTable extends AbsEventTable<FavoriteEvent>{
 
+    public static final String TABLE_NAME = "favs";
 
-    private static final String TABLE_NAME = "favs";
-
-    public FavTable(SQLiteDatabase database) {
-        super(database);
-        setTableCreator(this);
+    public FavTable(Context context) {
+        super(context);
     }
 
     @Override
-    protected FavoriteEvent take(Cursor cursor) {
+    protected FavoriteEvent newEvent(Cursor cursor) {
         return new FavoriteEvent(cursor);
     }
 

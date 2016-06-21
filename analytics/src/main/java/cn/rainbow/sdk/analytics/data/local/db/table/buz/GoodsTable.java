@@ -1,13 +1,11 @@
-package cn.rainbow.sdk.analytics.data.local.db.buz;
+package cn.rainbow.sdk.analytics.data.local.db.table.buz;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
-import cn.rainbow.sdk.analytics.data.local.db.EventTable;
-import cn.rainbow.sdk.analytics.data.local.db.TableCreator;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
-import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 
 /**
@@ -15,15 +13,14 @@ import cn.rainbow.sdk.analytics.track.report.GpvReporter;
  */
 public class GoodsTable extends AbsEventTable<GoodsViewEvent>{
 
-    private static final String TABLE_NAME = "goods";
+    public static final String TABLE_NAME = "goods";
 
-    public GoodsTable(SQLiteDatabase database) {
-        super(database);
-        setTableCreator(this);
+    public GoodsTable(Context context) {
+        super(context);
     }
 
     @Override
-    protected GoodsViewEvent take(Cursor cursor) {
+    protected GoodsViewEvent newEvent(Cursor cursor) {
         return new GoodsViewEvent(cursor);
     }
 

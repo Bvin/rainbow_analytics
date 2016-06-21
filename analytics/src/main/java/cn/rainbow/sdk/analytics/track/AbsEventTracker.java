@@ -1,7 +1,6 @@
 package cn.rainbow.sdk.analytics.track;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +11,6 @@ import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
 import cn.rainbow.sdk.analytics.THAnalytics;
-import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.event.Event;
@@ -23,36 +21,50 @@ import cn.rainbow.sdk.analytics.utils.NetworkHelper;
  */
 public abstract class AbsEventTracker<T extends Event> implements Callback<Model> {
 
-    private SimpleDateFormat mDateFormat;
-    private long mStartMillis;
-    private T mEvent;
-
     protected Context mContext;
+    private T mEvent;
+    private SQLTable mTable;
+
     protected long mEventId;
     protected String mEventName;
 
-    public AbsEventTracker(long eventId, String eventName) {
+    private SimpleDateFormat mDateFormat;
+    private long mStartMillis;
+
+    public AbsEventTracker(Context context,long eventId, String eventName) {
+        mContext = context;
         mEventId = eventId;
         mEventName = eventName;
     }
 
-    public void attachContext(Context context){
-        mContext = context;
-    }
-
-    public abstract T createEvent();
-    public abstract SQLTable createTable(T event, SQLiteDatabase database);
+    /**
+     * 获取事件.
+     * @return 事件, must not be null
+     */
+    public abstract T takeEvent();
 
     /**
-     * 事件开始.
-     * <p>调用此方法之前一定要确保createEvent()中的事件已被创建
+     * 获取表.
+     * @return 表, must not be null
      */
-    public void onEventStart(){
+    public abstract SQLTable takeTable();
+
+    /**
+     * 事件统计开始.
+     * <p>注意：
+     * <ol>
+     *     <li>调用此方法之前务必确保抽象方法takeEvent()中事件被创建.</li>
+     *     <li>onEventStart()和onEventEnd()需成对出现，调用onEventEnd()之前务必先调用onEventStart().</li>
+     * </ol>
+     * @throws IllegalStateException 事件统计之前必须保证事件已被创建(@link#takeEvent())，否则会抛出此异常
+     */
+    public void onEventStart() throws IllegalStateException {
         if (mEvent == null) {
-            mEvent = createEvent();
+            mEvent = takeEvent();
         }
         if (mEvent == null)
-            throw new RuntimeException("event must be build before call onEventStart() method!");
+            throw new IllegalStateException("event must be build before call onEventStart() method!");
+
         mEvent.setStartDate(getCurrentDate());
         mStartMillis = System.currentTimeMillis();
     }
@@ -61,6 +73,10 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
 
     }
 
+    /**
+     * 事件统计结束（必须先调用onEventStart()开始统计.
+     * @throws IllegalStateException 如果调用此方法之前没有调用onEventStart()会抛出此异常
+     */
     public void onEventEnd() throws IllegalStateException {
         if (mEvent == null)
             throw new IllegalStateException("event object may be not created or be recycled!");
@@ -70,6 +86,11 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
         long duration = System.currentTimeMillis() - mStartMillis;
         mEvent.setDuration(duration);
 
+        finallyExecute();
+    }
+
+    //事件结束后执行finally操作
+    private void finallyExecute() {
         if (THAnalytics.getCurrentConfig().isPushRemoteEnable()) {//开启上报服务器
             if (THAnalytics.getCurrentConfig().getPushStrategy() == Config.PUSH_STRATEGY_REAL_TIME) {
                 //实时推送
@@ -95,11 +116,14 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
             save();
         }
     }
+
     protected void save() {
-        DBHelper dbHelper = new DBHelper(mContext);
-        SQLTable table = createTable(mEvent, dbHelper.getWritableDatabase());
-        table.save(mEvent);
-        //table.close();
+        if (mEvent != null) {
+            mTable = takeTable();
+            if (mTable != null) {
+                mTable.save(mEvent);
+            }
+        }
     }
 
     protected void push(){
@@ -108,7 +132,7 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
 
     @Override
     public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-        //推送成功
+        //推送成功(不需要删除，因为选择推送就不会保存到本地)
     }
 
     @Override

@@ -3,10 +3,8 @@ package cn.rainbow.sdk.analytics.track;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import android.util.Log;
 
-import cn.rainbow.sdk.analytics.THAnalytics;
-import cn.rainbow.sdk.analytics.data.local.db.PageTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.PageTable;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 
@@ -18,12 +16,12 @@ public class PageTracker extends AbsEventTracker<PageEvent> {
     private static final String TAG = "PageTracker";
 
     private String mPageName;
+
     private PageEvent mPageEvent;
     private PageTable mPageTable;
 
     public PageTracker(Context context) {
-        super(PageEvent.EVENT_ID, "统计页面");
-        attachContext(context);
+        super(context, PageEvent.EVENT_ID, "统计页面");
         mPageName = context.getClass().getName();
     }
 
@@ -48,19 +46,19 @@ public class PageTracker extends AbsEventTracker<PageEvent> {
         onEventStart();
     }
 
-    public void onPageEnd()throws IllegalStateException{
+    public void onPageEnd() throws IllegalStateException{
         onEventEnd();//一定要调用onEventEnd()才会完成统计并且保存到数据库
     }
 
     @Override
-    public PageEvent createEvent() {
+    public PageEvent takeEvent() {
         return mPageEvent;
     }
 
     @Override
-    public SQLTable createTable(PageEvent event, SQLiteDatabase database) {
+    public SQLTable takeTable() {
         if (mPageTable == null) {
-            mPageTable = new PageTable(database);
+            mPageTable = new PageTable(mContext);
         }
         return mPageTable;
     }

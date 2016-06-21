@@ -1,5 +1,6 @@
-package cn.rainbow.sdk.analytics.data.local.db.buz;
+package cn.rainbow.sdk.analytics.data.local.db.table.buz;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -13,11 +14,10 @@ import cn.rainbow.sdk.analytics.track.report.ApvReporter;
  */
 public class THPageTable extends AbsEventTable<THPageEvent>{
 
-    private static final String NAME = "th_pages";
+    public static final String NAME = "th_pages";
 
-    public THPageTable(SQLiteDatabase database) {
-        super(database);
-        setTableCreator(this);
+    public THPageTable(Context context) {
+        super(context);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class THPageTable extends AbsEventTable<THPageEvent>{
     }
 
     @Override
-    protected THPageEvent take(Cursor cursor) {
+    protected THPageEvent newEvent(Cursor cursor) {
         return new THPageEvent(cursor);
     }
 }

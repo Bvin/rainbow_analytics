@@ -9,8 +9,6 @@ import cn.rainbow.sdk.analytics.Config;
  */
 public interface Tracker extends Business{
 
-    void attachContext(Context context);
-
     void config(Config config);
 
     Config getCurrentConfig();
@@ -46,10 +44,11 @@ public interface Tracker extends Business{
 
     /**
      * @brief 开始统计事件。
+     * @param context 上下文
      * @param eventId  事件编号。
      * @param desc  事件描述。
      */
-    void beginLogEvent(int eventId, String desc);
+    void beginLogEvent(Context context,int eventId, String desc);
 
     /**
      * @brief 结束统计事件。

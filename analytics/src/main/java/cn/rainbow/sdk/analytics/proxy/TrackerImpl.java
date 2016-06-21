@@ -1,7 +1,6 @@
 package cn.rainbow.sdk.analytics.proxy;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -12,12 +11,11 @@ import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
-import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
-import cn.rainbow.sdk.analytics.data.local.db.buz.CartTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.FavTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.GoodsTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.OrderTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.THPageTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.THPageTable;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
@@ -55,13 +53,7 @@ public class TrackerImpl implements Tracker{
     private GoodsPagerTracker mGoodsPagerTracker;
     private CrashTracker mCrashTracker;
     private String mPageName;
-    private Context mContext;
     private Config mConfig = new Config();//empty setConfig
-
-    @Override
-    public void attachContext(Context context) {
-        mContext = context;
-    }
 
     @Override
     public void config(Config config) {
@@ -83,16 +75,15 @@ public class TrackerImpl implements Tracker{
     }
 
     private void uploadLog(Context context) {
-        DBHelper dbHelper = new DBHelper(context);
-        uploadApv(dbHelper.getWritableDatabase());
-        uploadGpv(dbHelper.getWritableDatabase());
-        uploadCartEvents(dbHelper.getWritableDatabase());
-        uploadFavEvents(dbHelper.getWritableDatabase());
-        uploadOrderEvents(dbHelper.getWritableDatabase());
+        uploadApv(context);
+        uploadGpv(context);
+        uploadCartEvents(context);
+        uploadFavEvents(context);
+        uploadOrderEvents(context);
     }
 
-    private void uploadApv(SQLiteDatabase db) {
-        THPageTable table = new THPageTable(db);
+    private void uploadApv(Context context) {
+        THPageTable table = new THPageTable(context);
         List<THPageEvent> list = table.query();
         if (list == null || list.isEmpty()) return;
         for (THPageEvent event : list) {
@@ -100,8 +91,8 @@ public class TrackerImpl implements Tracker{
         }
     }
 
-    private void uploadGpv(SQLiteDatabase db) {
-        GoodsTable table = new GoodsTable(db);
+    private void uploadGpv(Context context) {
+        GoodsTable table = new GoodsTable(context);
         List<GoodsViewEvent> list = table.query();
         if (list == null || list.isEmpty()) return;
         for (GoodsViewEvent event : list) {
@@ -109,8 +100,8 @@ public class TrackerImpl implements Tracker{
         }
     }
 
-    private void uploadCartEvents(SQLiteDatabase db) {
-        CartTable table = new CartTable(db);
+    private void uploadCartEvents(Context context) {
+        CartTable table = new CartTable(context);
         List<CartEvent> list = table.query();
         if (list == null || list.isEmpty()) return;
         for (CartEvent event : list) {
@@ -118,8 +109,8 @@ public class TrackerImpl implements Tracker{
         }
     }
 
-    private void uploadFavEvents(SQLiteDatabase db) {
-        FavTable table = new FavTable(db);
+    private void uploadFavEvents(Context context) {
+        FavTable table = new FavTable(context);
         List<FavoriteEvent> list = table.query();
         if (list == null || list.isEmpty()) return;
         for (FavoriteEvent event : list) {
@@ -127,8 +118,8 @@ public class TrackerImpl implements Tracker{
         }
     }
 
-    private void uploadOrderEvents(SQLiteDatabase db) {
-        OrderTable table = new OrderTable(db);
+    private void uploadOrderEvents(Context context) {
+        OrderTable table = new OrderTable(context);
         List<OrderEvent> list = table.query();
         if (list == null || list.isEmpty()) return;
         for (OrderEvent event : list) {
@@ -204,10 +195,9 @@ public class TrackerImpl implements Tracker{
     }
 
     @Override
-    public void beginLogEvent(int eventId, String desc) {
+    public void beginLogEvent(Context context,int eventId, String desc) {
         if (mEventTracker == null) {
-            mEventTracker = new DefaultEventTracker(eventId, desc);
-            mEventTracker.attachContext(mContext);
+            mEventTracker = new DefaultEventTracker(context,eventId, desc);
         }else {
             //endLogEvent？
         }
@@ -257,16 +247,16 @@ public class TrackerImpl implements Tracker{
 
     @Override
     public void trackCart(Context context, CartEvent eventData) {
-        new CartTracker().startTrack(context, eventData);
+        new CartTracker(context).startTrack(eventData);
     }
 
     @Override
     public void trackFav(Context context, FavoriteEvent eventData) {
-        new FavTracker().startTrack(context, eventData);
+        new FavTracker(context).startTrack(eventData);
     }
 
     @Override
     public void trackOrder(Context context, OrderEvent eventData) {
-        new OrderTracker().startTrack(context, eventData);
+        new OrderTracker(context).startTrack(eventData);
     }
 }

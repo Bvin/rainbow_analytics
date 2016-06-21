@@ -3,15 +3,9 @@ package cn.rainbow.sdk.analytics.track.buz;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.List;
-import java.util.Map;
-
-import alexclin.httplite.Request;
-import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.FavTable;
-import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
 import cn.rainbow.sdk.analytics.track.report.FavReporter;
@@ -26,12 +20,14 @@ public class FavTracker extends AbsEventTracker<FavoriteEvent> {
     private FavoriteEvent mEvent;
     private FavTable mTable;
 
-    public FavTracker() {
-        super(EVENT_ID, "商品收藏统计");
+    public FavTracker(Context context) {
+        super(context, EVENT_ID, "商品收藏统计");
     }
 
-    public void startTrack(Context context,FavoriteEvent event){
-        attachContext(context);
+    public void startTrack(FavoriteEvent event){
+        if (event == null) {
+            throw new RuntimeException("event must not be null.");
+        }
         mEvent = event;
         onEventStart();
         mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
@@ -44,14 +40,14 @@ public class FavTracker extends AbsEventTracker<FavoriteEvent> {
     }
 
     @Override
-    public FavoriteEvent createEvent() {
+    public FavoriteEvent takeEvent() {
         return mEvent;
     }
 
     @Override
-    public SQLTable createTable(FavoriteEvent event, SQLiteDatabase database) {
+    public SQLTable takeTable() {
         if (mTable == null) {
-            mTable = new FavTable(database);
+            mTable = new FavTable(mContext);
         }
         return mTable;
     }

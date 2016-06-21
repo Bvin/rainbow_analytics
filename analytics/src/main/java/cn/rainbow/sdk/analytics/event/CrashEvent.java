@@ -2,9 +2,9 @@ package cn.rainbow.sdk.analytics.event;
 
 import android.content.ContentValues;
 
-import cn.rainbow.sdk.analytics.data.local.db.AppTable;
-import cn.rainbow.sdk.analytics.data.local.db.CrashTable;
-import cn.rainbow.sdk.analytics.data.local.db.EventTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.AppTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.CrashTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
 
 /**
  * Created by bvin on 2016/6/2.
