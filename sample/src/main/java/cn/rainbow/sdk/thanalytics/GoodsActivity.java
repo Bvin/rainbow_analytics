@@ -36,7 +36,7 @@ public class GoodsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //THAnalytics.startGoodsPage(this,mGoodsViewEventData);
+        THAnalytics.startGoodsPage(this,mGoodsViewEventData);
     }
 
     @Override
