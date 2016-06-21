@@ -3,14 +3,9 @@ package cn.rainbow.sdk.analytics.track.buz;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.List;
-import java.util.Map;
-
-import alexclin.httplite.Request;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.CartTable;
-import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
 import cn.rainbow.sdk.analytics.track.report.CartReporter;
@@ -18,19 +13,21 @@ import cn.rainbow.sdk.analytics.track.report.CartReporter;
 /**
  * Created by bvin on 2016/6/14.
  */
-public class CartTracker extends AbsEventTracker<CartEvent> implements alexclin.httplite.listener.Callback<Model> {
+public class CartTracker extends AbsEventTracker<CartEvent> {
 
     public static final int EVENT_ID = 1040;
 
     private CartEvent mEvent;
     private CartTable mTable;
 
-    public CartTracker() {
-        super(EVENT_ID, "购物车统计");
+    public CartTracker(Context context) {
+        super(context,EVENT_ID, "购物车统计");
     }
 
-    public void startTrack(Context context,CartEvent event){
-        attachContext(context);
+    public void startTrack(CartEvent event){
+        if (event == null) {
+            throw new RuntimeException("event must not be null.");
+        }
         mEvent = event;
         onEventStart();
         mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
@@ -43,23 +40,15 @@ public class CartTracker extends AbsEventTracker<CartEvent> implements alexclin.
     }
 
     @Override
-    public CartEvent createEvent() {
+    public CartEvent takeEvent() {
         return mEvent;
     }
 
     @Override
-    public SQLTable createTable(CartEvent event, SQLiteDatabase database) {
+    public SQLTable takeTable() {
         if (mTable == null) {
-            mTable = new CartTable(database);
+            mTable = new CartTable(mContext);
         }
         return mTable;
-    }
-
-    @Override
-    public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-    }
-
-    @Override
-    public void onFailed(Request request, Exception e) {
     }
 }

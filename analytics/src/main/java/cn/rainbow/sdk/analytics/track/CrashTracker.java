@@ -9,7 +9,7 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 
 import cn.rainbow.sdk.analytics.BuildConfig;
-import cn.rainbow.sdk.analytics.data.local.db.CrashTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.CrashTable;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.CrashEvent;
 
@@ -22,9 +22,7 @@ public class CrashTracker extends AbsEventTracker<CrashEvent>{
     private SQLTable mTable;
 
     public CrashTracker(Context context) {
-        super(CrashEvent.EVENT_ID, CrashEvent.EVENT_NAME);
-        mContext = context;// FIXME: 2016/6/6 父类所必需field需要在子类赋值，父类与子类有同名field容易产生误会，
-        // 父类一定要的最后申明成抽象方法。
+        super(context, CrashEvent.EVENT_ID, CrashEvent.EVENT_NAME);
     }
 
     public void onCrash(String log){
@@ -64,14 +62,14 @@ public class CrashTracker extends AbsEventTracker<CrashEvent>{
     }
 
     @Override
-    public CrashEvent createEvent() {
+    public CrashEvent takeEvent() {
         return mCrashEvent;
     }
 
     @Override
-    public SQLTable createTable(CrashEvent event, SQLiteDatabase database) {
+    public SQLTable takeTable() {
         if (mTable == null) {
-            mTable =  new CrashTable(database);
+            mTable =  new CrashTable(mContext);
         }
         return mTable;
     }

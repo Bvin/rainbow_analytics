@@ -1,7 +1,6 @@
 package cn.rainbow.sdk.analytics.track.buz;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,7 @@ import java.util.Map;
 import alexclin.httplite.Request;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.GoodsTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
@@ -32,7 +31,14 @@ public class GoodsPagerTracker extends THPageTracker {
         onEventStart();
     }
 
+    /**
+     * 开始统计商品页面.
+     * @param eventData 不能为空
+     */
     public void startGoodsPage(GoodsViewEvent eventData){
+        if (eventData == null) {
+            throw new RuntimeException("event must not be null.");
+        }
         mEvent = eventData;
         mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
         onPageStartAfter(null);
@@ -52,14 +58,14 @@ public class GoodsPagerTracker extends THPageTracker {
     }
 
     @Override
-    public PageEvent createEvent() {
+    public PageEvent takeEvent() {
         return mEvent;
     }
 
     @Override
-    public SQLTable createTable(PageEvent event, SQLiteDatabase database) {
+    public SQLTable takeTable() {
         if (mTable == null) {
-            mTable = new GoodsTable(database);
+            mTable = new GoodsTable(mContext);
         }
         return mTable;
     }

@@ -34,6 +34,7 @@ public class FavoriteEvent extends Event{
 
     public FavoriteEvent(Cursor cursor) {
         if (cursor != null) {
+            initBaseColumns(cursor);
             mOperation = cursor.getInt(cursor.getColumnIndex(FavReporter.Keys.OPERATION));
             mChannelId = cursor.getInt(cursor.getColumnIndex(FavReporter.Keys.CHANNEL_ID));
             mMerchantId = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.MERCHANT_ID));

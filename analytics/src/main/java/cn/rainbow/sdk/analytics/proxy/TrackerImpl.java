@@ -4,11 +4,25 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.List;
+import java.util.Map;
+
+import alexclin.httplite.Request;
+import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
+import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.THPageTable;
+import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
+import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.track.AppTracker;
 import cn.rainbow.sdk.analytics.track.CrashTracker;
 import cn.rainbow.sdk.analytics.track.DefaultEventTracker;
@@ -19,6 +33,11 @@ import cn.rainbow.sdk.analytics.track.buz.GoodsPagerTracker;
 import cn.rainbow.sdk.analytics.track.buz.THPageTracker;
 import cn.rainbow.sdk.analytics.track.PageTracker;
 import cn.rainbow.sdk.analytics.track.buz.OrderTracker;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
+import cn.rainbow.sdk.analytics.track.report.CartReporter;
+import cn.rainbow.sdk.analytics.track.report.FavReporter;
+import cn.rainbow.sdk.analytics.track.report.GpvReporter;
+import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 
 /**
  * Created by 32967 on 2016/5/27.
@@ -34,13 +53,7 @@ public class TrackerImpl implements Tracker{
     private GoodsPagerTracker mGoodsPagerTracker;
     private CrashTracker mCrashTracker;
     private String mPageName;
-    private Context mContext;
     private Config mConfig = new Config();//empty setConfig
-
-    @Override
-    public void attachContext(Context context) {
-        mContext = context;
-    }
 
     @Override
     public void config(Config config) {
@@ -58,6 +71,76 @@ public class TrackerImpl implements Tracker{
             mAppTracker = new AppTracker(context, appId);
         }
         mAppTracker.onStart();
+        uploadLog(context);//上传以前的统计日志
+    }
+
+    private void uploadLog(Context context) {
+        uploadApv(context);
+        uploadGpv(context);
+        uploadCartEvents(context);
+        uploadFavEvents(context);
+        uploadOrderEvents(context);
+    }
+
+    private void uploadApv(Context context) {
+        THPageTable table = new THPageTable(context);
+        List<THPageEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (THPageEvent event : list) {
+            new ApvReporter(event).push(callback(event, table));
+        }
+    }
+
+    private void uploadGpv(Context context) {
+        GoodsTable table = new GoodsTable(context);
+        List<GoodsViewEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (GoodsViewEvent event : list) {
+            new GpvReporter(event).push(callback(event, table));
+        }
+    }
+
+    private void uploadCartEvents(Context context) {
+        CartTable table = new CartTable(context);
+        List<CartEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (CartEvent event : list) {
+            new CartReporter(event).push(callback(event, table));
+        }
+    }
+
+    private void uploadFavEvents(Context context) {
+        FavTable table = new FavTable(context);
+        List<FavoriteEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (FavoriteEvent event : list) {
+            new FavReporter(event).push(callback(event, table));
+        }
+    }
+
+    private void uploadOrderEvents(Context context) {
+        OrderTable table = new OrderTable(context);
+        List<OrderEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (OrderEvent event : list) {
+            new OrderReporter(event).push(callback(event, table));
+        }
+    }
+
+    private Callback<Model> callback(final Event event, final AbsEventTable table) {
+        return new Callback<Model>() {
+            @Override
+            public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
+                if (model != null && model.getRet() == 200) {
+                    table.delete(event);
+                }
+            }
+
+            @Override
+            public void onFailed(Request request, Exception e) {
+
+            }
+        };
     }
 
     @Override
@@ -112,10 +195,9 @@ public class TrackerImpl implements Tracker{
     }
 
     @Override
-    public void beginLogEvent(int eventId, String desc) {
+    public void beginLogEvent(Context context,int eventId, String desc) {
         if (mEventTracker == null) {
-            mEventTracker = new DefaultEventTracker(eventId, desc);
-            mEventTracker.attachContext(mContext);
+            mEventTracker = new DefaultEventTracker(context,eventId, desc);
         }else {
             //endLogEvent？
         }
@@ -165,16 +247,16 @@ public class TrackerImpl implements Tracker{
 
     @Override
     public void trackCart(Context context, CartEvent eventData) {
-        new CartTracker().startTrack(context, eventData);
+        new CartTracker(context).startTrack(eventData);
     }
 
     @Override
     public void trackFav(Context context, FavoriteEvent eventData) {
-        new FavTracker().startTrack(context, eventData);
+        new FavTracker(context).startTrack(eventData);
     }
 
     @Override
     public void trackOrder(Context context, OrderEvent eventData) {
-        new OrderTracker().startTrack(context, eventData);
+        new OrderTracker(context).startTrack(eventData);
     }
 }

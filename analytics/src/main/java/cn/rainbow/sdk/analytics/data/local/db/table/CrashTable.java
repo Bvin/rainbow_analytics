@@ -1,19 +1,33 @@
-package cn.rainbow.sdk.analytics.data.local.db;
+package cn.rainbow.sdk.analytics.data.local.db.table;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import cn.rainbow.sdk.analytics.data.local.db.table.AppTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
+import cn.rainbow.sdk.analytics.event.Event;
 
 /**
  * Created by bvin on 2016/6/6.
  */
-public class CrashTable extends EventTable{
+public class CrashTable extends EventTable {
 
-    public CrashTable(SQLiteDatabase database) {
-        super(database);
+    public static final String TABLE_NAME = "crash";
+
+    public CrashTable(Context context) {
+        super(context);
+    }
+
+    @Override
+    protected Event newEvent(Cursor cursor) {
+        // TODO: 2016/6/21 new CrashEvent(cursor)
+        return super.newEvent(cursor);
     }
 
     @Override
     public String tableName() {
-        return "crash";
+        return TABLE_NAME;
     }
 
     @Override

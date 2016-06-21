@@ -3,18 +3,11 @@ package cn.rainbow.sdk.analytics.track.buz;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
-import java.util.List;
-import java.util.Map;
-
-import alexclin.httplite.Request;
-import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.THPageTable;
-import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.THPageTable;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.track.PageTracker;
@@ -25,7 +18,7 @@ import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
 /**
  * Created by bvin on 2016/6/12.
  */
-public class THPageTracker extends PageTracker implements Callback<Model> {
+public class THPageTracker extends PageTracker{
 
     public static final String OS = "android";
 
@@ -82,22 +75,14 @@ public class THPageTracker extends PageTracker implements Callback<Model> {
     }
 
     @Override
-    public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-    }
-
-    @Override
-    public void onFailed(Request request, Exception e) {
-    }
-
-    @Override
-    public PageEvent createEvent() {
+    public PageEvent takeEvent() {
         return mEvent;
     }
 
     @Override
-    public SQLTable createTable(PageEvent event, SQLiteDatabase database) {
+    public SQLTable takeTable() {
         if (mTable == null) {
-            mTable = new THPageTable(database);
+            mTable = new THPageTable(mContext);
         }
         return mTable;
     }

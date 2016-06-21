@@ -8,7 +8,7 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 
 import cn.rainbow.sdk.analytics.BuildConfig;
-import cn.rainbow.sdk.analytics.data.local.db.AppTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.AppTable;
 import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.AppEvent;
@@ -24,8 +24,7 @@ public class AppTracker extends AbsEventTracker<AppEvent>{
     private AppTable mAppTable;
 
     public AppTracker(Context context,int appId) {
-        super(AppEvent.EVENT_ID, "App级统计");
-        mContext = context;
+        super(context,AppEvent.EVENT_ID, "App级统计");
         mAppId = appId;
     }
 
@@ -34,8 +33,7 @@ public class AppTracker extends AbsEventTracker<AppEvent>{
             mAppEvent = new AppEvent(mAppId);//从配置读取APP_ID
         }
         if (mAppTable == null) {
-            DBHelper dbHelper = new DBHelper(mContext);
-            mAppTable = new AppTable(dbHelper.getWritableDatabase());
+            mAppTable = new AppTable(mContext);
         }
         collectInfo();
         onEventStart();
@@ -67,7 +65,7 @@ public class AppTracker extends AbsEventTracker<AppEvent>{
         return null;
     }
 
-    public void onExit()throws IllegalStateException{
+    public void onExit() throws IllegalStateException{
         onEventEnd();//will call bellow save() method
     }
 
@@ -77,14 +75,14 @@ public class AppTracker extends AbsEventTracker<AppEvent>{
     }
 
     @Override
-    public AppEvent createEvent() {
+    public AppEvent takeEvent() {
         return mAppEvent;
     }
 
     @Override
-    public SQLTable createTable(AppEvent event, SQLiteDatabase database) {
+    public SQLTable takeTable() {
         if (mAppTable == null) {
-            mAppTable = new AppTable(database);
+            mAppTable = new AppTable(mContext);
         }
         return mAppTable;
     }

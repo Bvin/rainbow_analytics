@@ -37,9 +37,9 @@ public class GpvReporter extends AbsEventReporter<GoodsViewEvent>{
     public static class Keys {
         public static final String CHANNEL_ID = "c";
         public static final String MERCHANT_ID = "mid";
-        public static final String GOODS_ID = "gi";
+        public static final String GOODS_ID = "gid";
         public static final String GOODS_NAME = "gn";
-        public static final String GOODS_IMAGE = "gm";
+        public static final String GOODS_IMAGE = "gi";
         public static final String GOODS_CATEGORY1 = "gc1";
         public static final String GOODS_CATEGORY2 = "gc2";
         public static final String GOODS_CATEGORY3 = "gc3";

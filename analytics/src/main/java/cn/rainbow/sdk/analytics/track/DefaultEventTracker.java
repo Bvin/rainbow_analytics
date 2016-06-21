@@ -1,8 +1,9 @@
 package cn.rainbow.sdk.analytics.track;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import cn.rainbow.sdk.analytics.data.local.db.EventTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.Event;
 
@@ -11,18 +12,27 @@ import cn.rainbow.sdk.analytics.event.Event;
  */
 public class DefaultEventTracker extends AbsEventTracker {
 
-    public DefaultEventTracker(long eventId, String eventName) {
-        super(eventId, eventName);
+    private Event mEvent;
+    private SQLTable mTable;
+
+    public DefaultEventTracker(Context context,long eventId, String eventName) {
+        super(context,eventId, eventName);
     }
 
     @Override
-    public Event createEvent() {
-        return new Event(mEventId);
+    public Event takeEvent() {
+        if (mEvent == null) {
+            mEvent = new Event(mEventId);
+        }
+        return mEvent;
     }
 
     @Override
-    public SQLTable createTable(Event event, SQLiteDatabase database) {
-        return new EventTable(database);
+    public SQLTable takeTable() {
+        if (mTable == null) {
+            mTable = new EventTable(mContext);
+        }
+        return mTable;
     }
 
 }

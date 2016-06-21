@@ -27,6 +27,7 @@ public class THPageEvent extends PageEvent {
 
     public THPageEvent(Cursor cursor) {
         if (cursor != null) {
+            initBaseColumns(cursor);
             mChannelId = cursor.getInt(cursor.getColumnIndex(ApvReporter.Keys.CHANNEL_ID));
             mMerchantId = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.MERCHANT_ID));
             mUrl = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.PAGE));

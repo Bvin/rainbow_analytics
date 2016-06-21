@@ -1,28 +1,29 @@
-package cn.rainbow.sdk.analytics.data.local.db;
+package cn.rainbow.sdk.analytics.data.local.db.table;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
 import cn.rainbow.sdk.analytics.data.remote.AbsEventReporter;
 import cn.rainbow.sdk.analytics.event.Event;
 
 /**
  * Created by 32967 on 2016/5/31.
  */
-public class EventTable extends AbsEventTable<Event> implements TableCreator{
+public class EventTable extends AbsEventTable<Event> {
 
-    private static final String TABLE_NAME = "event";
+    public static final String TABLE_NAME = "event";
 
-    public EventTable(SQLiteDatabase database) {
-        super(database);
-        setTableCreator(this);
+    public EventTable(Context context) {
+        super(context);
     }
 
     @Override
-    protected Event take(Cursor cursor) {
+    protected Event newEvent(Cursor cursor) {
         return new Event(cursor);
     }
 

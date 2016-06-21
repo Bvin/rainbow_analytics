@@ -3,14 +3,9 @@ package cn.rainbow.sdk.analytics.track.buz;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.List;
-import java.util.Map;
-
-import alexclin.httplite.Request;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.OrderTable;
-import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
 import cn.rainbow.sdk.analytics.track.AbsEventTracker;
 import cn.rainbow.sdk.analytics.track.report.OrderReporter;
@@ -18,19 +13,18 @@ import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 /**
  * Created by bvin on 2016/6/14.
  */
-public class OrderTracker extends AbsEventTracker<OrderEvent> implements alexclin.httplite.listener.Callback<Model> {
+public class OrderTracker extends AbsEventTracker<OrderEvent> {
 
     public static final int EVENT_ID = 1122;
 
     private OrderEvent mEvent;
     private OrderTable mTable;
 
-    public OrderTracker() {
-        super(EVENT_ID, "订单统计");
+    public OrderTracker(Context context) {
+        super(context, EVENT_ID, "订单统计");
     }
 
-    public void startTrack(Context context,OrderEvent event){
-        attachContext(context);
+    public void startTrack(OrderEvent event){
         mEvent = event;
         onEventStart();//一定要调用，否则后面会传不到Event
         mEvent.setChannelId(THAnalytics.getCurrentConfig().getChannelId());
@@ -43,22 +37,14 @@ public class OrderTracker extends AbsEventTracker<OrderEvent> implements alexcli
     }
 
     @Override
-    public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-    }
-
-    @Override
-    public void onFailed(Request request, Exception e) {
-    }
-
-    @Override
-    public OrderEvent createEvent() {
+    public OrderEvent takeEvent() {
         return mEvent;
     }
 
     @Override
-    public SQLTable createTable(OrderEvent event, SQLiteDatabase database) {
+    public SQLTable takeTable() {
         if (mTable == null) {
-            mTable = new OrderTable(database);
+            mTable = new OrderTable(mContext);
         }
         return mTable;
     }

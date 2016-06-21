@@ -48,6 +48,7 @@ public class CartEvent extends Event{
 
     public CartEvent(Cursor cursor) {
         if (cursor != null) {
+            initBaseColumns(cursor);
             mOperation = cursor.getInt(cursor.getColumnIndex(CartReporter.Keys.OPERATION));
             mChannelId = cursor.getInt(cursor.getColumnIndex(CartReporter.Keys.CHANNEL_ID));
             mMerchantId = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.MERCHANT_ID));

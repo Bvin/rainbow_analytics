@@ -4,11 +4,15 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import cn.rainbow.sdk.analytics.data.local.db.buz.CartTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.FavTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.GoodsTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.OrderTable;
-import cn.rainbow.sdk.analytics.data.local.db.buz.THPageTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.THPageTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.AppTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.CrashTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.PageTable;
 
 /**
  * Created by bvin on 2016/5/31.
@@ -18,8 +22,11 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_FILE_NAME = "th_analytics";
     private static final int VERSION = 2;
 
+    private Context mContext;
+
     public DBHelper(Context context) {
         super(context.getApplicationContext(), DB_FILE_NAME, null, VERSION);
+        mContext = context;
     }
 
     @Override
@@ -35,18 +42,20 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    //v1基础通用事件
     private void createTablesByV1(SQLiteDatabase db) {
-        new EventTable(db).create();
-        new AppTable(db).create();
-        new PageTable(db).create();
-        new CrashTable(db).create();
+        new EventTable(mContext).create(db);
+        new AppTable(mContext).create(db);
+        new PageTable(mContext).create(db);
+        new CrashTable(mContext).create(db);
     }
 
+    //v2业务事件
     private void createTablesByV2(SQLiteDatabase db) {
-        new THPageTable(db).create();
-        new GoodsTable(db).create();
-        new FavTable(db).create();
-        new CartTable(db).create();
-        new OrderTable(db).create();
+        new THPageTable(mContext).create(db);
+        new GoodsTable(mContext).create(db);
+        new FavTable(mContext).create(db);
+        new CartTable(mContext).create(db);
+        new OrderTable(mContext).create(db);
     }
 }
