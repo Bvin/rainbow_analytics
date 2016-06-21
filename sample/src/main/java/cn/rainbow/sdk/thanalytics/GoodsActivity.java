@@ -64,6 +64,7 @@ public class GoodsActivity extends BaseActivity {
         List<OrderEvent.Goods> list = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             OrderEvent.Goods goods = new OrderEvent.Goods(i);
+            goods.setGoodsSkuCode("sku-"+i);
             goods.setGoodsName("gn");
             goods.setGoodsId("gi");
             goods.setGoodsCount(""+i);

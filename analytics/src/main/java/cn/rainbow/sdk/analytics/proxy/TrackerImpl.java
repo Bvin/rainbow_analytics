@@ -152,6 +152,7 @@ public class TrackerImpl implements Tracker{
     public void beginLogPage(Context context) {
         if (mPageTracker == null) {
             mPageTracker = new PageTracker(context);
+            mPageTracker.setEnable(false);//关闭常规页面统计
         }
         if (mMarketingPageTracker == null) {
             mMarketingPageTracker = new THPageTracker(context);

@@ -31,6 +31,8 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
     private SimpleDateFormat mDateFormat;
     private long mStartMillis;
 
+    private boolean mEnable = true;//默认开启
+
     public AbsEventTracker(Context context,long eventId, String eventName) {
         mContext = context;
         mEventId = eventId;
@@ -59,6 +61,7 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
      * @throws IllegalStateException 事件统计之前必须保证事件已被创建(@link#takeEvent())，否则会抛出此异常
      */
     public void onEventStart() throws IllegalStateException {
+        if (!mEnable) return;
         if (mEvent == null) {
             mEvent = takeEvent();
         }
@@ -70,7 +73,7 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
     }
 
     public void onEvent(){
-
+        if (!mEnable) return;
     }
 
     /**
@@ -78,6 +81,7 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
      * @throws IllegalStateException 如果调用此方法之前没有调用onEventStart()会抛出此异常
      */
     public void onEventEnd() throws IllegalStateException {
+        if (!mEnable) return;
         if (mEvent == null)
             throw new IllegalStateException("event object may be not created or be recycled!");
 
@@ -128,6 +132,14 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
 
     protected void push(){
         //empty implement
+    }
+
+    /**
+     * 设置是否开启统计.
+     * @param enable 是否开启
+     */
+    public void setEnable(boolean enable) {
+        mEnable = enable;
     }
 
     @Override

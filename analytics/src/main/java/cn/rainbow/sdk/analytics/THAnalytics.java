@@ -35,7 +35,10 @@ public class THAnalytics {
     }
 
     //如果开启Crash跟踪，调用此方法将会开启...
-    public static void onAppStart(Context context) {
+    public static void onAppStart(Context context, Config config) {
+        if (config != null) {
+            setConfig(config);
+        }
         if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.initApp(context, 1208, 0, 0);
         if (mTracker.getCurrentConfig().isEnableCrashTrack()) {
@@ -45,6 +48,10 @@ public class THAnalytics {
         InfoCollectHelper infoCollectHelper = new InfoCollectHelper(context);
         int channelId = infoCollectHelper.getMetaDataIntValue(TH_CHANNEL);
         mTracker.getCurrentConfig().setChannelId(channelId);
+    }
+
+    public static void onAppStart(Context context) {
+        onAppStart(context, null);
     }
 
     public static void onAppExit() {
