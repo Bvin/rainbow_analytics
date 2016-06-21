@@ -124,10 +124,10 @@ public class CartEvent extends Event{
             putValidString(mValues, CartReporter.Keys.GOODS_NAME, mGoodsName);
             putValidString(mValues, CartReporter.Keys.GOODS_IMAGE, mGoodsImage);
             putValidString(mValues, CartReporter.Keys.GOODS_SKU_CODE, mGoodsSkuCode);
-            putValidString(mValues, CartReporter.Keys.GOODS_PRICE, mGoodsId);
-            putValidString(mValues, CartReporter.Keys.GOODS_SELL_PRICE, mGoodsName);
-            putValidString(mValues, CartReporter.Keys.GOODS_COUNT, mGoodsImage);
-            putValidString(mValues, CartReporter.Keys.COUPON_AMOUNT, mGoodsSkuCode);
+            putValidString(mValues, CartReporter.Keys.GOODS_PRICE, mGoodsPrice);
+            putValidString(mValues, CartReporter.Keys.GOODS_SELL_PRICE, mGoodsSellPrice);
+            putValidString(mValues, CartReporter.Keys.GOODS_COUNT, mGoodsCount);
+            putValidString(mValues, CartReporter.Keys.COUPON_AMOUNT, mCouponAmount);
             putValidString(mValues, CartReporter.Keys.USER_ID, mUid);
             putValidString(mValues, CartReporter.Keys.DEVICE_ID, mId);
         }
