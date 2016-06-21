@@ -42,10 +42,11 @@ public class OrderTable extends AbsEventTable<OrderEvent>{
                 OrderReporter.Keys.COUPON_PRICE + " TEXT," +
                 OrderReporter.Keys.FREIGHT_PRICE + " TEXT," +
                 OrderReporter.Keys.GOODS_TOTAL + " TEXT," +
-                OrderReporter.Keys.GOODS_LIST + " TEXT";
+                Columns.GOODS_LIST + " TEXT";
     }
 
     public class Columns{
         public static final String ORDER_NUMBER = "order_number";
+        public static final String GOODS_LIST = "i";
     }
 }

@@ -45,7 +45,6 @@ public class OrderReporter extends AbsEventReporter<OrderEvent>{
         public static final String FREIGHT_PRICE = "fp";
         public static final String GOODS_TOTAL = "pn";
         public static final String OPERATION_TYPE = "opt";
-        public static final String GOODS_LIST = "i";
 
         public static final String GOODS_ID = "gi";
         public static final String GOODS_SKU_CODE = "gs";

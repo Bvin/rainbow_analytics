@@ -75,7 +75,7 @@ public class OrderEvent extends Event{
         mFreightPrice = cursor.getString(cursor.getColumnIndex(OrderReporter.Keys.FREIGHT_PRICE));
         mGoodsCount = cursor.getString(cursor.getColumnIndex(OrderReporter.Keys.GOODS_TOTAL));
         mOperation = cursor.getInt(cursor.getColumnIndex(OrderReporter.Keys.OPERATION_TYPE));
-        String goodsList = cursor.getString(cursor.getColumnIndex(OrderReporter.Keys.GOODS_LIST));
+        String goodsList = cursor.getString(cursor.getColumnIndex(OrderTable.Columns.GOODS_LIST));
         if (!TextUtils.isEmpty(goodsList)) {
             mGoodsList = parseString(goodsList);
         }
@@ -186,6 +186,7 @@ public class OrderEvent extends Event{
         StringBuilder sb = new StringBuilder();
         ContentValues cv = saveValues();
         for (Map.Entry<String, Object> entry : cv.valueSet()) {
+            if (entry.getKey().equals(OrderTable.Columns.GOODS_LIST)) continue;//不用传i，已通过数组分开传了
             if (entry.getKey().equals(OrderTable.Columns.ORDER_NUMBER)) {
                 sb.append(OrderReporter.Keys.ORDER_NUMBER);//由于on是数据库表的保留字段需要转换一下
             } else {
@@ -218,7 +219,7 @@ public class OrderEvent extends Event{
             if (mGoodsList != null) {
                 String goodsList = asString(mGoodsList);//序列化
                 if (!TextUtils.isEmpty(goodsList)) {
-                    putValidString(mValues, OrderReporter.Keys.GOODS_LIST, goodsList);
+                    putValidString(mValues, OrderTable.Columns.GOODS_LIST, goodsList);
                 }
             }
         }
