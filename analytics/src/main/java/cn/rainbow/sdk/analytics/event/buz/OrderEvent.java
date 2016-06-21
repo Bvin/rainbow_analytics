@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cn.rainbow.sdk.analytics.data.local.db.buz.OrderTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 
@@ -234,7 +234,7 @@ public class OrderEvent extends Event{
         if (list != null && !list.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < list.size(); i++) {
-                sb.append(list.get(i).toString());
+                sb.append(list.get(i).toString());//remove last &
                 if (i != list.size() - 1) {
                     sb.append(GOODS_SEPARATOR);
                 }
@@ -268,7 +268,7 @@ public class OrderEvent extends Event{
         private String mGoodsName;
         private String mSkuImage;
 
-        private int mIndex;
+        private int mIndex = -1;//默认-1
 
         public Goods(String urlString) {
             //k1=v1&k2=v2&k3=v3....
@@ -283,9 +283,9 @@ public class OrderEvent extends Event{
                         if (queryArray.length > 1) {
                             String value = queryArray[1];
                             if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
-                                int firstPreSquareBracketsIndex = key.indexOf("[");
+                                int firstPreSquareBracketsIndex = key.indexOf("[") + 1;
                                 int firstSufSquareBracketsIndex = key.indexOf("]");
-                                int lastPreSquareBracketsIndex = key.lastIndexOf("[");
+                                int lastPreSquareBracketsIndex = key.lastIndexOf("[") + 1;
                                 int lastSufSquareBracketsIndex = key.lastIndexOf("]");
                                 //i[1][gi]/i[1][gn]//i[2][gn]
                                 if (mIndex < 0) {//取出index
