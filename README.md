@@ -29,4 +29,9 @@ THAnalytics.setConfig(config);
 <meta-data android:name="TH_CHANNEL"  android:value="2006" />
 ```
 
-
+### PROGUARD
+```xml
+-keep class cn.rainbow.sdk.analytics.** {*;}
+-keep class alexclin.httplite.** {*;}
+-keep class alexclin.httplite.url.** {*;}
+```
