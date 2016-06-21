@@ -1,5 +1,7 @@
 package cn.rainbow.sdk.analytics.data.remote;
 
+import android.text.TextUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -40,6 +42,7 @@ public abstract class AbsEventReporter<T extends Event> implements EventReport<T
      * @return 成功返回URL编码后的内容，否则返元原来内容
      */
     protected String urlEncode(String content){
+        if (TextUtils.isEmpty(content)) return content;
         try {
             content = URLEncoder.encode(content, "utf-8");
         } catch (UnsupportedEncodingException e) {
