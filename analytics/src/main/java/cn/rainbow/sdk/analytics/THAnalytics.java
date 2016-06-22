@@ -47,9 +47,9 @@ public class THAnalytics {
             CrashHandler crashHandler = new CrashHandler(context);
             Thread.setDefaultUncaughtExceptionHandler(crashHandler);
         }
-        /*InfoCollectHelper infoCollectHelper = new InfoCollectHelper(context);
+        InfoCollectHelper infoCollectHelper = new InfoCollectHelper(context);
         int channelId = infoCollectHelper.getMetaDataIntValue(TH_CHANNEL);
-        mTracker.getCurrentConfig().setChannelId(channelId);*/
+        mTracker.getCurrentConfig().setChannelId(channelId);
     }
 
     public static void onAppStart(Context context) {
