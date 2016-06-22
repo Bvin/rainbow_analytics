@@ -16,7 +16,7 @@ public class Config {
     private boolean mEnableDebugLog;
     private boolean mEnableCrashTrack;
     private boolean mIsTestEnv;
-    private int mChannelId;
+    private int mChannelId = 1;//渠道
     private boolean mSaveLocal = true;//默认开启
     private boolean mPushRemote = true;//默认开启
     private boolean mPushOnlyWifi;

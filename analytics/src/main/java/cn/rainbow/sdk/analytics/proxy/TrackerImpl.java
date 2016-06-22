@@ -71,15 +71,23 @@ public class TrackerImpl implements Tracker{
             mAppTracker = new AppTracker(context, appId);
         }
         mAppTracker.onStart();
-        uploadLog(context);//上传以前的统计日志
+        if (getCurrentConfig().getPushStrategy() == Config.PUSH_STRATEGY_BATCH_BOOTSTRAP) {
+            uploadLog(context, 3000);//上传以前的统计日志
+        }
     }
 
-    private void uploadLog(Context context) {
-        uploadApv(context);
-        uploadGpv(context);
-        uploadCartEvents(context);
-        uploadFavEvents(context);
-        uploadOrderEvents(context);
+    private void uploadLog(final Context context, long delayMs) {
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uploadApv(context);
+                uploadGpv(context);
+                uploadCartEvents(context);
+                uploadFavEvents(context);
+                uploadOrderEvents(context);
+            }
+        }, delayMs);
+
     }
 
     private void uploadApv(Context context) {

@@ -72,7 +72,7 @@ public class SQLTable {
 
     //查询
     public Cursor query(String[] columns, String selection, String[] selectionArgs, String orderBy) {
-        return mContext.getContentResolver().query(parseUri(mTableCreator),columns,selection,selectionArgs,orderBy);
+        return mContext.getContentResolver().query(parseUri(mTableCreator), columns, selection, selectionArgs, orderBy);
         //return mDatabase.query(mTableCreator.tableName(), columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
