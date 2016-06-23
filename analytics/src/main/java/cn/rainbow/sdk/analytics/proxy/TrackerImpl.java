@@ -252,6 +252,7 @@ public class TrackerImpl implements Tracker{
     @Override
     public void stopGoodsPage() throws IllegalStateException{
         endPageTrack(mGoodsPagerTracker);
+        mGoodsPagerTracker = null;
     }
 
     @Override
