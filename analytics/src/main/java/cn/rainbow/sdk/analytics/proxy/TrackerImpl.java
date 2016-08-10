@@ -15,6 +15,7 @@ import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.THEventTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.THPageTable;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.event.Event;
@@ -22,6 +23,7 @@ import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
+import cn.rainbow.sdk.analytics.event.buz.THEvent;
 import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.track.AppTracker;
 import cn.rainbow.sdk.analytics.track.CrashTracker;
@@ -33,11 +35,13 @@ import cn.rainbow.sdk.analytics.track.buz.GoodsPagerTracker;
 import cn.rainbow.sdk.analytics.track.buz.THPageTracker;
 import cn.rainbow.sdk.analytics.track.PageTracker;
 import cn.rainbow.sdk.analytics.track.buz.OrderTracker;
+import cn.rainbow.sdk.analytics.track.buz.THTracker;
 import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.CartReporter;
 import cn.rainbow.sdk.analytics.track.report.FavReporter;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 import cn.rainbow.sdk.analytics.track.report.OrderReporter;
+import cn.rainbow.sdk.analytics.track.report.THEventReport;
 
 /**
  * Created by 32967 on 2016/5/27.
@@ -53,7 +57,10 @@ public class TrackerImpl implements Tracker{
     private GoodsPagerTracker mGoodsPagerTracker;
     private CrashTracker mCrashTracker;
     private String mPageName;
+    private String mPreviousPageName;
     private Config mConfig = new Config();//empty setConfig
+
+    private boolean mUploadTraceNumber = true;
 
     @Override
     public void config(Config config) {
@@ -85,6 +92,7 @@ public class TrackerImpl implements Tracker{
                 uploadCartEvents(context);
                 uploadFavEvents(context);
                 uploadOrderEvents(context);
+                uploadTHEvents(context);
             }
         }, delayMs);
 
@@ -135,6 +143,15 @@ public class TrackerImpl implements Tracker{
         }
     }
 
+    private void uploadTHEvents(Context context) {
+        THEventTable table = new THEventTable(context);
+        List<THEvent> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (THEvent event : list) {
+            new THEventReport(event).push(callback(event, table));
+        }
+    }
+
     private Callback<Model> callback(final Event event, final AbsEventTable table) {
         return new Callback<Model>() {
             @Override
@@ -165,7 +182,13 @@ public class TrackerImpl implements Tracker{
         if (mMarketingPageTracker == null) {
             mMarketingPageTracker = new THPageTracker(context);
         }
-        printDebugLog(TAG, "beginLogPage: 上一页->" + mPageName);
+        printDebugLog(TAG, "beginLogPage:当前页->"+context.getClass().getName()+" |上一页->" + mPageName);
+        if (mPreviousPageName!=null) {
+            if (context.getClass().getName().equals(mPreviousPageName)) {
+                printDebugLog(TAG, "返回");
+                mUploadTraceNumber = false;
+            }
+        }
         beginPageTrack(mPageTracker);
         beginPageTrack(mMarketingPageTracker);
     }
@@ -186,12 +209,27 @@ public class TrackerImpl implements Tracker{
         }
     }
 
+    public void updatePageEvent(THPageEvent event){
+        mMarketingPageTracker.update(event);
+    }
+
     @Override
-    public void endLogPage(Context context) {
+    public void endLogPage(Context context, String traceNumber) {
+        mPreviousPageName = mPageName;
         mPageName = context.getClass().getName();
         printDebugLog(TAG,"endLogPage:当前页—> "+mPageName);
         endPageTrack(mPageTracker);
         mPageTracker = null;
+
+        //update trace number
+        if(mUploadTraceNumber) {
+            if (traceNumber != null) {
+                THPageEvent event = (THPageEvent) mMarketingPageTracker.takeEvent();
+                event.setTraceNumber(traceNumber);
+                mMarketingPageTracker.update(event);
+            }
+        }
+        mUploadTraceNumber = true;
         endPageTrack(mMarketingPageTracker);
         mMarketingPageTracker = null;
     }
@@ -268,5 +306,10 @@ public class TrackerImpl implements Tracker{
     @Override
     public void trackOrder(Context context, OrderEvent eventData) {
         new OrderTracker(context).startTrack(eventData);
+    }
+
+    @Override
+    public void trackEvent(Context context, THEvent eventData) {
+        new THTracker(context).startTrack(eventData);
     }
 }

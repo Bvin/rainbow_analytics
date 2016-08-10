@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 
 /**
@@ -42,6 +43,7 @@ public class GoodsViewEvent extends THPageEvent {
             mEndDate = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.LEAVE_TIME));
             mId = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.DEVICE_ID));
             mUid = cursor.getString(cursor.getColumnIndex(GpvReporter.Keys.USER_ID));
+            setTraceNumber(cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.TRACE_NUMBER)));
         }
     }
 
@@ -93,6 +95,7 @@ public class GoodsViewEvent extends THPageEvent {
             putValidString(mValues, GpvReporter.Keys.GOODS_CATEGORY3, mCategory3);
             putValidString(mValues, GpvReporter.Keys.USER_ID, mUid);
             putValidString(mValues, GpvReporter.Keys.DEVICE_ID, mId);
+            putValidString(mValues, ApvReporter.Keys.TRACE_NUMBER, getTraceNumber());
         }
         return mValues;
     }

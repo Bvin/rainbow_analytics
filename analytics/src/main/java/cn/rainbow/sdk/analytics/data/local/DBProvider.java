@@ -18,6 +18,7 @@ import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
+import cn.rainbow.sdk.analytics.data.local.db.table.buz.THEventTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.THPageTable;
 
 /**
@@ -36,6 +37,7 @@ public class DBProvider extends ContentProvider{
     private static final int CODE_EVENT_FAVS = 12;
     private static final int CODE_EVENT_ORDERS = 14;
     private static final int CODE_EVENT_CARTS = 16;
+    private static final int CODE_TH_EVENT = 18;
 
 
     static {
@@ -49,6 +51,7 @@ public class DBProvider extends ContentProvider{
         registerTable(FavTable.TABLE_NAME,CODE_EVENT_FAVS);
         registerTable(CartTable.TABLE_NAME,CODE_EVENT_CARTS);
         registerTable(OrderTable.TABLE_NAME,CODE_EVENT_ORDERS);
+        registerTable(THEventTable.TABLE_NAME,CODE_TH_EVENT);
     }
 
     static void registerTable(String tableName, int code) {
@@ -172,6 +175,9 @@ public class DBProvider extends ContentProvider{
             case CODE_EVENT_ORDERS:
             case CODE_EVENT_ORDERS + 1:
                 return OrderTable.TABLE_NAME;
+            case CODE_TH_EVENT:
+            case CODE_TH_EVENT + 1:
+                return THEventTable.TABLE_NAME;
             default:
                 return null;
         }

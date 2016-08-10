@@ -21,6 +21,7 @@ public class OrderReporter extends AbsEventReporter<OrderEvent>{
     public void report(OrderEvent event, Callback callback) {
         StringBuilder sb = new StringBuilder(ApiConfig.URL_ORDER);
         sb.append("?");
+        sb.append("rt=order&");
         sb.append(event.toString());
         for (OrderEvent.Goods goods : event.getGoodsList()) {
             sb.append(goods.toString());

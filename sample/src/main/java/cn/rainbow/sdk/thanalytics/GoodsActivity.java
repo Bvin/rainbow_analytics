@@ -13,6 +13,7 @@ import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
+import cn.rainbow.sdk.analytics.event.buz.THEvent;
 
 public class GoodsActivity extends BaseActivity {
 
@@ -31,6 +32,7 @@ public class GoodsActivity extends BaseActivity {
         mGoodsViewEventData.setGoodsId("007");
         mGoodsViewEventData.setGoodsName("商品名称");
         mGoodsViewEventData.setGoodsImage("url");
+        mGoodsViewEventData.setTraceNumber("tn");
     }
 
     @Override
@@ -80,5 +82,18 @@ public class GoodsActivity extends BaseActivity {
         favoriteEvent.setGoodsId("65454");
         favoriteEvent.setGoodsImage("agsdhsasfg");
         THAnalytics.trackFavorite(this,favoriteEvent);
+    }
+
+    public void trackEvent(View view){
+        THEvent thEvent = new THEvent(THEvent.EVENT_ID_CLICK);
+        thEvent.setUrl("GoodsActivity");
+        thEvent.setLink("link");
+        thEvent.setTraceNumber("test");
+        THAnalytics.trackEvent(this,thEvent);
+    }
+
+    @Override
+    public String traceNumber() {
+        return "GoodsActivity";
     }
 }

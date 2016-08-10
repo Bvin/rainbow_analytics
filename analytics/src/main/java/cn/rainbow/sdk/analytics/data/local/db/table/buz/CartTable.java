@@ -2,9 +2,12 @@ package cn.rainbow.sdk.analytics.data.local.db.table.buz;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
+import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.CartReporter;
 
 /**
@@ -42,6 +45,13 @@ public class CartTable extends AbsEventTable<CartEvent> {
                 CartReporter.Keys.GOODS_COUNT + " TEXT," +
                 CartReporter.Keys.COUPON_AMOUNT + " TEXT," +
                 CartReporter.Keys.DEVICE_ID + " TEXT," +
-                CartReporter.Keys.USER_ID + " TEXT";
+                CartReporter.Keys.USER_ID + " TEXT," +
+                ApvReporter.Keys.TRACE_NUMBER + " TEXT";
+    }
+
+    @Override
+    public SQLTable alter(SQLiteDatabase db) {
+        db.execSQL(addColumn(ApvReporter.Keys.TRACE_NUMBER, "TEXT"));
+        return this;
     }
 }

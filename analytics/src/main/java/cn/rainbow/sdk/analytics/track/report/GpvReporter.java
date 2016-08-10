@@ -19,7 +19,7 @@ public class GpvReporter extends AbsEventReporter<GoodsViewEvent>{
     @Override
     public void report(GoodsViewEvent event, Callback callback) {
         Api api = mHttpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportGPV(event.getChannelId(),
+        api.reportGPV("gpv",event.getChannelId(),
                 event.getMerchantId(),
                 event.getGoodsId(),
                 urlEncode(event.getGoodsName()),
@@ -31,6 +31,7 @@ public class GpvReporter extends AbsEventReporter<GoodsViewEvent>{
                 event.getCategory3(),
                 event.getId(),
                 event.getUid(),
+                event.getTraceNumber(),
                 new BaseResponseCallback(callback));
     }
 

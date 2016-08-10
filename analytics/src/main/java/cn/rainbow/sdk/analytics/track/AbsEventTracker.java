@@ -1,10 +1,12 @@
 package cn.rainbow.sdk.analytics.track;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import alexclin.httplite.Request;
@@ -155,7 +157,7 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
 
     private String getCurrentDate(){
         if (mDateFormat == null) {
-            mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         }
         return mDateFormat.format(new Date());
     }

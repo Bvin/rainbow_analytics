@@ -12,6 +12,7 @@ import java.util.Map;
 
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
 import cn.rainbow.sdk.analytics.event.Event;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.OrderReporter;
 
 /**
@@ -48,7 +49,7 @@ public class OrderEvent extends Event{
     private String mFreightPrice;
     private String mGoodsCount;
     private List<Goods> mGoodsList;
-
+    private String mTraceNumber;
     private int mOperation;
 
     private ContentValues mValues;
@@ -79,6 +80,7 @@ public class OrderEvent extends Event{
         if (!TextUtils.isEmpty(goodsList)) {
             mGoodsList = parseString(goodsList);
         }
+        mTraceNumber = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.TRACE_NUMBER));
     }
 
     public void setChannelId(int channelId) {
@@ -222,6 +224,7 @@ public class OrderEvent extends Event{
                     putValidString(mValues, OrderTable.Columns.GOODS_LIST, goodsList);
                 }
             }
+            putValidString(mValues, ApvReporter.Keys.TRACE_NUMBER, mTraceNumber);
         }
         return mValues;
     }

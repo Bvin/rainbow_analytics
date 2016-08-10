@@ -29,6 +29,7 @@ public class DefaultEventTracker extends AbsEventTracker {
 
     @Override
     public SQLTable takeTable() {
+
         if (mTable == null) {
             mTable = new EventTable(mContext);
         }

@@ -6,6 +6,8 @@ import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
+import cn.rainbow.sdk.analytics.event.buz.THEvent;
+import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 
 /**
  * Created by bvin on 2016/6/13.
@@ -18,4 +20,6 @@ public interface Business {
     void trackCart(Context context, CartEvent eventData);
     void trackFav(Context context, FavoriteEvent eventData);
     void trackOrder(Context context, OrderEvent eventData);
+    void trackEvent(Context context, THEvent eventData);
+
 }

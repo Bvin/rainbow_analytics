@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import cn.rainbow.sdk.analytics.event.Event;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.CartReporter;
 
 /**
@@ -33,6 +34,7 @@ public class CartEvent extends Event{
 
     private String mId;
     private String mUid;
+    private String mTraceNumber;
 
     private int mOperation;
     
@@ -62,6 +64,7 @@ public class CartEvent extends Event{
             mCouponAmount = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.COUPON_AMOUNT));
             mId = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.DEVICE_ID));
             mUid = cursor.getString(cursor.getColumnIndex(CartReporter.Keys.USER_ID));
+            mTraceNumber = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.TRACE_NUMBER));
         }
     }
 
@@ -113,6 +116,10 @@ public class CartEvent extends Event{
         mUid = uid;
     }
 
+    public void setTraceNumber(String traceNumber) {
+        mTraceNumber = traceNumber;
+    }
+
     @Override
     public ContentValues saveValues() {
         if (mValues == null) {
@@ -130,6 +137,7 @@ public class CartEvent extends Event{
             putValidString(mValues, CartReporter.Keys.COUPON_AMOUNT, mCouponAmount);
             putValidString(mValues, CartReporter.Keys.USER_ID, mUid);
             putValidString(mValues, CartReporter.Keys.DEVICE_ID, mId);
+            putValidString(mValues, ApvReporter.Keys.TRACE_NUMBER, mTraceNumber);
         }
         return mValues;
     }
@@ -184,5 +192,9 @@ public class CartEvent extends Event{
 
     public int getOperation() {
         return mOperation;
+    }
+
+    public String getTraceNumber() {
+        return mTraceNumber;
     }
 }

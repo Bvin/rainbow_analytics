@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 
 import cn.rainbow.sdk.analytics.data.local.DBProvider;
 
@@ -49,6 +50,17 @@ public class SQLTable {
     public SQLTable drop(SQLiteDatabase db){
         db.execSQL(toDropSql(mTableCreator));
         return this;
+    }
+
+    public SQLTable alter(SQLiteDatabase db){
+        String alterString = toAlterSql();
+        if (!TextUtils.isEmpty(alterString))
+            db.execSQL(alterString);
+        return this;
+    }
+
+    protected String toAlterSql() {
+        return null;
     }
 
     //保存(插入)
@@ -102,6 +114,16 @@ public class SQLTable {
     //表删除语句
     private String toDropSql(TableCreator tableCreator) {
         return "DROP TABLE IF EXISTS " + tableCreator.tableName();
+    }
+
+    /**
+     * 该表加字段
+     * @param column 列名
+     * @param dataType 列数据类型
+     * @return
+     */
+    public String addColumn(String column, String dataType) {
+        return "ALTER TABLE " + mTableCreator.tableName() + " ADD COLUMN " + column + " " + dataType;
     }
 
     //表名解析到uri

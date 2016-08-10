@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import cn.rainbow.sdk.analytics.Config;
 import cn.rainbow.sdk.analytics.THAnalytics;
 
 /**
@@ -26,6 +25,11 @@ public class BaseActivity extends AppCompatActivity{
     @Override
     protected void onPause() {
         super.onPause();
-        THAnalytics.onPause(this);
+        //当
+        THAnalytics.onPause(this, traceNumber());
+    }
+
+    public String traceNumber(){
+        return null;
     }
 }

@@ -2,9 +2,12 @@ package cn.rainbow.sdk.analytics.data.local.db.table.buz;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
+import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 
 /**
@@ -41,7 +44,14 @@ public class GoodsTable extends AbsEventTable<GoodsViewEvent>{
                 GpvReporter.Keys.GOODS_CATEGORY2 + " TEXT," +
                 GpvReporter.Keys.GOODS_CATEGORY3 + " TEXT," +
                 GpvReporter.Keys.DEVICE_ID + " TEXT," +
-                GpvReporter.Keys.USER_ID + " TEXT";
+                GpvReporter.Keys.USER_ID + " TEXT," +
+                ApvReporter.Keys.TRACE_NUMBER + " TEXT";
+    }
+
+    @Override
+    public SQLTable alter(SQLiteDatabase db) {
+        db.execSQL(addColumn(ApvReporter.Keys.TRACE_NUMBER, "TEXT"));
+        return this;
     }
 
     public class Columns{

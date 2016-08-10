@@ -1,13 +1,13 @@
 package cn.rainbow.sdk.analytics;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
+import cn.rainbow.sdk.analytics.event.buz.THEvent;
+import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.proxy.Tracker;
 import cn.rainbow.sdk.analytics.proxy.TrackerImpl;
 import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
@@ -42,7 +42,7 @@ public class THAnalytics {
             setConfig(config);
         }
         if (!mTracker.getCurrentConfig().isEnable()) return;
-        //mTracker.initApp(context, 1208, 0, 0);
+        mTracker.initApp(context, 1208, 0, 0);
         if (mTracker.getCurrentConfig().isEnableCrashTrack()) {
             CrashHandler crashHandler = new CrashHandler(context);
             Thread.setDefaultUncaughtExceptionHandler(crashHandler);
@@ -66,9 +66,9 @@ public class THAnalytics {
         mTracker.beginLogPage(context);
     }
 
-    public static void onPause(Context context) {
+    public static void onPause(Context context, String traceNumber) {
         if (!mTracker.getCurrentConfig().isEnable()) return;
-        mTracker.endLogPage(context);
+        mTracker.endLogPage(context, traceNumber);
     }
 
     public static void reportCrash(Context context, String log) {
@@ -124,5 +124,15 @@ public class THAnalytics {
     public static void trackOrder(Context context, OrderEvent event){
         if (!mTracker.getCurrentConfig().isEnable()) return;
         mTracker.trackOrder(context,event);
+    }
+
+    /**
+     * 统计通用事件.
+     * @param context 上下文
+     * @param event 事件
+     */
+    public static void trackEvent(Context context, THEvent event) {
+        if (!mTracker.getCurrentConfig().isEnable()) return;
+        mTracker.trackEvent(context, event);
     }
 }

@@ -19,7 +19,7 @@ public class CartReporter extends AbsEventReporter<CartEvent>{
     @Override
     public void report(CartEvent event, Callback callback) {
         Api api = mHttpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportCart(event.getChannelId(),
+        api.reportCart("cart",event.getChannelId(),
                 event.getMerchantId(),
                 event.getGoodsId(),
                 event.getGoodsSkuCode(),
@@ -32,6 +32,7 @@ public class CartReporter extends AbsEventReporter<CartEvent>{
                 event.getId(),
                 event.getUid(),
                 event.getOperation(),
+                event.getTraceNumber(),
                 new BaseResponseCallback(callback));
     }
 

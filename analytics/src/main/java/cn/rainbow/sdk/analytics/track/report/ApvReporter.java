@@ -20,7 +20,7 @@ public class ApvReporter extends AbsEventReporter<THPageEvent> {
     public void report(THPageEvent event, Callback callback) {
         Api api = mHttpLite.retrofit(Api.class, new PreRequestListener());
         String pageName = urlEncode(event.getUrl());
-        api.reportAPV(event.getChannelId(),
+        api.reportAPV("apv",event.getChannelId(),
                 event.getMerchantId(),
                 pageName,
                 event.getAppVersion(),
@@ -30,6 +30,7 @@ public class ApvReporter extends AbsEventReporter<THPageEvent> {
                 event.getSystem(),
                 event.getSystemVersion(),
                 event.getDeviceId(),
+                event.getTraceNumber(),
                 new BaseResponseCallback(callback));
     }
 
@@ -44,5 +45,6 @@ public class ApvReporter extends AbsEventReporter<THPageEvent> {
         public static final String OS = "o";
         public static final String OS_VERSION = "ov";
         public static final String DEVICE_ID = "id";
+        public static final String TRACE_NUMBER = "tn";
     }
 }

@@ -20,6 +20,7 @@ public class THPageEvent extends PageEvent {
     private String mDeviceId;
     private String mSystem;
     private String mSystemVersion;
+    private String mTraceNumber;
     private ContentValues mValues;
 
     public THPageEvent() {
@@ -38,6 +39,7 @@ public class THPageEvent extends PageEvent {
             mSystemVersion = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.OS_VERSION));
             mStartDate = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.ENTER_TIME));
             mEndDate = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.LEAVE_TIME));
+            mTraceNumber = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.TRACE_NUMBER));
         }
     }
 
@@ -73,6 +75,14 @@ public class THPageEvent extends PageEvent {
         mSystemVersion = systemVersion;
     }
 
+    public void setTraceNumber(String traceNumber) {
+        mTraceNumber = traceNumber;
+    }
+
+    public String getTraceNumber() {
+        return mTraceNumber;
+    }
+
     @Override
     public ContentValues saveValues() {
         if (mValues == null) {
@@ -87,6 +97,7 @@ public class THPageEvent extends PageEvent {
             putValidString(mValues, ApvReporter.Keys.OS, mSystem);
             putValidString(mValues, ApvReporter.Keys.OS_VERSION, mSystemVersion);
             putValidString(mValues, ApvReporter.Keys.DEVICE_ID, mDeviceId);
+            putValidString(mValues, ApvReporter.Keys.TRACE_NUMBER, mTraceNumber);
         }
         return mValues;
     }

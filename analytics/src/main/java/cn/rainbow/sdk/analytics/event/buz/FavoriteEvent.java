@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import cn.rainbow.sdk.analytics.event.Event;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.FavReporter;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 
@@ -28,6 +29,7 @@ public class FavoriteEvent extends Event{
 
     private String mId;
     private String mUid;
+    private String mTraceNumber;
 
     private int mOperation;
     private ContentValues mValues;
@@ -44,6 +46,7 @@ public class FavoriteEvent extends Event{
             mGoodsSkuCode = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.GOODS_SKU_CODE));
             mId = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.DEVICE_ID));
             mUid = cursor.getString(cursor.getColumnIndex(FavReporter.Keys.USER_ID));
+            mTraceNumber = cursor.getString(cursor.getColumnIndex(ApvReporter.Keys.TRACE_NUMBER));
         }
     }
 
@@ -87,6 +90,10 @@ public class FavoriteEvent extends Event{
         mUid = uid;
     }
 
+    public void setTraceNumber(String traceNumber) {
+        mTraceNumber = traceNumber;
+    }
+
     @Override
     public ContentValues saveValues() {
         if (mValues == null) {
@@ -100,6 +107,7 @@ public class FavoriteEvent extends Event{
             putValidString(mValues, FavReporter.Keys.GOODS_SKU_CODE, mGoodsSkuCode);
             putValidString(mValues, FavReporter.Keys.USER_ID, mUid);
             putValidString(mValues, FavReporter.Keys.DEVICE_ID, mId);
+            putValidString(mValues, ApvReporter.Keys.TRACE_NUMBER, mTraceNumber);
         }
         return mValues;
     }
@@ -138,5 +146,9 @@ public class FavoriteEvent extends Event{
 
     public int getOperation() {
         return mOperation;
+    }
+
+    public String getTraceNumber() {
+        return mTraceNumber;
     }
 }

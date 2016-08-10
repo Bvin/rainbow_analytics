@@ -64,6 +64,10 @@ public class THPageTracker extends PageTracker{
         mEvent.setDeviceId(new InfoCollectHelper(mContext).getDeviceUUID());
     }
 
+    public void update(THPageEvent event){
+        mEvent = event;
+    }
+
     private PackageInfo getPackageInfo() {
         try {
             PackageInfo pi = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);

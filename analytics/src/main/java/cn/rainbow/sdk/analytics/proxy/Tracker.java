@@ -32,8 +32,9 @@ public interface Tracker extends Business{
     /**
      * @brief 结束页面统计。
      * @param context  页面名称。
+     * @param traceNumber 跟踪编号
      */
-    void endLogPage(Context context);
+    void endLogPage(Context context, String traceNumber);
 
     /**
      * @brief 统计事件。

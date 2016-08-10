@@ -18,7 +18,7 @@ public class App extends Application{
         config.enableDebugLog(true);//打开log
         config.enableCrashTrack(true);//开启崩溃收集
         config.setTestEnv(true);
-        config.setPushStrategy(Config.PUSH_STRATEGY_REAL_TIME);
+        config.setPushStrategy(Config.PUSH_STRATEGY_BATCH_BOOTSTRAP);
         config.setPushRemote(true);
         THAnalytics.onAppStart(this, config);
     }

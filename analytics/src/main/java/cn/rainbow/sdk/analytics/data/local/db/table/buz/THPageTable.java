@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
+import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.local.db.TableCreator;
 import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 import cn.rainbow.sdk.analytics.track.report.ApvReporter;
@@ -36,7 +37,14 @@ public class THPageTable extends AbsEventTable<THPageEvent>{
                 ApvReporter.Keys.MOBILE + " TEXT," +
                 ApvReporter.Keys.OS + " TEXT," +
                 ApvReporter.Keys.OS_VERSION + " TEXT," +
-                ApvReporter.Keys.DEVICE_ID + " TEXT";
+                ApvReporter.Keys.DEVICE_ID + " TEXT," +
+                ApvReporter.Keys.TRACE_NUMBER + " TEXT";
+    }
+
+    @Override
+    public SQLTable alter(SQLiteDatabase db) {
+        db.execSQL(addColumn(ApvReporter.Keys.TRACE_NUMBER, "TEXT"));
+        return this;
     }
 
     @Override

@@ -8,7 +8,7 @@ import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.FavReporter;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
-import cn.rainbow.sdk.analytics.track.report.OrderReporter;
+import cn.rainbow.sdk.analytics.track.report.THEventReport;
 
 /**
  * Created by bvin on 2016/6/14.
@@ -33,7 +33,8 @@ public interface Api {
      */
 
     @GET(ApiConfig.URL_APP_PV)
-    void reportAPV(@Param(ApvReporter.Keys.CHANNEL_ID) int channel,
+    void reportAPV(@Param("rt") String reportType,
+                   @Param(ApvReporter.Keys.CHANNEL_ID) int channel,
                    @Param(ApvReporter.Keys.MERCHANT_ID) String merchant,
                    @Param(ApvReporter.Keys.PAGE) String url,
                    @Param(ApvReporter.Keys.APP_VERSION) String version,
@@ -43,11 +44,13 @@ public interface Api {
                    @Param(ApvReporter.Keys.OS) String os,
                    @Param(ApvReporter.Keys.OS_VERSION) String osVersion,
                    @Param(ApvReporter.Keys.DEVICE_ID) String id,
+                   @Param(ApvReporter.Keys.TRACE_NUMBER) String tn,
                    Callback<Model> callback);
 
 
     @GET(ApiConfig.URL_GOODS_PV)
-    void reportGPV(@Param(GpvReporter.Keys.CHANNEL_ID) int channel,
+    void reportGPV(@Param("rt") String reportType,
+                   @Param(GpvReporter.Keys.CHANNEL_ID) int channel,
                    @Param(GpvReporter.Keys.MERCHANT_ID) String merchant,
                    @Param(GpvReporter.Keys.GOODS_ID) String goodsId,
                    @Param(GpvReporter.Keys.GOODS_NAME) String goodsName,
@@ -59,10 +62,12 @@ public interface Api {
                    @Param(GpvReporter.Keys.GOODS_CATEGORY3) String goodsCategory3,
                    @Param(GpvReporter.Keys.DEVICE_ID) String id,
                    @Param(GpvReporter.Keys.USER_ID) String uid,
+                   @Param(ApvReporter.Keys.TRACE_NUMBER) String tn,
                    Callback<Model> callback);
 
     @GET(ApiConfig.URL_CART)
-    void reportCart(@Param("c") int channel,
+    void reportCart(@Param("rt") String reportType,
+                    @Param("c") int channel,
                     @Param("mid") String merchant,
                     @Param("gid") String goodsId,
                     @Param("gsku") String goodsSkuCode,
@@ -75,10 +80,12 @@ public interface Api {
                     @Param("id") String id,
                     @Param("uid") String uid,
                     @Param("op") int op,
+                    @Param(ApvReporter.Keys.TRACE_NUMBER) String tn,
                     Callback<Model> callback);
 
     @GET(ApiConfig.URL_FAV)
-    void reportFav(@Param(FavReporter.Keys.CHANNEL_ID) int channel,
+    void reportFav(@Param("rt") String reportType,
+                   @Param(FavReporter.Keys.CHANNEL_ID) int channel,
                    @Param(FavReporter.Keys.MERCHANT_ID) String merchant,
                    @Param(FavReporter.Keys.GOODS_ID) String goodsId,
                    @Param(FavReporter.Keys.GOODS_SKU_CODE) String goodsSkuCode,
@@ -87,6 +94,19 @@ public interface Api {
                    @Param(FavReporter.Keys.DEVICE_ID) String id,
                    @Param(FavReporter.Keys.USER_ID) String uid,
                    @Param(FavReporter.Keys.OPERATION) int op,
+                   @Param(ApvReporter.Keys.TRACE_NUMBER) String tn,
                    Callback<Model> callback);
+
+   @GET(ApiConfig.URL_EVENT)
+   void reportEvent(@Param("rt") String reportType,
+                    @Param(THEventReport.Keys.CHANNEL_ID) int channel,
+                    @Param(THEventReport.Keys.MERCHANT_ID) String merchant,
+                    @Param(THEventReport.Keys.EVENT_ID) String eventId,
+                    @Param(THEventReport.Keys.PAGE) String url,
+                    @Param(THEventReport.Keys.LINK) String link,
+                    @Param(THEventReport.Keys.DEVICE_ID) String id,
+                    @Param(THEventReport.Keys.USER_ID) String uid,
+                    @Param(THEventReport.Keys.TRACE_NUMBER) String tn,
+                    Callback<Model> callback);
 
 }

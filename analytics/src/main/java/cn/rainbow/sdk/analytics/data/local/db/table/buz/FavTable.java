@@ -5,8 +5,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
+import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.local.db.TableCreator;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.FavReporter;
 
 /**
@@ -40,6 +42,13 @@ public class FavTable extends AbsEventTable<FavoriteEvent>{
                 FavReporter.Keys.GOODS_IMAGE + " TEXT," +
                 FavReporter.Keys.GOODS_SKU_CODE + " TEXT," +
                 FavReporter.Keys.DEVICE_ID + " TEXT," +
-                FavReporter.Keys.USER_ID + " TEXT";
+                FavReporter.Keys.USER_ID + " TEXT," +
+                ApvReporter.Keys.TRACE_NUMBER + " TEXT";
+    }
+
+    @Override
+    public SQLTable alter(SQLiteDatabase db) {
+        db.execSQL(addColumn(ApvReporter.Keys.TRACE_NUMBER, "TEXT"));
+        return this;
     }
 }

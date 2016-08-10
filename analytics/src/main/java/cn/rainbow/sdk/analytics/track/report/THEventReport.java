@@ -5,42 +5,40 @@ import cn.rainbow.sdk.analytics.data.remote.AbsEventReporter;
 import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
 import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
 import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
-import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
+import cn.rainbow.sdk.analytics.event.buz.THEvent;
 
 /**
- * Created by bvin on 2016/6/16.
+ * Created by bvin on 2016/8/10.
  */
-public class FavReporter extends AbsEventReporter<FavoriteEvent>{
-
-    public FavReporter(FavoriteEvent event) {
+public class THEventReport extends AbsEventReporter<THEvent>{
+    public THEventReport(THEvent event) {
         super(event);
     }
 
     @Override
-    public void report(FavoriteEvent event, Callback callback) {
+    public void report(THEvent event, Callback callback) {
         Api api = mHttpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportFav("follow_goods",event.getChannelId(),
+        String pageName = urlEncode(event.getUrl());
+        String link = urlEncode(event.getLink());
+        api.reportEvent("events",
+                event.getChannelId(),
                 event.getMerchantId(),
-                event.getGoodsId(),
-                event.getGoodsSkuCode(),
-                urlEncode(event.getGoodsName()),
-                urlEncode(event.getGoodsImage()),
+                event.getEventId()+"",
+                pageName,
+                link,
                 event.getId(),
                 event.getUid(),
-                event.getOperation(),
                 event.getTraceNumber(),
                 new BaseResponseCallback(callback));
     }
-
-    public class Keys{
+    public class Keys {
         public static final String CHANNEL_ID = "c";
         public static final String MERCHANT_ID = "mid";
-        public static final String GOODS_ID = "gid";
-        public static final String GOODS_SKU_CODE = "gsku";
-        public static final String GOODS_NAME = "gn";
-        public static final String GOODS_IMAGE = "gi";
+        public static final String EVENT_ID = "e";
+        public static final String PAGE = "u";
+        public static final String LINK = "l";
+        public static final String TRACE_NUMBER = "tn";
         public static final String DEVICE_ID = "id";
         public static final String USER_ID = "uid";
-        public static final String OPERATION = "op";
     }
 }

@@ -28,4 +28,9 @@ public class NewActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    public String traceNumber() {
+        return "NewActivity";
+    }
 }
