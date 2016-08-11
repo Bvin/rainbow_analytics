@@ -107,6 +107,7 @@ public interface Api {
                     @Param(THEventReport.Keys.DEVICE_ID) String id,
                     @Param(THEventReport.Keys.USER_ID) String uid,
                     @Param(THEventReport.Keys.TRACE_NUMBER) String tn,
+                    @Param(THEventReport.Keys.ELEMENT_TRACE_NUMBER) String etn,
                     Callback<Model> callback);
 
 }

@@ -4,6 +4,8 @@ android {
     compileSdkVersion 23
     buildToolsVersion "19.1.0"
 
+    publishNonDefault true
+
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 23
@@ -15,6 +17,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    productFlavors{
+        th{}
+        demo{}
     }
 }
 

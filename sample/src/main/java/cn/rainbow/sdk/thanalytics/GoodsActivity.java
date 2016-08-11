@@ -89,6 +89,7 @@ public class GoodsActivity extends BaseActivity {
         thEvent.setUrl("GoodsActivity");
         thEvent.setLink("link");
         thEvent.setTraceNumber("test");
+        thEvent.setElementTraceNumber("etn");
         THAnalytics.trackEvent(this,thEvent);
     }
 

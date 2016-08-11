@@ -17,11 +17,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors{
+        th{}
+        demo{}
+    }
+}
+
+configurations {
+    thDebugCompile
+    demoDebugCompile
+    thReleaseCompile
+    demoReleaseCompile
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.0'
-    compile project(':analytics')
+    thDebugCompile project(path: ':analytics', configuration: 'thDebug')
+    demoDebugCompile project(path: ':analytics', configuration: 'demoDebug')
+    thReleaseCompile project(path: ':analytics', configuration: 'thRelease')
+    demoReleaseCompile project(path: ':analytics', configuration: 'demoRelease')
 }

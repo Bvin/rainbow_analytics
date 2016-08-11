@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
+import cn.rainbow.sdk.analytics.Authority;
 import cn.rainbow.sdk.analytics.data.local.db.table.AppTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.CrashTable;
 import cn.rainbow.sdk.analytics.data.local.db.DBHelper;
@@ -27,7 +28,7 @@ import cn.rainbow.sdk.analytics.data.local.db.table.buz.THPageTable;
 public class DBProvider extends ContentProvider{
 
     private static  final UriMatcher sUriMatcher;
-    public static final String AUTHORITY = "cn.rainbow.analytics.provider";
+    public static final String AUTHORITY = Authority.AUTHORITY;
     private static final int CODE_EVENT_TABLE = 0;
     private static final int CODE_EVENT_APP = 2;
     private static final int CODE_EVENT_PAGE = 4;

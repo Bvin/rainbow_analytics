@@ -24,6 +24,10 @@
         <activity android:name=".GoodsActivity">
         </activity>
         <meta-data android:name="TH_CHANNEL"  android:value="2006" />
+
+        <provider
+            android:authorities="cn.rainbow.analytics.provider.demo"
+            android:name="cn.rainbow.sdk.analytics.data.local.DBProvider"/>
     </application>
 
 </manifest>

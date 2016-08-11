@@ -29,6 +29,7 @@ public class THEventReport extends AbsEventReporter<THEvent>{
                 event.getId(),
                 event.getUid(),
                 event.getTraceNumber(),
+                event.getElementTraceNumber(),
                 new BaseResponseCallback(callback));
     }
     public class Keys {
@@ -40,5 +41,6 @@ public class THEventReport extends AbsEventReporter<THEvent>{
         public static final String TRACE_NUMBER = "tn";
         public static final String DEVICE_ID = "id";
         public static final String USER_ID = "uid";
+        public static final String ELEMENT_TRACE_NUMBER = "etn";
     }
 }

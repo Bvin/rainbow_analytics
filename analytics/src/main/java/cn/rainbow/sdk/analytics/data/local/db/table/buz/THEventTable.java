@@ -2,9 +2,12 @@ package cn.rainbow.sdk.analytics.data.local.db.table.buz;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
+import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.event.buz.THEvent;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.THEventReport;
 
 /**
@@ -37,6 +40,13 @@ public class THEventTable extends AbsEventTable<THEvent>{
                 THEventReport.Keys.LINK + " TEXT," +
                 THEventReport.Keys.USER_ID + " TEXT," +
                 THEventReport.Keys.DEVICE_ID + " TEXT," +
-                THEventReport.Keys.TRACE_NUMBER + " TEXT";
+                THEventReport.Keys.TRACE_NUMBER + " TEXT," +
+                THEventReport.Keys.ELEMENT_TRACE_NUMBER + " TEXT";
+    }
+
+    @Override
+    public SQLTable alter(SQLiteDatabase db) {
+        db.execSQL(addColumn(THEventReport.Keys.ELEMENT_TRACE_NUMBER, "TEXT"));
+        return this;
     }
 }

@@ -1,8 +1,10 @@
 package cn.rainbow.sdk.analytics.event.buz;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import cn.rainbow.sdk.analytics.event.Event;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.THEventReport;
 
 /**
@@ -19,9 +21,12 @@ public class THEvent extends Event{
 
     private String mLink;
     private String mTraceNumber;
+    private String mElementTraceNumber;
 
     private String mId;
     private String mUid;
+
+    private ContentValues mValues;
 
     public THEvent(long eventId) {
         super(eventId);
@@ -39,6 +44,7 @@ public class THEvent extends Event{
             mId = cursor.getString(cursor.getColumnIndex(THEventReport.Keys.DEVICE_ID));
             mUid = cursor.getString(cursor.getColumnIndex(THEventReport.Keys.USER_ID));
             mTraceNumber = cursor.getString(cursor.getColumnIndex(THEventReport.Keys.TRACE_NUMBER));
+            mElementTraceNumber = cursor.getString(cursor.getColumnIndex(THEventReport.Keys.ELEMENT_TRACE_NUMBER));
         }
     }
 
@@ -98,4 +104,28 @@ public class THEvent extends Event{
         mUid = uid;
     }
 
+    public String getElementTraceNumber() {
+        return mElementTraceNumber;
+    }
+
+    public void setElementTraceNumber(String elementTraceNumber) {
+        mElementTraceNumber = elementTraceNumber;
+    }
+
+    @Override
+    public ContentValues saveValues() {
+        if (mValues == null) {
+            mValues = new ContentValues();
+            putValidInt(mValues, THEventReport.Keys.CHANNEL_ID, mChannelId);
+            putValidString(mValues, THEventReport.Keys.MERCHANT_ID, mMerchantId);
+            putValidString(mValues, THEventReport.Keys.EVENT_ID, getEventId()+"");
+            putValidString(mValues, THEventReport.Keys.PAGE, mUrl);
+            putValidString(mValues, THEventReport.Keys.LINK, mLink);
+            putValidString(mValues, THEventReport.Keys.DEVICE_ID, mId);
+            putValidString(mValues, THEventReport.Keys.USER_ID, mUid);
+            putValidString(mValues, THEventReport.Keys.TRACE_NUMBER, mTraceNumber);
+            putValidString(mValues, THEventReport.Keys.ELEMENT_TRACE_NUMBER, mElementTraceNumber);
+        }
+        return mValues;
+    }
 }

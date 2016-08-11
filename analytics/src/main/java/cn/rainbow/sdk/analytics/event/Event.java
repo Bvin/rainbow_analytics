@@ -43,15 +43,39 @@ public class Event implements TableSave{
     public Event(Cursor cursor){
         if (cursor != null) {
             initBaseColumns(cursor);
-            mEventId = cursor.getLong(cursor.getColumnIndex(EventTable.Columns.EVENT_ID));
-            mEventName = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_NAME));
-            mEventDesc = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_DESC));
-            mEventType = cursor.getInt(cursor.getColumnIndex(EventTable.Columns.EVENT_TYPE));
-            mStartDate = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_START_DATE));
-            mEndDate = cursor.getString(cursor.getColumnIndex(EventTable.Columns.EVENT_END_DATE));
-            mDuration = cursor.getLong(cursor.getColumnIndex(EventTable.Columns.EVENT_DURATION));
+
+            int columnIndex = getColumnIndex(cursor, EventTable.Columns.EVENT_ID);
+            if (isColumnExist(columnIndex)) mEventId = cursor.getLong(columnIndex);
+
+            columnIndex = getColumnIndex(cursor, EventTable.Columns.EVENT_NAME);
+            if (isColumnExist(columnIndex)) mEventName = cursor.getString(columnIndex);
+
+            columnIndex = getColumnIndex(cursor, EventTable.Columns.EVENT_DESC);
+            if (isColumnExist(columnIndex)) mEventDesc = cursor.getString(columnIndex);
+
+            columnIndex = getColumnIndex(cursor, EventTable.Columns.EVENT_TYPE);
+            if (isColumnExist(columnIndex)) mEventType = cursor.getInt(columnIndex);
+
+            columnIndex = getColumnIndex(cursor, EventTable.Columns.EVENT_START_DATE);
+            if (isColumnExist(columnIndex)) mStartDate = cursor.getString(columnIndex);
+
+            columnIndex = getColumnIndex(cursor, EventTable.Columns.EVENT_END_DATE);
+            if (isColumnExist(columnIndex)) mEndDate = cursor.getString(columnIndex);
+
+            columnIndex = getColumnIndex(cursor, EventTable.Columns.EVENT_DURATION);
+            if (isColumnExist(columnIndex)) mDuration = cursor.getLong(columnIndex);
+
         }
     }
+
+    private boolean isColumnExist(int columnIndex) {
+        return columnIndex > -1;
+    }
+
+    private int getColumnIndex(Cursor cursor, String columnName) {
+        return cursor.getColumnIndex(columnName);
+    }
+
 
     protected void initBaseColumns(Cursor cursor){
         mBaseIndex = cursor.getInt(cursor.getColumnIndex(SQLTable._ID));
