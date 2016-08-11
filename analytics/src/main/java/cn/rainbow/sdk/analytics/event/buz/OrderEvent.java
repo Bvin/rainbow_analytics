@@ -183,6 +183,10 @@ public class OrderEvent extends Event{
         return mOperation;
     }
 
+    public void setTraceNumber(String traceNumber) {
+        mTraceNumber = traceNumber;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
