@@ -1,5 +1,8 @@
 package cn.rainbow.sdk.analytics.proxy;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +14,7 @@ import java.util.Map;
 import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
+import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
@@ -41,15 +45,15 @@ import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.CartReporter;
 import cn.rainbow.sdk.analytics.track.report.FavReporter;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
+import cn.rainbow.sdk.analytics.track.report.LocalReporter;
 import cn.rainbow.sdk.analytics.track.report.OrderReporter;
+import cn.rainbow.sdk.analytics.track.report.ReportService;
 import cn.rainbow.sdk.analytics.track.report.THEventReport;
 
 /**
  * Created by 32967 on 2016/5/27.
  */
 public class TrackerImpl implements Tracker{
-
-    private static final String TAG = "TrackerImpl";
 
     private AbsEventTracker mEventTracker;
     private AppTracker mAppTracker;
@@ -79,10 +83,31 @@ public class TrackerImpl implements Tracker{
             mAppTracker = new AppTracker(context, appId);
         }
         mAppTracker.onStart();
+        long delayMs = 1000 * 7;
         //PUSH_STRATEGY_BATCH_BOOTSTRAP需不需要判断是否PushRemoteEnable?
         //PushRemoteEnable只在实时传有效，还是所有策略都全控制
         if (/*getCurrentConfig().isPushRemoteEnable() && */getCurrentConfig().getPushStrategy() == Config.PUSH_STRATEGY_BATCH_BOOTSTRAP) {
-            uploadLog(context, 3000);//上传以前的统计日志
+            if (getCurrentConfig().isUseJobSchedu() && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                //5.0以上闲时上传
+                JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+                ComponentName componentName = new ComponentName(context, ReportService.class.getName());
+                JobInfo.Builder jobBuilder = new JobInfo.Builder(1, componentName);
+                //jobBuilder.setRequiresDeviceIdle(true);//设备空闲的时候
+                if (getCurrentConfig().isPushOnlyWifi()) {
+                    jobBuilder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED);//非移动网络
+                }
+                //jobBuilder.setPeriodic(3000);
+                jobBuilder.setMinimumLatency(delayMs);
+                Log.d(THAnalytics.TAG, "report local event use JobScheduler" );
+                int resultCode = jobScheduler.schedule(jobBuilder.build());
+                if (resultCode < 0) {
+                    Log.d(THAnalytics.TAG, "report local event fail schedule code :" + resultCode);
+                }
+            } else {
+                //延时7s上传
+                Log.d(THAnalytics.TAG, "report local event use Handler" );
+                uploadLog(context, delayMs);
+            }
         }
     }
 
@@ -90,119 +115,10 @@ public class TrackerImpl implements Tracker{
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                List<AbsEventTable> list = new ArrayList<>();
-                list.add(new THPageTable(context));
-                list.add(new GoodsTable(context));
-                list.add(new CartTable(context));
-                list.add(new FavTable(context));
-                list.add(new OrderTable(context));
-                list.add(new THEventTable(context));
-                reportEvents(list);
+                new LocalReporter(context).report();
             }
         }, delayMs);
 
-    }
-
-    private void uploadApv(Context context) {
-        THPageTable table = new THPageTable(context);
-        List<THPageEvent> list = table.query();
-        if (list == null || list.isEmpty()) return;
-        for (THPageEvent event : list) {
-            new ApvReporter(event).push(callback(event, table));
-        }
-    }
-
-    private void uploadGpv(Context context) {
-        GoodsTable table = new GoodsTable(context);
-        List<GoodsViewEvent> list = table.query();
-        if (list == null || list.isEmpty()) return;
-        for (GoodsViewEvent event : list) {
-            new GpvReporter(event).push(callback(event, table));
-        }
-    }
-
-    private void uploadCartEvents(Context context) {
-        CartTable table = new CartTable(context);
-        List<CartEvent> list = table.query();
-        if (list == null || list.isEmpty()) return;
-        for (CartEvent event : list) {
-            new CartReporter(event).push(callback(event, table));
-        }
-    }
-
-    private void uploadFavEvents(Context context) {
-        FavTable table = new FavTable(context);
-        List<FavoriteEvent> list = table.query();
-        if (list == null || list.isEmpty()) return;
-        for (FavoriteEvent event : list) {
-            new FavReporter(event).push(callback(event, table));
-        }
-    }
-
-    private void uploadOrderEvents(Context context) {
-        OrderTable table = new OrderTable(context);
-        List<OrderEvent> list = table.query();
-        if (list == null || list.isEmpty()) return;
-        for (OrderEvent event : list) {
-            new OrderReporter(event).push(callback(event, table));
-        }
-    }
-
-    private void uploadTHEvents(Context context) {
-        THEventTable table = new THEventTable(context);
-        List<THEvent> list = table.query();
-        if (list == null || list.isEmpty()) return;
-        for (THEvent event : list) {
-            new THEventReport(event).push(callback(event, table));
-        }
-    }
-
-    private void reportEvents(List<AbsEventTable> tables) {
-        for (AbsEventTable table : tables) {
-            reportTable(table);
-        }
-    }
-
-    private void reportTable(AbsEventTable table) {
-        List<Event> list = table.query();
-        if (list == null || list.isEmpty()) return;
-        for (Event event : list) {
-            reportEvents(table, event);
-        }
-    }
-
-    private void reportEvents(AbsEventTable table, Event event) {
-        if (event instanceof THPageEvent){
-            if (event instanceof GoodsViewEvent){
-                new GpvReporter((GoodsViewEvent) event).push(callback(event, table));
-            }else {
-                new ApvReporter((THPageEvent) event).push(callback(event, table));
-            }
-        }else if (event instanceof CartEvent){
-            new CartReporter((CartEvent) event).push(callback(event, table));
-        }else if (event instanceof FavoriteEvent){
-            new FavReporter((FavoriteEvent) event).push(callback(event, table));
-        }else if (event instanceof OrderEvent){
-            new OrderReporter((OrderEvent) event).push(callback(event, table));
-        }else if (event instanceof THEvent){
-            new THEventReport((THEvent) event).push(callback(event, table));
-        }
-    }
-
-    private Callback<Model> callback(final Event event, final AbsEventTable table) {
-        return new Callback<Model>() {
-            @Override
-            public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-                if (model != null && model.getRet() == 200) {
-                    table.delete(event);
-                }
-            }
-
-            @Override
-            public void onFailed(Request request, Exception e) {
-
-            }
-        };
     }
 
     @Override
@@ -219,10 +135,10 @@ public class TrackerImpl implements Tracker{
         if (mMarketingPageTracker == null) {
             mMarketingPageTracker = new THPageTracker(context);
         }
-        printDebugLog(TAG, "beginLogPage:当前页->"+context.getClass().getName()+" |上一页->" + mPageName);
+        printDebugLog(THAnalytics.TAG, "beginLogPage:当前页->"+context.getClass().getName()+" |上一页->" + mPageName);
         if (mPreviousPageName!=null) {
             if (context.getClass().getName().equals(mPreviousPageName)) {
-                printDebugLog(TAG, "返回");
+                printDebugLog(THAnalytics.TAG, "返回");
                 mUploadTraceNumber = false;
             }
         }
@@ -254,7 +170,7 @@ public class TrackerImpl implements Tracker{
     public void endLogPage(Context context, String traceNumber) {
         mPreviousPageName = mPageName;
         mPageName = context.getClass().getName();
-        printDebugLog(TAG,"endLogPage:当前页—> "+mPageName);
+        printDebugLog(THAnalytics.TAG,"endLogPage:当前页—> "+mPageName);
         endPageTrack(mPageTracker);
         mPageTracker = null;
 
@@ -312,7 +228,7 @@ public class TrackerImpl implements Tracker{
         if (mCrashTracker == null) {
             mCrashTracker = new CrashTracker(context);
         }
-        cn.rainbow.sdk.analytics.utils.Log.d(TAG+"#logCrashInfo",log);
+        cn.rainbow.sdk.analytics.utils.Log.d(THAnalytics.TAG+"#logCrashInfo",log);
         mCrashTracker.onCrash(log);
     }
 

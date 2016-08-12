@@ -20,6 +20,7 @@ public class Config {
     private boolean mSaveLocal = true;//默认开启
     private boolean mPushRemote = true;//默认开启
     private boolean mPushOnlyWifi;
+    private boolean mUseJobSchedu;
     private int mPushStrategy = PUSH_STRATEGY_BATCH_BOOTSTRAP;//默认启动时发送
 
     public void enableDebugLog(boolean enable){
@@ -133,6 +134,14 @@ public class Config {
 
     public boolean isPushOnlyWifi() {
         return mPushOnlyWifi;
+    }
+
+    public boolean isUseJobSchedu() {
+        return mUseJobSchedu;
+    }
+
+    public void setUseJobSchedu(boolean useJobSchedu) {
+        mUseJobSchedu = useJobSchedu;
     }
 
     @Override

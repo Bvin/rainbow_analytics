@@ -20,6 +20,7 @@ public class App extends Application{
         config.setTestEnv(true);
         config.setPushStrategy(Config.PUSH_STRATEGY_BATCH_BOOTSTRAP);
         config.setPushRemote(true);
+        config.setUseJobSchedu(true);
         THAnalytics.onAppStart(this, config);
     }
 

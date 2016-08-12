@@ -17,6 +17,8 @@ import cn.rainbow.sdk.analytics.utils.InfoCollectHelper;
  */
 public class THAnalytics {
 
+    public static final String TAG = "THAnalytics";
+
     public static final String TH_CHANNEL = "TH_CHANNEL";
 
     private static Tracker mTracker;
