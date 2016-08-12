@@ -20,7 +20,8 @@ public class Config {
     private boolean mSaveLocal = true;//默认开启
     private boolean mPushRemote = true;//默认开启
     private boolean mPushOnlyWifi;
-    private boolean mUseJobSchedu;
+    private boolean mUseJobScheduler;
+    private long mDelayMsWhenPushLocal;
     private int mPushStrategy = PUSH_STRATEGY_BATCH_BOOTSTRAP;//默认启动时发送
 
     public void enableDebugLog(boolean enable){
@@ -136,12 +137,20 @@ public class Config {
         return mPushOnlyWifi;
     }
 
-    public boolean isUseJobSchedu() {
-        return mUseJobSchedu;
+    public boolean isUseJobScheduler() {
+        return mUseJobScheduler;
     }
 
-    public void setUseJobSchedu(boolean useJobSchedu) {
-        mUseJobSchedu = useJobSchedu;
+    public void setUseJobScheduler(boolean useJobScheduler) {
+        mUseJobScheduler = useJobScheduler;
+    }
+
+    public long getDelayMsWhenPushLocal() {
+        return mDelayMsWhenPushLocal;
+    }
+
+    public void setDelayMsWhenPushLocal(long delayMsWhenPushLocal) {
+        mDelayMsWhenPushLocal = delayMsWhenPushLocal;
     }
 
     @Override

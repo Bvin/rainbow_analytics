@@ -1,4 +1,4 @@
-package cn.rainbow.sdk.analytics.track.report;
+package cn.rainbow.sdk.analytics.track.report.service;
 
 import android.annotation.TargetApi;
 import android.app.job.JobParameters;
@@ -6,6 +6,8 @@ import android.app.job.JobService;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+
+import cn.rainbow.sdk.analytics.track.report.LocalReporter;
 
 /**
  * Created by bvin on 2016/8/12.

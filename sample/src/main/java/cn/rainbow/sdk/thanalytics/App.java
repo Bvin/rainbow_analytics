@@ -1,7 +1,6 @@
 package cn.rainbow.sdk.thanalytics;
 
 import android.app.Application;
-import android.util.Log;
 
 import cn.rainbow.sdk.analytics.Config;
 import cn.rainbow.sdk.analytics.THAnalytics;
@@ -20,7 +19,8 @@ public class App extends Application{
         config.setTestEnv(true);
         config.setPushStrategy(Config.PUSH_STRATEGY_BATCH_BOOTSTRAP);
         config.setPushRemote(true);
-        config.setUseJobSchedu(true);
+        config.setDelayMsWhenPushLocal(3000);
+        //config.setUseJobScheduler(true);
         THAnalytics.onAppStart(this, config);
     }
 

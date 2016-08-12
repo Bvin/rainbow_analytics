@@ -7,23 +7,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import alexclin.httplite.Request;
-import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
 import cn.rainbow.sdk.analytics.THAnalytics;
-import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
-import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
-import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
-import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
-import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
-import cn.rainbow.sdk.analytics.data.local.db.table.buz.THEventTable;
-import cn.rainbow.sdk.analytics.data.local.db.table.buz.THPageTable;
-import cn.rainbow.sdk.analytics.data.remote.Model;
-import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
@@ -41,14 +26,8 @@ import cn.rainbow.sdk.analytics.track.buz.THPageTracker;
 import cn.rainbow.sdk.analytics.track.PageTracker;
 import cn.rainbow.sdk.analytics.track.buz.OrderTracker;
 import cn.rainbow.sdk.analytics.track.buz.THTracker;
-import cn.rainbow.sdk.analytics.track.report.ApvReporter;
-import cn.rainbow.sdk.analytics.track.report.CartReporter;
-import cn.rainbow.sdk.analytics.track.report.FavReporter;
-import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 import cn.rainbow.sdk.analytics.track.report.LocalReporter;
-import cn.rainbow.sdk.analytics.track.report.OrderReporter;
-import cn.rainbow.sdk.analytics.track.report.ReportService;
-import cn.rainbow.sdk.analytics.track.report.THEventReport;
+import cn.rainbow.sdk.analytics.track.report.service.ReportService;
 
 /**
  * Created by 32967 on 2016/5/27.
@@ -64,8 +43,6 @@ public class TrackerImpl implements Tracker{
     private String mPageName;
     private String mPreviousPageName;
     private Config mConfig = new Config();//empty setConfig
-
-    private boolean mUploadTraceNumber = true;
 
     @Override
     public void config(Config config) {
@@ -83,11 +60,11 @@ public class TrackerImpl implements Tracker{
             mAppTracker = new AppTracker(context, appId);
         }
         mAppTracker.onStart();
-        long delayMs = 1000 * 7;
+        long delayMs = getCurrentConfig().getDelayMsWhenPushLocal();
         //PUSH_STRATEGY_BATCH_BOOTSTRAP需不需要判断是否PushRemoteEnable?
         //PushRemoteEnable只在实时传有效，还是所有策略都全控制
         if (/*getCurrentConfig().isPushRemoteEnable() && */getCurrentConfig().getPushStrategy() == Config.PUSH_STRATEGY_BATCH_BOOTSTRAP) {
-            if (getCurrentConfig().isUseJobSchedu() && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            if (getCurrentConfig().isUseJobScheduler() && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 //5.0以上闲时上传
                 JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
                 ComponentName componentName = new ComponentName(context, ReportService.class.getName());
@@ -136,10 +113,9 @@ public class TrackerImpl implements Tracker{
             mMarketingPageTracker = new THPageTracker(context);
         }
         printDebugLog(THAnalytics.TAG, "beginLogPage:当前页->"+context.getClass().getName()+" |上一页->" + mPageName);
-        if (mPreviousPageName!=null) {
+        if (mPreviousPageName != null) {
             if (context.getClass().getName().equals(mPreviousPageName)) {
                 printDebugLog(THAnalytics.TAG, "返回");
-                mUploadTraceNumber = false;
             }
         }
         beginPageTrack(mPageTracker);
@@ -175,14 +151,13 @@ public class TrackerImpl implements Tracker{
         mPageTracker = null;
 
         //update trace number
-        if(mUploadTraceNumber) {
-            if (traceNumber != null) {
-                THPageEvent event = (THPageEvent) mMarketingPageTracker.takeEvent();
+        if (traceNumber != null) {
+            THPageEvent event = (THPageEvent) mMarketingPageTracker.takeEvent();
+            if (event != null) {
                 event.setTraceNumber(traceNumber);
                 mMarketingPageTracker.update(event);
             }
         }
-        mUploadTraceNumber = true;
         endPageTrack(mMarketingPageTracker);
         mMarketingPageTracker = null;
     }

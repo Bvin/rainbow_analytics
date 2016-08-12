@@ -1,6 +1,7 @@
 package cn.rainbow.sdk.analytics.track.report;
 
 import android.content.Context;
+import android.os.Handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,19 +28,22 @@ import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
 /**
  * Created by bvin on 2016/8/12.
  */
-public class LocalReporter {
+public class LocalReporter{
 
-    private Context mContext;
-    List<AbsEventTable> list = new ArrayList<>();
+    private static final long INTERVAL = 1000 * 10;
+    private List<AbsEventTable> list = new ArrayList<>();
+    private Handler mHandler;
+    private EventRunnable mEventRunnable;
 
     public LocalReporter(Context context) {
-        mContext = context;
         list.add(new THPageTable(context));
         list.add(new GoodsTable(context));
         list.add(new CartTable(context));
         list.add(new FavTable(context));
         list.add(new OrderTable(context));
         list.add(new THEventTable(context));
+        mHandler = new Handler();
+        mEventRunnable = new EventRunnable();
     }
 
     public void report(){
@@ -56,7 +60,8 @@ public class LocalReporter {
         List<Event> list = table.query();
         if (list == null || list.isEmpty()) return;
         for (Event event : list) {
-            reportEvents(table, event);
+            mEventRunnable.setEvent(event, table);
+            mHandler.postDelayed(mEventRunnable, INTERVAL);
         }
     }
 
@@ -92,5 +97,21 @@ public class LocalReporter {
 
             }
         };
+    }
+
+    class EventRunnable implements Runnable{
+
+        private AbsEventTable table;
+        private Event event;
+
+        public void setEvent(Event event, AbsEventTable table) {
+            this.event = event;
+            this.table = table;
+        }
+
+        @Override
+        public void run() {
+            reportEvents(table, event);
+        }
     }
 }
