@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -89,12 +90,14 @@ public class TrackerImpl implements Tracker{
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                uploadApv(context);
-                uploadGpv(context);
-                uploadCartEvents(context);
-                uploadFavEvents(context);
-                uploadOrderEvents(context);
-                uploadTHEvents(context);
+                List<AbsEventTable> list = new ArrayList<>();
+                list.add(new THPageTable(context));
+                list.add(new GoodsTable(context));
+                list.add(new CartTable(context));
+                list.add(new FavTable(context));
+                list.add(new OrderTable(context));
+                list.add(new THEventTable(context));
+                reportEvents(list);
             }
         }, delayMs);
 
