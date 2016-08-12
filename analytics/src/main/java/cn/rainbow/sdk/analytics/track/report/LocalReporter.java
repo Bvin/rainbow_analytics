@@ -30,7 +30,7 @@ import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
  */
 public class LocalReporter{
 
-    private static final long INTERVAL = 1000 * 10;
+    private static final long INTERVAL = 1000 * 1;
     private List<AbsEventTable> list = new ArrayList<>();
     private Handler mHandler;
     private EventRunnable mEventRunnable;
@@ -60,8 +60,9 @@ public class LocalReporter{
         List<Event> list = table.query();
         if (list == null || list.isEmpty()) return;
         for (Event event : list) {
-            mEventRunnable.setEvent(event, table);
-            mHandler.postDelayed(mEventRunnable, INTERVAL);
+            /*mEventRunnable.setEvent(event, table);
+            mHandler.postDelayed(mEventRunnable, INTERVAL);*/
+            reportEvents(table, event);
         }
     }
 
