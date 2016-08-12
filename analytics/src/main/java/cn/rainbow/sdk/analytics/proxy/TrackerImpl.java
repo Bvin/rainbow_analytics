@@ -10,6 +10,7 @@ import java.util.Map;
 import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
+import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
@@ -78,7 +79,9 @@ public class TrackerImpl implements Tracker{
             mAppTracker = new AppTracker(context, appId);
         }
         mAppTracker.onStart();
-        if (getCurrentConfig().getPushStrategy() == Config.PUSH_STRATEGY_BATCH_BOOTSTRAP) {
+        //PUSH_STRATEGY_BATCH_BOOTSTRAP需不需要判断是否PushRemoteEnable?
+        //PushRemoteEnable只在实时传有效，还是所有策略都全控制
+        if (/*getCurrentConfig().isPushRemoteEnable() && */getCurrentConfig().getPushStrategy() == Config.PUSH_STRATEGY_BATCH_BOOTSTRAP) {
             uploadLog(context, 3000);//上传以前的统计日志
         }
     }

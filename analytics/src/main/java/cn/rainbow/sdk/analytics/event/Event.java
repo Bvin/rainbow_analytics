@@ -14,7 +14,7 @@ import cn.rainbow.sdk.analytics.data.local.db.TableSave;
 public class Event implements TableSave{
 
     private int mBaseIndex = -1;
-    private long mEventId;
+    protected long mEventId;
     private String mEventName;
     private String mEventDesc;//data
     private int mEventType;
@@ -68,11 +68,11 @@ public class Event implements TableSave{
         }
     }
 
-    private boolean isColumnExist(int columnIndex) {
+    protected boolean isColumnExist(int columnIndex) {
         return columnIndex > -1;
     }
 
-    private int getColumnIndex(Cursor cursor, String columnName) {
+    protected int getColumnIndex(Cursor cursor, String columnName) {
         return cursor.getColumnIndex(columnName);
     }
 

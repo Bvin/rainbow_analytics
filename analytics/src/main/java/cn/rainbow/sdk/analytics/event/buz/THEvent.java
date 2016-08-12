@@ -3,6 +3,7 @@ package cn.rainbow.sdk.analytics.event.buz;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.THEventReport;
@@ -33,9 +34,12 @@ public class THEvent extends Event{
     }
 
     public THEvent(Cursor cursor) {
-        super(cursor);
         if (cursor != null) {
             initBaseColumns(cursor);
+
+            int columnIndex = getColumnIndex(cursor, EventTable.Columns.EVENT_ID);
+            if (isColumnExist(columnIndex)) mEventId = cursor.getLong(columnIndex);
+
             mChannelId = cursor.getInt(cursor.getColumnIndex(THEventReport.Keys.CHANNEL_ID));
             mMerchantId = cursor.getString(cursor.getColumnIndex(THEventReport.Keys.MERCHANT_ID));
             mUrl =  cursor.getString(cursor.getColumnIndex(THEventReport.Keys.PAGE));
