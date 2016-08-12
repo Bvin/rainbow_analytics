@@ -10,7 +10,6 @@ import java.util.Map;
 import alexclin.httplite.Request;
 import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
-import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
@@ -152,6 +151,38 @@ public class TrackerImpl implements Tracker{
         if (list == null || list.isEmpty()) return;
         for (THEvent event : list) {
             new THEventReport(event).push(callback(event, table));
+        }
+    }
+
+    private void reportEvents(List<AbsEventTable> tables) {
+        for (AbsEventTable table : tables) {
+            reportTable(table);
+        }
+    }
+
+    private void reportTable(AbsEventTable table) {
+        List<Event> list = table.query();
+        if (list == null || list.isEmpty()) return;
+        for (Event event : list) {
+            reportEvents(table, event);
+        }
+    }
+
+    private void reportEvents(AbsEventTable table, Event event) {
+        if (event instanceof THPageEvent){
+            if (event instanceof GoodsViewEvent){
+                new GpvReporter((GoodsViewEvent) event).push(callback(event, table));
+            }else {
+                new ApvReporter((THPageEvent) event).push(callback(event, table));
+            }
+        }else if (event instanceof CartEvent){
+            new CartReporter((CartEvent) event).push(callback(event, table));
+        }else if (event instanceof FavoriteEvent){
+            new FavReporter((FavoriteEvent) event).push(callback(event, table));
+        }else if (event instanceof OrderEvent){
+            new OrderReporter((OrderEvent) event).push(callback(event, table));
+        }else if (event instanceof THEvent){
+            new THEventReport((THEvent) event).push(callback(event, table));
         }
     }
 

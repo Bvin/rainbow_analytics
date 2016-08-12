@@ -142,6 +142,10 @@ public class Event implements TableSave{
         if (value > 0) cv.put(key, value);
     }
 
+    public void putValidLong(ContentValues cv, String key, long value) {
+        if (value > 0) cv.put(key, value);
+    }
+
     public void putValidString(ContentValues cv, String key, String value) {
         if (!TextUtils.isEmpty(value)) cv.put(key, value);
     }

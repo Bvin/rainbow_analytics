@@ -37,7 +37,7 @@ public class THEvent extends Event{
         if (cursor != null) {
             initBaseColumns(cursor);
 
-            int columnIndex = getColumnIndex(cursor, EventTable.Columns.EVENT_ID);
+            int columnIndex = getColumnIndex(cursor, THEventReport.Keys.EVENT_ID);
             if (isColumnExist(columnIndex)) mEventId = cursor.getLong(columnIndex);
 
             mChannelId = cursor.getInt(cursor.getColumnIndex(THEventReport.Keys.CHANNEL_ID));
@@ -122,7 +122,7 @@ public class THEvent extends Event{
             mValues = new ContentValues();
             putValidInt(mValues, THEventReport.Keys.CHANNEL_ID, mChannelId);
             putValidString(mValues, THEventReport.Keys.MERCHANT_ID, mMerchantId);
-            putValidString(mValues, THEventReport.Keys.EVENT_ID, getEventId()+"");
+            putValidLong(mValues, THEventReport.Keys.EVENT_ID, getEventId());
             putValidString(mValues, THEventReport.Keys.PAGE, mUrl);
             putValidString(mValues, THEventReport.Keys.LINK, mLink);
             putValidString(mValues, THEventReport.Keys.DEVICE_ID, mId);
