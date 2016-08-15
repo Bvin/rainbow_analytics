@@ -33,7 +33,7 @@ public interface Api {
      */
 
     @GET(ApiConfig.URL_APP_PV)
-    void reportAPV(@Param("rt") String reportType,
+    void reportAPV(@Param("type") String reportType,
                    @Param(ApvReporter.Keys.CHANNEL_ID) int channel,
                    @Param(ApvReporter.Keys.MERCHANT_ID) String merchant,
                    @Param(ApvReporter.Keys.PAGE) String url,
@@ -49,7 +49,7 @@ public interface Api {
 
 
     @GET(ApiConfig.URL_GOODS_PV)
-    void reportGPV(@Param("rt") String reportType,
+    void reportGPV(@Param("type") String reportType,
                    @Param(GpvReporter.Keys.CHANNEL_ID) int channel,
                    @Param(GpvReporter.Keys.MERCHANT_ID) String merchant,
                    @Param(GpvReporter.Keys.GOODS_ID) String goodsId,
@@ -66,7 +66,7 @@ public interface Api {
                    Callback<Model> callback);
 
     @GET(ApiConfig.URL_CART)
-    void reportCart(@Param("rt") String reportType,
+    void reportCart(@Param("type") String reportType,
                     @Param("c") int channel,
                     @Param("mid") String merchant,
                     @Param("gid") String goodsId,
@@ -84,7 +84,7 @@ public interface Api {
                     Callback<Model> callback);
 
     @GET(ApiConfig.URL_FAV)
-    void reportFav(@Param("rt") String reportType,
+    void reportFav(@Param("type") String reportType,
                    @Param(FavReporter.Keys.CHANNEL_ID) int channel,
                    @Param(FavReporter.Keys.MERCHANT_ID) String merchant,
                    @Param(FavReporter.Keys.GOODS_ID) String goodsId,
@@ -98,7 +98,7 @@ public interface Api {
                    Callback<Model> callback);
 
    @GET(ApiConfig.URL_EVENT)
-   void reportEvent(@Param("rt") String reportType,
+   void reportEvent(@Param("type") String reportType,
                     @Param(THEventReport.Keys.CHANNEL_ID) int channel,
                     @Param(THEventReport.Keys.MERCHANT_ID) String merchant,
                     @Param(THEventReport.Keys.EVENT_ID) String eventId,
