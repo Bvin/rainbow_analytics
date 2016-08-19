@@ -38,4 +38,5 @@ dependencies {
     demoDebugCompile project(path: ':analytics', configuration: 'demoDebug')
     thReleaseCompile project(path: ':analytics', configuration: 'thRelease')
     demoReleaseCompile project(path: ':analytics', configuration: 'demoRelease')
+    testCompile "org.robolectric:robolectric:3.1.2"
 }
