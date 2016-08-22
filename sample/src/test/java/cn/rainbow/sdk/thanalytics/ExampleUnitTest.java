@@ -1,6 +1,7 @@
 package cn.rainbow.sdk.thanalytics;
 
 import org.junit.Test;
+import org.robolectric.Robolectric;
 
 import static org.junit.Assert.*;
 
