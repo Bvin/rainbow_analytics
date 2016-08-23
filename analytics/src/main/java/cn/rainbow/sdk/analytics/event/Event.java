@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import java.io.Serializable;
+
 import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.local.db.TableSave;
@@ -11,7 +13,7 @@ import cn.rainbow.sdk.analytics.data.local.db.TableSave;
 /**
  * Created by 32967 on 2016/5/31.
  */
-public class Event implements TableSave{
+public class Event implements TableSave, Serializable{
 
     private int mBaseIndex = -1;
     protected long mEventId;

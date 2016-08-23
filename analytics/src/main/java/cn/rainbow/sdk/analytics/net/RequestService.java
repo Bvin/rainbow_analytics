@@ -1,91 +1,95 @@
 package cn.rainbow.sdk.analytics.net;
 
 import android.app.IntentService;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Context;
+import android.net.Uri;
+import android.text.TextUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import java.util.IllegalFormatCodePointException;
+import java.util.Map;
+
+import cn.rainbow.sdk.analytics.data.local.DBProvider;
+import cn.rainbow.sdk.analytics.data.remote.Model;
+import cn.rainbow.sdk.analytics.net.response.Response;
+import cn.rainbow.sdk.analytics.net.response.reader.StringResponseReader;
+import cn.rainbow.sdk.analytics.utils.Log;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
  * <p/>
- * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
 public class RequestService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "cn.rainbow.sdk.analytics.net.action.FOO";
-    private static final String ACTION_BAZ = "cn.rainbow.sdk.analytics.net.action.BAZ";
+    private static final String TAG = "THAnalytics";
+    private static final String URL = "URL";
+    private static final String TABLE_NAME = "TABLE_NAME";
+    private static final String ROW_ID = "ROW_ID";
 
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "cn.rainbow.sdk.analytics.net.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "cn.rainbow.sdk.analytics.net.extra.PARAM2";
+    /**
+     *
+     * @param url URL
+     * @param tableName 表名
+     * @param rowId 记录id
+     */
+    public static void start(Context context, String url, String tableName, int rowId) {
+        Intent starter = new Intent(context, RequestService.class);
+        starter.putExtra(URL,url);
+        starter.putExtra(TABLE_NAME,tableName);
+        starter.putExtra(ROW_ID,rowId);
+        context.startService(starter);
+    }
+
+    private StringResponseReader mResponseReader;
+    private Gson mGson;
 
     public RequestService() {
         super("RequestService");
     }
 
-    /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, RequestService.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
-
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, RequestService.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
-
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
+            String url = intent.getStringExtra(URL);
+            String tableName = intent.getStringExtra(TABLE_NAME);
+            int rowId = intent.getIntExtra(ROW_ID, -1);
+            if (!TextUtils.isEmpty(url)) {
+                Request<String> request = new Request<>();
+                if (mResponseReader == null) {
+                    mResponseReader = new StringResponseReader();
+                }
+                Log.e(TAG + "-request", url);
+                Response<String> response = request.performGet(url, mResponseReader);
+                if (response!=null&&response.isSuccess() && !TextUtils.isEmpty(response.get())) {
+                    Log.e(TAG + "-response", response.get());
+                    if (mGson == null) {
+                        mGson = new Gson();
+                    }
+                    try {
+                        Model model = mGson.fromJson(response.get(), Model.class);
+                        if (model != null) {
+                            if (model.isOK()) {
+                                if (!TextUtils.isEmpty(tableName) && rowId > -1) {
+                                    Uri tableUri = Uri.parse("content://" + DBProvider.AUTHORITY + "/" + tableName);
+                                    int rowNumber = getContentResolver().delete(ContentUris.withAppendedId(tableUri, rowId), null, null);
+                                    Log.d("delete:", tableUri.toString() + tableName + "/" + rowNumber);
+                                }
+                            }
+                        }
+                    } catch (JsonSyntaxException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
         }
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionFoo(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionBaz(String param1, String param2) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 }

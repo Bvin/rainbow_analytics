@@ -22,6 +22,10 @@ public class Model {
         return mRet;
     }
 
+    public boolean isOK(){
+        return mRet == 200;
+    }
+
     public String getMessage() {
         return mMessage;
     }

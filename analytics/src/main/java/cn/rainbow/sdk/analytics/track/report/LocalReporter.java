@@ -1,5 +1,6 @@
 package cn.rainbow.sdk.analytics.track.report;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Handler;
 
@@ -16,6 +17,7 @@ import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.OrderTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.THEventTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.THPageTable;
+import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
 import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
@@ -24,6 +26,7 @@ import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
 import cn.rainbow.sdk.analytics.event.buz.THEvent;
 import cn.rainbow.sdk.analytics.event.buz.THPageEvent;
+import cn.rainbow.sdk.analytics.net.RequestService;
 
 /**
  * Created by bvin on 2016/8/12.
@@ -34,8 +37,10 @@ public class LocalReporter{
     private List<AbsEventTable> list = new ArrayList<>();
     private Handler mHandler;
     private EventRunnable mEventRunnable;
+    private Context mContext;
 
     public LocalReporter(Context context) {
+        mContext = context;
         list.add(new THPageTable(context));
         list.add(new GoodsTable(context));
         list.add(new CartTable(context));
@@ -74,7 +79,26 @@ public class LocalReporter{
                 new ApvReporter((THPageEvent) event).push(callback(event, table));
             }
         }else if (event instanceof CartEvent){
-            new CartReporter((CartEvent) event).push(callback(event, table));
+            ContentValues cv = event.saveValues();
+            if (cv != null) {
+                cv.put("type", "cart");
+            }
+            StringBuilder sb = new StringBuilder(ApiConfig.HOST+ApiConfig.URL_ORDER);
+            sb.append("?");
+            for (Map.Entry<String, Object> entry : cv.valueSet()) {
+                if (entry.getKey().equals(OrderTable.Columns.GOODS_LIST)) continue;//不用传i，已通过数组分开传了
+                if (entry.getKey().equals(OrderTable.Columns.ORDER_NUMBER)) {
+                    sb.append(OrderReporter.Keys.ORDER_NUMBER);//由于on是数据库表的保留字段需要转换一下
+                } else {
+                    sb.append(entry.getKey());
+                }
+                sb.append("=").append(entry.getValue()).append("&");
+            }
+            if (sb.toString().endsWith("&")) {
+                sb.delete(sb.toString().length() - 1, sb.toString().length());
+            }
+            RequestService.start(mContext, sb.toString(), table.tableName(), event.getBaseColumns());
+            //new CartReporter((CartEvent) event).push(callback(event, table));
         }else if (event instanceof FavoriteEvent){
             new FavReporter((FavoriteEvent) event).push(callback(event, table));
         }else if (event instanceof OrderEvent){

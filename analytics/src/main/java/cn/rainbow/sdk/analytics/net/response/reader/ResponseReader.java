@@ -1,4 +1,4 @@
-package cn.rainbow.sdk.analytics.net.response;
+package cn.rainbow.sdk.analytics.net.response.reader;
 
 import java.io.IOException;
 import java.io.InputStream;

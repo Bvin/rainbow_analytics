@@ -18,6 +18,14 @@ public class NetworkResponse {
         mResponseMessage = responseMessage;
     }
 
+    public long getContentLength() {
+        return mContentLength;
+    }
+
+    public void setContentLength(long contentLength) {
+        mContentLength = contentLength;
+    }
+
     public InputStream getContent() {
         return mContent;
     }

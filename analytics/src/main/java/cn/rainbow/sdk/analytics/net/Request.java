@@ -12,7 +12,7 @@ import cn.rainbow.sdk.analytics.net.progress.ProgressListener;
 import cn.rainbow.sdk.analytics.net.progress.ProgressOutputStream;
 import cn.rainbow.sdk.analytics.net.response.NetworkResponse;
 import cn.rainbow.sdk.analytics.net.response.Response;
-import cn.rainbow.sdk.analytics.net.response.ResponseReader;
+import cn.rainbow.sdk.analytics.net.response.reader.ResponseReader;
 
 /**
  * Created by bvin on 2016/8/18.
@@ -49,6 +49,7 @@ public class Request<T> {
             }
             //4.read response
             NetworkResponse networkResponse = new NetworkResponse(conn.getInputStream(), conn.getResponseCode(), conn.getResponseMessage());
+            networkResponse.setContentLength(conn.getContentLength());
             Response<T> response = new Response<>(networkResponse);
             response.setReader(responseReader);
             return response;
@@ -62,6 +63,14 @@ public class Request<T> {
                 conn.disconnect();
         }
         return null;
+    }
+
+    public Response<T> performGet(String url, String method, Map<String, String> headers, ResponseReader<T> responseReader) {
+        return perform(url, method, headers, null, null, null, responseReader);
+    }
+
+    public Response<T> performGet(String url, ResponseReader<T> responseReader) {
+        return perform(url, GET, null, null, null, null, responseReader);
     }
 
     private void doOutput(HttpURLConnection conn, byte[] content, String contentType, ProgressListener progressListener) throws IOException {
