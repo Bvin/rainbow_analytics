@@ -3,8 +3,14 @@ package cn.rainbow.sdk.analytics.event.buz;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.litesuits.http.annotation.HttpUri;
+import com.litesuits.http.request.param.HttpParam;
+import com.litesuits.http.request.param.NonHttpParam;
+
+import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.track.report.ApvReporter;
+import cn.rainbow.sdk.analytics.track.report.CartReporter;
 import cn.rainbow.sdk.analytics.track.report.FavReporter;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
 
@@ -19,19 +25,40 @@ public class FavoriteEvent extends Event{
     /**取消收藏*/
     public static final int OP_CANCEL_FAV = 2002;
 
+    @HttpParam("type")
+    private String mType = "follow_goods";
+
+    @HttpParam(FavReporter.Keys.CHANNEL_ID)
     private int mChannelId;
+
+    @HttpParam(FavReporter.Keys.MERCHANT_ID)
     private String mMerchantId;
 
+    @HttpParam(FavReporter.Keys.GOODS_ID)
     private String mGoodsId;
+
+    @HttpParam(FavReporter.Keys.GOODS_SKU_CODE)
     private String mGoodsSkuCode;
+
+    @HttpParam(FavReporter.Keys.GOODS_NAME)
     private String mGoodsName;
+
+    @HttpParam(FavReporter.Keys.GOODS_IMAGE)
     private String mGoodsImage;
 
+    @HttpParam(FavReporter.Keys.DEVICE_ID)
     private String mId;
+
+    @HttpParam(FavReporter.Keys.USER_ID)
     private String mUid;
+
+    @HttpParam(ApvReporter.Keys.TRACE_NUMBER)
     private String mTraceNumber;
 
+    @HttpParam(FavReporter.Keys.OPERATION)
     private int mOperation;
+
+    @NonHttpParam
     private ContentValues mValues;
 
     public FavoriteEvent(Cursor cursor) {
@@ -75,11 +102,11 @@ public class FavoriteEvent extends Event{
     }
 
     public void setGoodsName(String goodsName) {
-        mGoodsName = goodsName;
+        mGoodsName = urlEncode(goodsName);
     }
 
     public void setGoodsImage(String goodsImage) {
-        mGoodsImage = goodsImage;
+        mGoodsImage = urlEncode(goodsImage);
     }
 
     public void setId(String id) {

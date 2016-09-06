@@ -3,12 +3,14 @@ package cn.rainbow.sdk.analytics.track.report;
 import android.content.Context;
 import android.os.Handler;
 
+import com.litesuits.http.exception.HttpException;
+import com.litesuits.http.listener.HttpListener;
+import com.litesuits.http.request.AbstractRequest;
+import com.litesuits.http.response.Response;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import alexclin.httplite.Request;
-import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.data.local.db.AbsEventTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.CartTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.FavTable;
@@ -69,35 +71,41 @@ public class LocalReporter{
     private void reportEvents(AbsEventTable table, Event event) {
         if (event instanceof THPageEvent){
             if (event instanceof GoodsViewEvent){
-                new GpvReporter((GoodsViewEvent) event).push(callback(event, table));
+                new GpvReporter((GoodsViewEvent) event).push(listener(event, table));
             }else {
-                new ApvReporter((THPageEvent) event).push(callback(event, table));
+                new ApvReporter((THPageEvent) event).push(listener(event, table));
             }
         }else if (event instanceof CartEvent){
-            new CartReporter((CartEvent) event).push(callback(event, table));
+            new CartReporter((CartEvent) event).push(listener(event, table));
         }else if (event instanceof FavoriteEvent){
-            new FavReporter((FavoriteEvent) event).push(callback(event, table));
+            new FavReporter((FavoriteEvent) event).push(listener(event, table));
         }else if (event instanceof OrderEvent){
-            new OrderReporter((OrderEvent) event).push(callback(event, table));
+            new OrderReporter((OrderEvent) event).push(listener(event, table));
         }else if (event instanceof THEvent){
-            new THEventReport((THEvent) event).push(callback(event, table));
+            new THEventReport((THEvent) event).push(listener(event, table));
         }
     }
 
-    private Callback<Model> callback(final Event event, final AbsEventTable table) {
-        return new Callback<Model>() {
-            @Override
-            public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-                if (model != null && model.getRet() == 200) {
-                    table.delete(event);
+    public HttpListener<Model> listener(final Event event, final AbsEventTable table){
+        return  new HttpListener<Model>() {
+                @Override
+                public void onSuccess(Model model, Response<Model> response) {
+                    super.onSuccess(model, response);
+                    if (model != null && model.getRet() == 200) {
+                        table.delete(event);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailed(Request request, Exception e) {
+                @Override
+                public void onFailure(HttpException e, Response<Model> response) {
+                    super.onFailure(e, response);
+                }
 
-            }
-        };
+                @Override
+                public void onStart(AbstractRequest<Model> request) {
+                    super.onStart(request);
+                }
+            };
     }
 
     class EventRunnable implements Runnable{

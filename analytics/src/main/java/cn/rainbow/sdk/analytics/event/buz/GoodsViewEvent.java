@@ -3,6 +3,9 @@ package cn.rainbow.sdk.analytics.event.buz;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.litesuits.http.request.param.HttpParam;
+import com.litesuits.http.request.param.NonHttpParam;
+
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
 import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
@@ -13,16 +16,34 @@ import cn.rainbow.sdk.analytics.track.report.GpvReporter;
  */
 public class GoodsViewEvent extends THPageEvent {
 
+    @HttpParam("type")
+    private String mType = "gpv";
+
+    @HttpParam(GpvReporter.Keys.GOODS_ID)
     private String mGoodsId;
+
+    @HttpParam(GpvReporter.Keys.GOODS_NAME)
     private String mGoodsName;
+
+    @HttpParam(GpvReporter.Keys.GOODS_IMAGE)
     private String mGoodsImage;
 
+    @HttpParam(GpvReporter.Keys.DEVICE_ID)
     private String mId;
+
+    @HttpParam(GpvReporter.Keys.USER_ID)
     private String mUid;
 
+    @HttpParam(GpvReporter.Keys.GOODS_CATEGORY1)
     private String mCategory1;
+
+    @HttpParam(GpvReporter.Keys.GOODS_CATEGORY2)
     private String mCategory2;
+
+    @HttpParam(GpvReporter.Keys.GOODS_CATEGORY3)
     private String mCategory3;
+
+    @NonHttpParam
     private ContentValues mValues;
 
     public GoodsViewEvent() {
@@ -52,11 +73,11 @@ public class GoodsViewEvent extends THPageEvent {
     }
 
     public void setGoodsName(String goodsName) {
-        mGoodsName = goodsName;
+        mGoodsName = urlEncode(goodsName);
     }
 
     public void setGoodsImage(String goodsImage) {
-        mGoodsImage = goodsImage;
+        mGoodsImage = urlEncode(goodsImage);
     }
 
     public void setId(String id) {

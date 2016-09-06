@@ -1,16 +1,16 @@
 package cn.rainbow.sdk.analytics.track;
 
 import android.content.Context;
-import android.util.Log;
+
+import com.litesuits.http.exception.HttpException;
+import com.litesuits.http.listener.HttpListener;
+import com.litesuits.http.request.AbstractRequest;
+import com.litesuits.http.response.Response;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import alexclin.httplite.Request;
-import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.Config;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
@@ -21,7 +21,7 @@ import cn.rainbow.sdk.analytics.utils.NetworkHelper;
 /**
  * Created by bvin on 2016/5/31.
  */
-public abstract class AbsEventTracker<T extends Event> implements Callback<Model> {
+public abstract class AbsEventTracker<T extends Event> {
 
     protected Context mContext;
     private T mEvent;
@@ -34,6 +34,7 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
     private long mStartMillis;
 
     private boolean mEnable = true;//默认开启
+    private HttpListener<Model> mHttpListener;
 
     public AbsEventTracker(Context context,long eventId, String eventName) {
         mContext = context;
@@ -144,15 +145,29 @@ public abstract class AbsEventTracker<T extends Event> implements Callback<Model
         mEnable = enable;
     }
 
-    @Override
-    public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-        //推送成功(不需要删除，因为选择推送就不会保存到本地)
-    }
+    public HttpListener<Model> listener(){
+        if (mHttpListener == null) {
+            mHttpListener = new HttpListener<Model>() {
+                @Override
+                public void onSuccess(Model model, Response<Model> response) {
+                    super.onSuccess(model, response);
+                    //推送成功(不需要删除，因为选择推送就不会保存到本地)
+                }
 
-    @Override
-    public void onFailed(Request request, Exception e) {
-        //推送失败（保存到本地）
-        saveIfEnable();
+                @Override
+                public void onFailure(HttpException e, Response<Model> response) {
+                    super.onFailure(e, response);
+                    //推送失败（保存到本地）
+                    saveIfEnable();
+                }
+
+                @Override
+                public void onStart(AbstractRequest<Model> request) {
+                    super.onStart(request);
+                }
+            };
+        }
+        return mHttpListener;
     }
 
     private String getCurrentDate(){

@@ -8,7 +8,7 @@ import cn.rainbow.sdk.analytics.THAnalytics;
 public interface ApiConfig {
 
     String HOST_TEST = "http://192.168.148.162:8010/";//http://dev.report.honglingjin.cn
-    String HOST_OFFICIAL = "http://report.honglingjin.cn";
+    String HOST_OFFICIAL = "http://report.honglingjin.cn/";
     String HOST = THAnalytics.getCurrentConfig().isTestEnv() ? HOST_TEST : HOST_OFFICIAL;
 
     String URL_REPORT = "report";

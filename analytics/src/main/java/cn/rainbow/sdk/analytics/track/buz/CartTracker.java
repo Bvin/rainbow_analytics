@@ -36,7 +36,7 @@ public class CartTracker extends AbsEventTracker<CartEvent> {
 
     @Override
     protected void push() {
-        new CartReporter(mEvent).push(this);
+        new CartReporter(mEvent).push(listener());
     }
 
     @Override

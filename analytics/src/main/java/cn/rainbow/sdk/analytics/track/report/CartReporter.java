@@ -1,10 +1,6 @@
 package cn.rainbow.sdk.analytics.track.report;
 
-import alexclin.httplite.listener.Callback;
 import cn.rainbow.sdk.analytics.data.remote.AbsEventReporter;
-import cn.rainbow.sdk.analytics.data.remote.httplite.Api;
-import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
-import cn.rainbow.sdk.analytics.data.remote.httplite.PreRequestListener;
 import cn.rainbow.sdk.analytics.event.buz.CartEvent;
 
 /**
@@ -16,25 +12,6 @@ public class CartReporter extends AbsEventReporter<CartEvent>{
         super(event);
     }
 
-    @Override
-    public void report(CartEvent event, Callback callback) {
-        Api api = mHttpLite.retrofit(Api.class, new PreRequestListener());
-        api.reportCart("cart",event.getChannelId(),
-                event.getMerchantId(),
-                event.getGoodsId(),
-                event.getGoodsSkuCode(),
-                urlEncode( event.getGoodsName()),
-                urlEncode(event.getGoodsImage()),
-                event.getGoodsPrice(),
-                event.getGoodsSellPrice(),
-                event.getGoodsCount(),
-                event.getCouponAmount(),
-                event.getId(),
-                event.getUid(),
-                event.getOperation(),
-                event.getTraceNumber(),
-                new BaseResponseCallback(callback));
-    }
 
     public class Keys{
         public static final String CHANNEL_ID = "c";

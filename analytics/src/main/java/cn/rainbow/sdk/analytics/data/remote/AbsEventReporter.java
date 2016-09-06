@@ -2,15 +2,16 @@ package cn.rainbow.sdk.analytics.data.remote;
 
 import android.text.TextUtils;
 
+import com.litesuits.http.LiteHttp;
+import com.litesuits.http.concurrent.OverloadPolicy;
+import com.litesuits.http.concurrent.SchedulePolicy;
+import com.litesuits.http.listener.HttpListener;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import alexclin.httplite.HttpLite;
-import alexclin.httplite.HttpLiteBuilder;
-import alexclin.httplite.listener.Callback;
-import alexclin.httplite.url.URLite;
-import cn.rainbow.sdk.analytics.data.remote.httplite.GsonParser;
 import cn.rainbow.sdk.analytics.event.Event;
+import cn.rainbow.sdk.analytics.track.report.EventRequest;
 
 /**
  * Created by bvin on 2016/6/16.
@@ -19,35 +20,35 @@ import cn.rainbow.sdk.analytics.event.Event;
 public abstract class AbsEventReporter<T extends Event> implements EventReport<T>{
 
     private T mEvent;
-    protected HttpLite mHttpLite;
+    protected LiteHttp mHttpLite;
 
     public AbsEventReporter(T event) {
         mEvent = event;
-        HttpLiteBuilder mBuilder = URLite.create();
-        mHttpLite = mBuilder.addResponseParser(new GsonParser()).build();
-        mHttpLite.setBaseUrl(ApiConfig.HOST);
+        mHttpLite = LiteHttp.build(null)
+                .setConcurrentSize(1)//核心并发数1
+                .setWaitingQueueSize(2)//等待队列数量2
+                .setSchedulePolicy(SchedulePolicy.FirstInFistRun)//先进先执行
+                .setOverloadPolicy(OverloadPolicy.DiscardCurrentTask)//满载抛弃
+                .setBaseUrl(ApiConfig.HOST+ApiConfig.URL_REPORT)
+                //.setJsonConvertor()//默认Gson
+                .create();
+        //<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/
+
     }
 
     /**
      * 推送.
      * @param callback 回掉
      */
-    public void push(Callback callback){
+    public void push(HttpListener<Model> callback){
         report(mEvent,callback);
     }
 
-    /**
-     * URL编码.
-     * @param content 内容
-     * @return 成功返回URL编码后的内容，否则返元原来内容
-     */
-    protected String urlEncode(String content){
-        if (TextUtils.isEmpty(content)) return content;
-        try {
-            content = URLEncoder.encode(content, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return content;
+    @Override
+    public void report(T event, HttpListener<Model> callback) {
+        EventRequest request = new EventRequest(event);
+        request.setHttpListener(callback);
+        mHttpLite.executeAsync(request);
     }
+
 }

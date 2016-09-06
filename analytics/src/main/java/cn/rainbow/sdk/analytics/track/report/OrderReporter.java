@@ -2,10 +2,12 @@ package cn.rainbow.sdk.analytics.track.report;
 
 import android.text.TextUtils;
 
-import alexclin.httplite.listener.Callback;
+import com.litesuits.http.listener.HttpListener;
+import com.litesuits.http.request.JsonAbsRequest;
+
 import cn.rainbow.sdk.analytics.data.remote.AbsEventReporter;
 import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
-import cn.rainbow.sdk.analytics.data.remote.httplite.BaseResponseCallback;
+import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
 
 /**
@@ -18,10 +20,10 @@ public class OrderReporter extends AbsEventReporter<OrderEvent>{
     }
 
     @Override
-    public void report(OrderEvent event, Callback callback) {
-        StringBuilder sb = new StringBuilder(ApiConfig.URL_ORDER);
+    public void report(OrderEvent event, HttpListener<Model> callback) {
+        StringBuilder sb = new StringBuilder();
         sb.append("?");
-        sb.append("rt=order&");
+        sb.append("type=order&");
         sb.append(event.toString());
         for (OrderEvent.Goods goods : event.getGoodsList()) {
             sb.append(goods.toString());
@@ -29,8 +31,18 @@ public class OrderReporter extends AbsEventReporter<OrderEvent>{
         if (sb.toString().endsWith("&")) {
             sb.delete(sb.toString().length() - 1, sb.toString().length());
         }
-        if (!TextUtils.isEmpty(sb.toString()))//不用retrofit是因为此接口参数不固定
-            mHttpLite.url(sb.toString()).get().async(new BaseResponseCallback(callback,true));
+        if (!TextUtils.isEmpty(sb.toString())) {//不用retrofit是因为此接口参数不固定
+            OrderRequest orderRequest = new OrderRequest(sb.toString());
+            orderRequest.setHttpListener(callback);
+            mHttpLite.executeAsync(orderRequest);
+        }
+    }
+
+    class OrderRequest extends JsonAbsRequest<Model>{
+
+        public OrderRequest(String url) {
+            super(url);
+        }
     }
 
     public static class Keys {
