@@ -7,11 +7,11 @@ import cn.rainbow.sdk.analytics.THAnalytics;
  */
 public interface ApiConfig {
 
-    String HOST_TEST = "http://192.168.148.162:8010/";//http://dev.report.honglingjin.cn
-    String HOST_OFFICIAL = "http://report.honglingjin.cn/";
+    String HOST_TEST = "http://192.168.148.162:8010";//http://dev.report.honglingjin.cn
+    String HOST_OFFICIAL = "http://report.honglingjin.cn";
     String HOST = THAnalytics.getCurrentConfig().isTestEnv() ? HOST_TEST : HOST_OFFICIAL;
 
-    String URL_REPORT = "report";
+    String URL_REPORT = "/report";
     String URL_APP_PV = "report_apv";
     String URL_GOODS_PV = "report_gpv";
     String URL_CART = "report_cart";

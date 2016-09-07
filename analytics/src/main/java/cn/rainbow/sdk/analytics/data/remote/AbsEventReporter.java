@@ -1,14 +1,9 @@
 package cn.rainbow.sdk.analytics.data.remote;
 
-import android.text.TextUtils;
-
 import com.litesuits.http.LiteHttp;
 import com.litesuits.http.concurrent.OverloadPolicy;
 import com.litesuits.http.concurrent.SchedulePolicy;
 import com.litesuits.http.listener.HttpListener;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.track.report.EventRequest;
@@ -31,6 +26,7 @@ public abstract class AbsEventReporter<T extends Event> implements EventReport<T
                 .setOverloadPolicy(OverloadPolicy.DiscardCurrentTask)//满载抛弃
                 .setBaseUrl(ApiConfig.HOST+ApiConfig.URL_REPORT)
                 //.setJsonConvertor()//默认Gson
+                .setDefaultMaxRetryTimes(0)
                 .create();
         //<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/
 
