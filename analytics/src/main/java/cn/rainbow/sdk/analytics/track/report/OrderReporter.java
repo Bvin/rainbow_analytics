@@ -25,8 +25,10 @@ public class OrderReporter extends AbsEventReporter<OrderEvent>{
         sb.append("?");
         sb.append("type=order&");
         sb.append(event.toString());
-        for (OrderEvent.Goods goods : event.getGoodsList()) {
-            sb.append(goods.toString());
+        if (event.getGoodsList() != null) {
+            for (OrderEvent.Goods goods : event.getGoodsList()) {
+                if (goods != null) sb.append(goods.toString());
+            }
         }
         if (sb.toString().endsWith("&")) {
             sb.delete(sb.toString().length() - 1, sb.toString().length());
