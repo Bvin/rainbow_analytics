@@ -59,7 +59,9 @@ public class AppTable extends EventTable {
 
     //更新
     public void update(AppEvent appEvent) {
-        update(mCurTableUri, appEvent);
+        if (mCurTableUri != null) {
+            update(mCurTableUri, appEvent);
+        }
     }
 
     public class Columns {
