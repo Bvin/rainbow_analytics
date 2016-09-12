@@ -84,7 +84,7 @@ public class GoodsActivity extends BaseActivity {
             goods.setGoodsCount(""+i);
             list.add(goods);
         }
-        orderEvent.setGoodsList(list);
+        //orderEvent.setGoodsList(list);
         THAnalytics.trackOrder(this,orderEvent);
     }
 

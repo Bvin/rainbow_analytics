@@ -66,7 +66,12 @@ public class SQLTable {
     //保存(插入)
     public Uri save(TableSave tableSave) {
         Uri uri = parseUri(mTableCreator);
-        return mContext.getContentResolver().insert(uri, tableSave.saveValues());
+        try {
+            return mContext.getContentResolver().insert(uri, tableSave.saveValues());
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
         //mDatabase.insert(mTableCreator.tableName(), null, tableSave.saveValues());
         //return this;
     }
