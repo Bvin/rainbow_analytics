@@ -65,6 +65,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void send(View view){
-        TransportService.startFromLocal(this,"http://wthrcdn.etouch.cn/weather_mini",mMap);
+        String url = "http://wthrcdn.etouch.cn/weather_mini";
+        //TransportService.startFromLocal(this,url,mMap);
+        if (mMap != null) {
+            HashMap.Entry<Integer,String> entry = obtainEntry(mMap);
+            if (entry != null) {
+                TransportService.startFromCurrent(this,url,entry.getValue());
+                mMap.remove(entry.getKey());
+            }
+        }
+    }
+
+    private HashMap.Entry<Integer,String> obtainEntry(HashMap<Integer, String> data) {
+        for (HashMap.Entry<Integer,String> entry :data.entrySet()){
+            return entry;
+        }
+        return null;
     }
 }
