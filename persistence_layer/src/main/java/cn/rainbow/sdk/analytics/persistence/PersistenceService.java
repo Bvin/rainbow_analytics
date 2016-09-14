@@ -59,7 +59,7 @@ public class PersistenceService {
             exeSql(new SQLExecutor() {
                 @Override
                 public boolean execute(SQLiteDatabase db) {
-                    db.execSQL("insert into " + EventTable.TABLE_NAME + "(" + EventTable.COLUMN_EVENT + ") values (" + persistable.toPersistableString() + ")");
+                    db.execSQL("insert into " + EventTable.TABLE_NAME + "(" + EventTable.COLUMN_EVENT + ") values ('" + persistable.toPersistableString() + "')");
                     return false;
                 }
             });
@@ -93,13 +93,13 @@ public class PersistenceService {
             public boolean execute(SQLiteDatabase db) {
                 Cursor cursor = db.rawQuery("select * from " + EventTable.TABLE_NAME + " desc limit 0," + MAX_QUERY_SIZE + "", null);
                 if (cursor != null) {
+                    SparseArray<String> result = new SparseArray<>();
                     if (cursor.moveToFirst()) {
-                        SparseArray<String> result = new SparseArray<>();
                         do {
                             result.put(cursor.getInt(EventTable.COLUMN_INDEX_ID), cursor.getString(EventTable.COLUMN_INDEX_EVENT));
                         } while (cursor.moveToNext());
-                        callback.callback(result);
                     }
+                    callback.callback(result);
                     cursor.close();
                     return true;
                 } else {
