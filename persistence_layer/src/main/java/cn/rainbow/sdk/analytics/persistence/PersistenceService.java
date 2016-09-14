@@ -13,6 +13,11 @@ import cn.rainbow.sdk.analytics.persistence.db.table.EventTable;
 /**
  * 持久化服务.
  * <br>Created by bvin on 2016/9/13.
+ * <ul>
+ *     <li>如果是独立的操作一定要记得，执行完之后手动调用end()方法释放数据库。
+ *     <li>如果是可预知多项连续的数据库操作，可在所有操作完了之后再调用end()方法，提交事务。
+ *     <li>如果是长时并且时间不可预知的数据库操作，将会在根据执行操作次数是否达到预设次数，达到就将自动释放资源，以免一直占用资源。
+ * </ul>
  */
 public class PersistenceService {
 
@@ -40,6 +45,9 @@ public class PersistenceService {
         mContext = context;
     }
 
+    /**
+     * 释放数据库.
+     */
     public void end() {
         //mForceClose = true;
         release();

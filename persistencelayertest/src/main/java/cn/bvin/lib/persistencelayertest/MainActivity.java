@@ -56,9 +56,4 @@ public class MainActivity extends AppCompatActivity {
         mPersistenceService.end();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //mPersistenceService.end();
-    }
 }
