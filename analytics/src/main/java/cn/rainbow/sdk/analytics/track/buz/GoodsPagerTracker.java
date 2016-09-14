@@ -2,14 +2,9 @@ package cn.rainbow.sdk.analytics.track.buz;
 
 import android.content.Context;
 
-import java.util.List;
-import java.util.Map;
-
-import alexclin.httplite.Request;
 import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.local.db.table.buz.GoodsTable;
-import cn.rainbow.sdk.analytics.data.remote.Model;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
 import cn.rainbow.sdk.analytics.track.report.GpvReporter;
@@ -46,16 +41,9 @@ public class GoodsPagerTracker extends THPageTracker {
 
     @Override
     protected void push() {
-        new GpvReporter(mEvent).push(this);
+        new GpvReporter(mEvent).push(listener());
     }
 
-    @Override
-    public void onSuccess(Request request, Map<String, List<String>> map, Model model) {
-    }
-
-    @Override
-    public void onFailed(Request request, Exception e) {
-    }
 
     @Override
     public PageEvent takeEvent() {

@@ -3,6 +3,9 @@ package cn.rainbow.sdk.analytics.event.buz;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.litesuits.http.request.param.HttpParam;
+import com.litesuits.http.request.param.NonHttpParam;
+
 import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.track.report.ApvReporter;
@@ -16,17 +19,34 @@ public class THEvent extends Event{
     public static final int EVENT_ID_CLICK = 10001;
     public static final int EVENT_ID_SHOW = 10002;
 
+    @HttpParam("type")
+    private String mType = "events";
+
+    @HttpParam(THEventReport.Keys.CHANNEL_ID)
     protected int mChannelId;
+
+    @HttpParam(THEventReport.Keys.MERCHANT_ID)
     protected String mMerchantId;
+
+    @HttpParam(THEventReport.Keys.PAGE)
     private String mUrl;
 
+    @HttpParam(THEventReport.Keys.LINK)
     private String mLink;
+
+    @HttpParam(THEventReport.Keys.TRACE_NUMBER)
     private String mTraceNumber;
+
+    @HttpParam(THEventReport.Keys.ELEMENT_TRACE_NUMBER)
     private String mElementTraceNumber;
 
+    @HttpParam(THEventReport.Keys.DEVICE_ID)
     private String mId;
+
+    @HttpParam(THEventReport.Keys.USER_ID)
     private String mUid;
 
+    @NonHttpParam
     private ContentValues mValues;
 
     public THEvent(long eventId) {

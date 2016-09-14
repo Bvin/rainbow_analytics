@@ -52,6 +52,12 @@ public class GoodsActivity extends BaseActivity {
     }
 
     public void trackCart(View view){
+        for (int i = 0; i < 100; i++) {
+            trackCartEvent();
+        }
+    }
+
+    private void trackCartEvent() {
         CartEvent cartEvent = new CartEvent(CartEvent.OP_ADD_GOODS);
         cartEvent.setGoodsImage("goodsImage");
         cartEvent.setGoodsName("goodsName");
@@ -59,6 +65,12 @@ public class GoodsActivity extends BaseActivity {
     }
 
     public void trackOrder(View view){
+        for (int i = 0; i < 100; i++) {
+            trackOrder();
+        }
+    }
+
+    private void trackOrder() {
         OrderEvent orderEvent = new OrderEvent(OrderEvent.OP_COMMIT);
         orderEvent.setOrderAddress("order address");
         orderEvent.setOrderPrice("121");
@@ -72,11 +84,17 @@ public class GoodsActivity extends BaseActivity {
             goods.setGoodsCount(""+i);
             list.add(goods);
         }
-        orderEvent.setGoodsList(list);
+        //orderEvent.setGoodsList(list);
         THAnalytics.trackOrder(this,orderEvent);
     }
 
     public void trackFav(View view){
+        for (int i = 0; i < 100; i++) {
+            trackFavEvent();
+        }
+    }
+
+    private void trackFavEvent() {
         FavoriteEvent favoriteEvent = new FavoriteEvent(FavoriteEvent.OP_ADD_FAV);
         favoriteEvent.setGoodsName("goods name");
         favoriteEvent.setGoodsId("65454");
@@ -85,6 +103,12 @@ public class GoodsActivity extends BaseActivity {
     }
 
     public void trackEvent(View view){
+        for (int i = 0; i < 100; i++) {
+            trackEvent();
+        }
+    }
+
+    private void trackEvent() {
         THEvent thEvent = new THEvent(THEvent.EVENT_ID_CLICK);
         thEvent.setUrl("GoodsActivity");
         thEvent.setLink("link");

@@ -36,7 +36,7 @@ public class FavTracker extends AbsEventTracker<FavoriteEvent> {
 
     @Override
     protected void push() {
-        new FavReporter(mEvent).push(this);
+        new FavReporter(mEvent).push(listener());
     }
 
     @Override

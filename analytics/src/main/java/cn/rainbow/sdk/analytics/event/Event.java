@@ -4,24 +4,41 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import java.io.Serializable;
+import com.litesuits.http.annotation.HttpUri;
+import com.litesuits.http.request.param.HttpParam;
+import com.litesuits.http.request.param.HttpParamModel;
+import com.litesuits.http.request.param.NonHttpParam;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import cn.rainbow.sdk.analytics.data.local.db.table.EventTable;
 import cn.rainbow.sdk.analytics.data.local.db.SQLTable;
 import cn.rainbow.sdk.analytics.data.local.db.TableSave;
+import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
+import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 
 /**
  * Created by 32967 on 2016/5/31.
  */
-public class Event implements TableSave, Serializable{
+@HttpUri(ApiConfig.URL_REPORT)
+public class Event implements TableSave ,HttpParamModel {
 
+    @NonHttpParam
     private int mBaseIndex = -1;
+    @NonHttpParam
     protected long mEventId;
+    @NonHttpParam
     private String mEventName;
+    @NonHttpParam
     private String mEventDesc;//data
+    @NonHttpParam
     private int mEventType;
+    @HttpParam(ApvReporter.Keys.ENTER_TIME)
     protected String mStartDate;
+    @HttpParam(ApvReporter.Keys.LEAVE_TIME)
     protected String mEndDate;
+    @NonHttpParam
     protected long mDuration;
 
     public Event() {
@@ -150,6 +167,21 @@ public class Event implements TableSave, Serializable{
 
     public void putValidString(ContentValues cv, String key, String value) {
         if (!TextUtils.isEmpty(value)) cv.put(key, value);
+    }
+
+    /**
+     * URL编码.
+     * @param content 内容
+     * @return 成功返回URL编码后的内容，否则返元原来内容
+     */
+    protected String urlEncode(String content){
+        if (TextUtils.isEmpty(content)) return content;
+        try {
+            content = URLEncoder.encode(content, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return content;
     }
 
     @Override

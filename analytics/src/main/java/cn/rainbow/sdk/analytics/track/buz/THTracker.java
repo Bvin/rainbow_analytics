@@ -47,6 +47,6 @@ public class THTracker extends AbsEventTracker<THEvent>{
 
     @Override
     protected void push() {
-        new THEventReport(mEvent).push(this);
+        new THEventReport(mEvent).push(listener());
     }
 }

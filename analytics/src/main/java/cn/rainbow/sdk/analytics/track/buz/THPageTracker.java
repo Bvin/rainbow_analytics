@@ -47,7 +47,7 @@ public class THPageTracker extends PageTracker{
 
     @Override
     protected void push() {
-        new ApvReporter(mEvent).push(this);
+        new ApvReporter(mEvent).push(listener());
     }
 
     private void collectExtraInfo() {

@@ -33,7 +33,7 @@ public class OrderTracker extends AbsEventTracker<OrderEvent> {
 
     @Override
     protected void push() {
-       new OrderReporter(mEvent).push(this);
+       new OrderReporter(mEvent).push(listener());
     }
 
     @Override

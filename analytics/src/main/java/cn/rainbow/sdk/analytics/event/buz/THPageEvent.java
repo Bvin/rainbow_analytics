@@ -3,6 +3,12 @@ package cn.rainbow.sdk.analytics.event.buz;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.litesuits.http.annotation.HttpUri;
+import com.litesuits.http.request.param.HttpParam;
+import com.litesuits.http.request.param.HttpParamModel;
+import com.litesuits.http.request.param.NonHttpParam;
+
+import cn.rainbow.sdk.analytics.data.remote.ApiConfig;
 import cn.rainbow.sdk.analytics.event.PageEvent;
 import cn.rainbow.sdk.analytics.track.report.ApvReporter;
 
@@ -12,15 +18,27 @@ import cn.rainbow.sdk.analytics.track.report.ApvReporter;
  */
 public class THPageEvent extends PageEvent {
 
+    @HttpParam("type")
+    private String mType = "apv";
+    @HttpParam(ApvReporter.Keys.CHANNEL_ID)
     protected int mChannelId;
+    @HttpParam(ApvReporter.Keys.MERCHANT_ID)
     protected String mMerchantId;
+    @HttpParam(ApvReporter.Keys.PAGE)
     private String mUrl;
+    @HttpParam(ApvReporter.Keys.APP_VERSION)
     private String mAppVersion;
+    @HttpParam(ApvReporter.Keys.MOBILE)
     private String mDevice;
+    @HttpParam(ApvReporter.Keys.DEVICE_ID)
     private String mDeviceId;
+    @HttpParam(ApvReporter.Keys.OS)
     private String mSystem;
+    @HttpParam(ApvReporter.Keys.OS_VERSION)
     private String mSystemVersion;
+    @HttpParam(ApvReporter.Keys.TRACE_NUMBER)
     private String mTraceNumber;
+    @NonHttpParam
     private ContentValues mValues;
 
     public THPageEvent() {

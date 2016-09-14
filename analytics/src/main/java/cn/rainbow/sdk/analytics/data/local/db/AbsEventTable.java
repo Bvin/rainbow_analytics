@@ -30,10 +30,13 @@ public abstract class AbsEventTable<T extends Event> extends SQLTable implements
         Cursor cursor = queryFull();
         if (cursor != null && cursor.moveToFirst()) {
             List<T> eventList = new ArrayList<>();
+            int i = 0;
             do {
+                if (i >= 10) break;
                 T event = newEvent(cursor);
                 if (event != null) {
                     eventList.add(event);
+                    i++;
                 }
             } while (cursor.moveToNext());
             cursor.close();//采集完数据，关闭cursor

@@ -1,6 +1,7 @@
 package cn.rainbow.sdk.analytics.data.remote;
 
-import alexclin.httplite.listener.Callback;
+import com.litesuits.http.listener.HttpListener;
+
 import cn.rainbow.sdk.analytics.event.Event;
 
 /**
@@ -9,5 +10,5 @@ import cn.rainbow.sdk.analytics.event.Event;
  */
 public interface EventReport<T extends Event>{
 
-    void report(T event, Callback callback);
+    void report(T event, HttpListener<Model> callback);
 }
