@@ -1,16 +1,18 @@
-package cn.bvin.lib.coretest;
+package cn.rainbow.sdk.analytics.core;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.HashMap;
 
+import cn.rainbow.sdk.analytics.api.Model;
+import cn.rainbow.sdk.analytics.api.ModelReader;
 import cn.rainbow.sdk.analytics.net.Request;
 import cn.rainbow.sdk.analytics.net.response.Response;
 import cn.rainbow.sdk.analytics.net.response.reader.ResponseReader;
-import cn.rainbow.sdk.analytics.net.response.reader.StringResponseReader;
 import cn.rainbow.sdk.analytics.persistence.Persistable;
 import cn.rainbow.sdk.analytics.persistence.PersistenceService;
 
@@ -21,6 +23,8 @@ import cn.rainbow.sdk.analytics.persistence.PersistenceService;
  * helper methods.
  */
 public class TransportService extends IntentService {
+
+    private static final String TAG = "THAnalytics";
 
     private static final String ACTION_PUSH_LOCAL = "ACTION_PUSH_LOCAL";
     private static final String ACTION_PUSH_CURRENT = "ACTION_PUSH_CURRENT";
@@ -83,20 +87,17 @@ public class TransportService extends IntentService {
         HashMap.Entry<Integer,String> entry = obtainEntry(data);
         if (entry != null) {
             String completionUrl = url+"?"+entry.getValue();//完整的url
-            Response<String> response = performRequest(completionUrl);
-            if (response.isSuccess()){
-                data.remove(entry.getKey());
-                Log.d( "response: ",response.get());
-                PersistenceService.getInstance(this).delete(entry.getKey());
-
-                sleepThread();
-
-                handleFromLocal(url, data);//递归
-
-            }else {
-                Log.d( "error: ",response.getNetworkResponse().getResponseMessage());
-                handleFromLocal(url, data);//递归
+            Response<Model> response = performRequest(completionUrl);
+            boolean isSuccess = handleResponse(response);
+            if (isSuccess) {
+                PersistenceService.getInstance(this).delete(entry.getKey());//删除数据库记录
+                log("DeleteRecord", String.valueOf(entry.getKey()));
+                data.remove(entry.getKey());//移除处理过的任务
+            } else {
+                //失败就不管了，下次再推
             }
+            sleepThread();
+            handleFromLocal(url, data);//递归
         }else {
             PersistenceService.getInstance(this).end();//上传完
         }
@@ -105,13 +106,20 @@ public class TransportService extends IntentService {
     //单独任务
     private void handleFromCurrent(final String url, String data){
         String completionUrl = url+"?"+data;//完整的url
-        Response<String> response = performRequest(completionUrl);
-        if (response.isSuccess()){
-            Log.d( "response: ",response.get());
+        Response<Model> response = performRequest(completionUrl);
+        boolean isSuccess = handleResponse(response);
+        if (isSuccess){
+            //成功就不管了
         }else {
             PersistenceService.getInstance(this).save(new Data(data));
+            //失败了保存到本地，待下次再推
         }
-        //sleepThread();
+        //sleepThread();//是否需要延迟线程？
+    }
+
+    private void log(String tag, String message) {
+        if (TextUtils.isEmpty(message)) message = "empty content";
+        Log.d(TAG + "-" + tag, message);
     }
 
     class Data implements Persistable{
@@ -129,13 +137,31 @@ public class TransportService extends IntentService {
     }
 
     //执行请求(GET)
-    private Response<String> performRequest(String completionUrl) {
-        Request<String> request = new Request<>();
-        ResponseReader<String> read = new StringResponseReader();
-        Log.d("request", completionUrl);
+    private Response<Model> performRequest(String completionUrl) {
+        Request<Model> request = new Request<>();
+        ResponseReader<Model> read = new ModelReader();
+        log("RequestStart", completionUrl);
         return request.performGet(completionUrl,read);
     }
 
+    private boolean handleResponse(Response<Model> response){
+        if (response != null) {
+            if (response.isSuccess()) {//HTTP访问成功
+                Model model = response.get();
+                log("RequestResponse", model.getOriginResponse());
+                if (model.isOkay()) {//服务端返回成功
+                    return true;
+                } else {
+                    //失败就不管了，下次再推
+                }
+            } else {
+                log("RequestError: ", "http status code is "+response.getNetworkResponse().getResponseCode());
+            }
+        }else {
+            log("RequestError: ", "no response");
+        }
+        return false;
+    }
 
     //休眠当前线程，达到延迟执行效果
     private void sleepThread() {
@@ -145,7 +171,6 @@ public class TransportService extends IntentService {
             e.printStackTrace();
         }
     }
-
 
     private HashMap.Entry<Integer,String> obtainEntry(HashMap<Integer, String> data) {
         for (HashMap.Entry<Integer,String> entry :data.entrySet()){

@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service android:name=".TransportService"/>
+        <service android:name="cn.rainbow.sdk.analytics.core.TransportService"/>
     </application>
 
 </manifest>

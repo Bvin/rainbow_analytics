@@ -8,6 +8,7 @@ import android.view.View;
 
 import java.util.HashMap;
 
+import cn.rainbow.sdk.analytics.core.TransportService;
 import cn.rainbow.sdk.analytics.persistence.Persistable;
 import cn.rainbow.sdk.analytics.persistence.PersistenceService;
 

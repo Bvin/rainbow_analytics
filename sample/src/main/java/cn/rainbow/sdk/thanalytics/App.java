@@ -1,9 +1,10 @@
 package cn.rainbow.sdk.thanalytics;
 
 import android.app.Application;
+import android.os.Handler;
 
-import cn.rainbow.sdk.analytics.Config;
 import cn.rainbow.sdk.analytics.THAnalytics;
+import cn.rainbow.sdk.analytics.core.Config;
 
 /**
  * Created by bvin on 2016/6/1.
@@ -14,19 +15,21 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
         Config config = new Config();
-        config.enableDebugLog(true);//打开log
-        config.enableCrashTrack(true);//开启崩溃收集
+        config.setEnable(true);
         config.setTestEnv(true);
-        config.setPushStrategy(Config.PUSH_STRATEGY_BATCH_BOOTSTRAP);
-        config.setPushRemote(true);
-        config.setDelayMsWhenPushLocal(1000);
-        //config.setUseJobScheduler(true);
-        THAnalytics.onAppStart(this, config);
+        config.setRealTime(true);
+        THAnalytics.init(this, config);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                THAnalytics.reportLocal();
+            }
+        },1500);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        THAnalytics.onAppExit();
     }
 }

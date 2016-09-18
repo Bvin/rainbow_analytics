@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId "cn.rainbow.sdk.thanalytics"
@@ -17,26 +17,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    productFlavors{
-        th{}
-        demo{}
-    }
 }
 
-configurations {
-    thDebugCompile
-    demoDebugCompile
-    thReleaseCompile
-    demoReleaseCompile
-}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.0'
-    thDebugCompile project(path: ':analytics', configuration: 'thDebug')
-    demoDebugCompile project(path: ':analytics', configuration: 'demoDebug')
-    thReleaseCompile project(path: ':analytics', configuration: 'thRelease')
-    demoReleaseCompile project(path: ':analytics', configuration: 'demoRelease')
-    testCompile "org.robolectric:robolectric:3.1.2"
+    testCompile 'org.robolectric:robolectric:3.1.2'
+    compile project(':analytics_core')
 }

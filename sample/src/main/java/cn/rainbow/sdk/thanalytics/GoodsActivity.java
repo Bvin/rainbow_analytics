@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.rainbow.sdk.analytics.THAnalytics;
-import cn.rainbow.sdk.analytics.event.buz.CartEvent;
-import cn.rainbow.sdk.analytics.event.buz.FavoriteEvent;
-import cn.rainbow.sdk.analytics.event.buz.GoodsViewEvent;
-import cn.rainbow.sdk.analytics.event.buz.OrderEvent;
-import cn.rainbow.sdk.analytics.event.buz.THEvent;
+import cn.rainbow.sdk.analytics.event.CartEvent;
+import cn.rainbow.sdk.analytics.event.FollowGoodsEvent;
+import cn.rainbow.sdk.analytics.event.GpvEvent;
+import cn.rainbow.sdk.analytics.event.OrderEvent;
+import cn.rainbow.sdk.analytics.event.THEvent;
 
 public class GoodsActivity extends BaseActivity {
 
-    private  GoodsViewEvent mGoodsViewEventData;
+    private GpvEvent mGoodsViewEventData;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, GoodsActivity.class);
@@ -28,7 +28,7 @@ public class GoodsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods);
-        mGoodsViewEventData = new GoodsViewEvent();
+        mGoodsViewEventData = new GpvEvent();
         mGoodsViewEventData.setGoodsId("007");
         mGoodsViewEventData.setGoodsName("商品名称");
         mGoodsViewEventData.setGoodsImage("url");
@@ -38,17 +38,14 @@ public class GoodsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        THAnalytics.startGoodsPage(this,mGoodsViewEventData);
+        mGoodsViewEventData.setEnterTime(getCurrentDate());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        try {
-            THAnalytics.stopGoodsPage();
-        }catch (IllegalStateException e){
-            e.printStackTrace();
-        }
+        mGoodsViewEventData.setLeaveTime(getCurrentDate());
+        THAnalytics.track(mGoodsViewEventData);
     }
 
     public void trackCart(View view){
@@ -61,7 +58,7 @@ public class GoodsActivity extends BaseActivity {
         CartEvent cartEvent = new CartEvent(CartEvent.OP_ADD_GOODS);
         cartEvent.setGoodsImage("goodsImage");
         cartEvent.setGoodsName("goodsName");
-        THAnalytics.trackCart(this,cartEvent);
+        THAnalytics.track(cartEvent);
     }
 
     public void trackOrder(View view){
@@ -85,7 +82,7 @@ public class GoodsActivity extends BaseActivity {
             list.add(goods);
         }
         //orderEvent.setGoodsList(list);
-        THAnalytics.trackOrder(this,orderEvent);
+        THAnalytics.track(orderEvent);
     }
 
     public void trackFav(View view){
@@ -95,11 +92,11 @@ public class GoodsActivity extends BaseActivity {
     }
 
     private void trackFavEvent() {
-        FavoriteEvent favoriteEvent = new FavoriteEvent(FavoriteEvent.OP_ADD_FAV);
+        FollowGoodsEvent favoriteEvent = new FollowGoodsEvent(FollowGoodsEvent.OP_ADD_FAV);
         favoriteEvent.setGoodsName("goods name");
         favoriteEvent.setGoodsId("65454");
         favoriteEvent.setGoodsImage("agsdhsasfg");
-        THAnalytics.trackFavorite(this,favoriteEvent);
+        THAnalytics.track(favoriteEvent);
     }
 
     public void trackEvent(View view){
@@ -114,7 +111,7 @@ public class GoodsActivity extends BaseActivity {
         thEvent.setLink("link");
         thEvent.setTraceNumber("test");
         thEvent.setElementTraceNumber("etn");
-        THAnalytics.trackEvent(this,thEvent);
+        THAnalytics.track(thEvent);
     }
 
     @Override
