@@ -73,7 +73,6 @@ public class PersistenceService {
             if (mDatabase == null) {
                 mSQLiteOpenHelper = new DBHelper(mContext);
                 mDatabase = mSQLiteOpenHelper.getWritableDatabase();
-                mDatabase.beginTransaction();
             }
             if (executor.execute(mDatabase)) {
                 Log.d("THAnalytics-SQL", "exeSql...#"+mCounter);
@@ -126,8 +125,6 @@ public class PersistenceService {
     private void release() {
         mCounter = 0;
         if (mDatabase != null) {
-            mDatabase.setTransactionSuccessful();
-            mDatabase.endTransaction();
             mDatabase.close();
             mDatabase = null;
         }
