@@ -3,6 +3,8 @@ package cn.rainbow.sdk.thanalytics;
 import android.os.Bundle;
 import android.view.View;
 
+import cn.rainbow.sdk.analytics.persistence.PersistenceService;
+
 public class MainActivity extends BaseActivity {
 
     @Override

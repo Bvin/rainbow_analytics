@@ -3,10 +3,14 @@ package cn.rainbow.sdk.analytics.core;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.concurrent.BrokenBarrierException;
 
 import cn.rainbow.sdk.analytics.api.Model;
 import cn.rainbow.sdk.analytics.api.ModelReader;
@@ -32,6 +36,9 @@ public class TransportService extends IntentService {
     private static final String EXTRA_LOCAL_DATA = "LOCAL_DATA";
     private static final String EXTRA_CURRENT_DATA = "CURRENT_DATA";
     private static final long TASK_INTERVAL = 1500;//任务间隔时间
+
+    public static final int MESSAGE_DB_DELETE = 1;
+    public static final int MESSAGE_DB_RELEASE = 0;
 
     /**
      * Starts this service to perform action Foo with the given parameters. If
@@ -62,6 +69,24 @@ public class TransportService extends IntentService {
         context.startService(intent);
     }
 
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MESSAGE_DB_RELEASE:
+                    PersistenceService.getInstance(getApplicationContext()).end();//上传完
+                    log("DeleteRecord", "complete");
+                    break;
+                case MESSAGE_DB_DELETE:
+                    PersistenceService.getInstance(null).delete(msg.arg1);//删除数据库记录
+                    log("DeleteRecord", String.valueOf(msg.arg1));
+                    break;
+            }
+
+        }
+    };
+
     public TransportService() {
         super("TransportThread");//WorkThread-Name
     }
@@ -90,8 +115,10 @@ public class TransportService extends IntentService {
             Response<Model> response = performRequest(completionUrl);
             boolean isSuccess = handleResponse(response);
             if (isSuccess) {
-                PersistenceService.getInstance(this).delete(entry.getKey());//删除数据库记录
-                log("DeleteRecord", String.valueOf(entry.getKey()));
+                Message message = mHandler.obtainMessage();
+                message.what = MESSAGE_DB_DELETE;
+                message.arg1 = entry.getKey();
+                mHandler.sendMessage(message);
                 data.remove(entry.getKey());//移除处理过的任务
             } else {
                 //失败就不管了，下次再推
@@ -99,7 +126,9 @@ public class TransportService extends IntentService {
             sleepThread();
             handleFromLocal(url, data);//递归
         }else {
-            PersistenceService.getInstance(this).end();//上传完
+            Message message = mHandler.obtainMessage();
+            message.what = MESSAGE_DB_RELEASE;
+            mHandler.sendMessage(message);
         }
     }
 

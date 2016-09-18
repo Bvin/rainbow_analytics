@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 
 import cn.rainbow.sdk.analytics.persistence.db.DBHelper;
@@ -75,6 +76,7 @@ public class PersistenceService {
                 mDatabase.beginTransaction();
             }
             if (executor.execute(mDatabase)) {
+                Log.d("THAnalytics-SQL", "exeSql...#"+mCounter);
                 mCounter++;
             }
             if (mForceClose) {//强制释放
@@ -82,6 +84,7 @@ public class PersistenceService {
                 mForceClose = false;
             }
         } else {
+            Log.d("THAnalytics-SQL", "累计执行事务超过限制");
             release();
         }
     }
@@ -132,6 +135,7 @@ public class PersistenceService {
             mSQLiteOpenHelper.close();
             mSQLiteOpenHelper = null;
         }
+        Log.d("THAnalytics-SQL", "End");
     }
 
     interface SQLExecutor{
