@@ -1,5 +1,7 @@
 package cn.rainbow.sdk.thanalytics;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,11 +35,24 @@ public class BaseActivity extends AppCompatActivity{
     @Override
     protected void onPause() {
         super.onPause();
-
+        mApvEvent.setChannelId(THAnalytics.getChannelId());
         mApvEvent.setLeaveTime(getCurrentDate());
         mApvEvent.setTraceNumber(traceNumber());
         mApvEvent.setUrl(getClass().getName());
         THAnalytics.track(mApvEvent);
+    }
+
+    public int getMetaDataIntValue(String name) {
+        PackageManager localPackageManager = getPackageManager();
+        try {
+            ApplicationInfo localApplicationInfo = localPackageManager.getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            if (localApplicationInfo != null) {
+                return localApplicationInfo.metaData.getInt(name);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return Integer.MIN_VALUE;
     }
 
     private SimpleDateFormat mDateFormat;

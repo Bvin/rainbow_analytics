@@ -111,14 +111,14 @@ public class OrderEvent extends Event{
         putValue(sb, "os", mOrderState);
         putValue(sb, "ou", mOrderUserId);
         putValue(sb, "op", mOrderPrice);
-        putValue(sb, "oa", mOrderAddress);
+        putValue(sb, "oa", mOrderAddress, true);
         putValue(sb, "cp", mCouponPrice);
         putValue(sb, "fp", mFreightPrice);
         putValue(sb, "pn", mGoodsCount);
         if (mGoodsList != null) {
             String goodsList = asString(mGoodsList);//序列化
             if (!TextUtils.isEmpty(goodsList)) {
-                sb.append(goodsList);
+                sb.append("&").append(goodsList);
             }
         }
         putValue(sb, "tn", mTraceNumber);
@@ -139,7 +139,7 @@ public class OrderEvent extends Event{
             for (int i = 0; i < list.size(); i++) {
                 sb.append(list.get(i).toString());//remove last &
                 if (i != list.size() - 1) {
-                    sb.append(GOODS_SEPARATOR);
+                    sb.append("&");
                 }
             }
             return sb.toString();

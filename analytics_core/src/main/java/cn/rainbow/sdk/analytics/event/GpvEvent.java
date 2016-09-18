@@ -89,8 +89,8 @@ public class GpvEvent extends Event{
         putValue(sb, "gc1", mCategory1);
         putValue(sb, "gc2", mCategory2);
         putValue(sb, "gc3", mCategory3);
-        putValue(sb, "et", mEnterTime);
-        putValue(sb, "lt", mLeaveTime);
+        putValue(sb, "et", mEnterTime, true);
+        putValue(sb, "lt", mLeaveTime, true);
         putValue(sb, "tn", mTraceNumber);
         return sb.toString();
     }

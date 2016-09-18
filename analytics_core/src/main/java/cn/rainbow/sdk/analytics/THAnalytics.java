@@ -20,6 +20,16 @@ public class THAnalytics {
         mTracker = new Tracker(context, config);
     }
 
+    public static int getChannelId(){
+        if (mTracker != null) {
+            return mTracker.getChannelId();
+        }else {
+            //未初始化
+            Log.e(TAG, "THAnalytics未初始化");
+            return -1;
+        }
+    }
+
     public static void reportLocal(){
         if (mTracker != null) {
             mTracker.reportLocal();

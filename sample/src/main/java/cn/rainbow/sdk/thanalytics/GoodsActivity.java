@@ -49,7 +49,7 @@ public class GoodsActivity extends BaseActivity {
     }
 
     public void trackCart(View view){
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             trackCartEvent();
         }
     }
@@ -62,7 +62,7 @@ public class GoodsActivity extends BaseActivity {
     }
 
     public void trackOrder(View view){
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             trackOrder();
         }
     }
@@ -81,12 +81,12 @@ public class GoodsActivity extends BaseActivity {
             goods.setGoodsCount(""+i);
             list.add(goods);
         }
-        //orderEvent.setGoodsList(list);
+        orderEvent.setGoodsList(list);
         THAnalytics.track(orderEvent);
     }
 
     public void trackFav(View view){
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             trackFavEvent();
         }
     }
@@ -100,7 +100,7 @@ public class GoodsActivity extends BaseActivity {
     }
 
     public void trackEvent(View view){
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             trackEvent();
         }
     }

@@ -1,6 +1,8 @@
 package cn.rainbow.sdk.analytics.core;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
@@ -14,6 +16,8 @@ import cn.rainbow.sdk.analytics.persistence.PersistenceService;
  * Created by bvin on 2016/9/14.
  */
 public class Tracker {
+
+    public static final String TH_CHANNEL = "TH_CHANNEL";
 
     private Context mContext;
     private Config mConfig;
@@ -30,6 +34,22 @@ public class Tracker {
         }
     }
 
+    public int getMetaDataIntValue(String name) {
+        PackageManager localPackageManager = mContext.getPackageManager();
+        try {
+            ApplicationInfo localApplicationInfo = localPackageManager.getApplicationInfo(mContext.getPackageName(), PackageManager.GET_META_DATA);
+            if (localApplicationInfo != null) {
+                return localApplicationInfo.metaData.getInt(name);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    public int getChannelId(){
+        return getMetaDataIntValue(TH_CHANNEL);
+    }
 
     public void track(Event event){
         if (!mConfig.isEnable()) return;
