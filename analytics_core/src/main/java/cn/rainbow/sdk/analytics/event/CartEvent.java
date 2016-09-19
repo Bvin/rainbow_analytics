@@ -12,7 +12,6 @@ public class CartEvent extends Event{
     /**提交购物车*/
     public static final int OP_COMMIT = 1003;
 
-    private int mChannelId;
     private String mMerchantId;
 
     private String mGoodsId;
@@ -33,10 +32,6 @@ public class CartEvent extends Event{
     public CartEvent(int operation) {
         super("cart");
         mOperation = operation;
-    }
-
-    public void setChannelId(int channelId) {
-        mChannelId = channelId;
     }
 
     public void setMerchantId(String merchantId) {
@@ -87,23 +82,59 @@ public class CartEvent extends Event{
         mTraceNumber = traceNumber;
     }
 
+    public String getMerchantId() {
+        return mMerchantId;
+    }
+
+    public String getGoodsId() {
+        return mGoodsId;
+    }
+
+    public String getGoodsSkuCode() {
+        return mGoodsSkuCode;
+    }
+
+    public String getGoodsName() {
+        return mGoodsName;
+    }
+
+    public String getGoodsImage() {
+        return mGoodsImage;
+    }
+
+    public String getGoodsPrice() {
+        return mGoodsPrice;
+    }
+
+    public String getGoodsSellPrice() {
+        return mGoodsSellPrice;
+    }
+
+    public String getGoodsCount() {
+        return mGoodsCount;
+    }
+
+    public String getCouponAmount() {
+        return mCouponAmount;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("type=").append(getName());
-        putValue(sb, "op", String.valueOf(mOperation));
-        putValue(sb, "gid", mGoodsId);
+        putValue(sb, "c", String.valueOf(mChannelId));
         putValue(sb, "mid", mMerchantId);
         putValue(sb, "gid", mGoodsId);
+        putValue(sb, "gsku", mGoodsSkuCode);
         putValue(sb, "gn", mGoodsName,true);
         putValue(sb, "gi", mGoodsImage, true);
-        putValue(sb, "id", mId);
-        putValue(sb, "uid", mUid);
-        putValue(sb, "gsku", mGoodsSkuCode);
         putValue(sb, "gp", mGoodsPrice);
         putValue(sb, "ga", mGoodsSellPrice);
         putValue(sb, "gc", mGoodsCount);
         putValue(sb, "ca", mCouponAmount);
+        putValue(sb, "id", mId);
+        putValue(sb, "uid", mUid);
+        putValue(sb, "op", String.valueOf(mOperation));
         putValue(sb, "tn", mTraceNumber);
         return sb.toString();
     }

@@ -14,6 +14,8 @@ public class Event implements Persistable{
 
     private String mName;
 
+    protected int mChannelId;
+
     public Event(String name) {
         mName = name;
     }
@@ -25,6 +27,10 @@ public class Event implements Persistable{
 
     public String getName() {
         return mName;
+    }
+
+    public void setChannelId(int channelId) {
+        mChannelId = channelId;
     }
 
     public void putValue(StringBuilder sb, String key, String value, boolean urlEncode) {

@@ -10,7 +10,6 @@ public class THEvent extends Event{
 
     private int mEventType;
 
-    private int mChannelId;
 
     private String mMerchantId;
 
@@ -29,10 +28,6 @@ public class THEvent extends Event{
     public THEvent(int eventId) {
         super("events");
         mEventType = eventId;
-    }
-
-    public void setChannelId(int channelId) {
-        mChannelId = channelId;
     }
 
     public void setMerchantId(String merchantId) {
@@ -69,9 +64,9 @@ public class THEvent extends Event{
         sb.append("type=").append(getName());
         putValue(sb, "c", String.valueOf(mChannelId));
         putValue(sb, "mid", mMerchantId);
+        putValue(sb, "e", String.valueOf(mEventType));
         putValue(sb, "u", mUrl, true);
         putValue(sb, "l", mLink, true);
-        putValue(sb, "e", String.valueOf(mEventType));
         putValue(sb, "tn", mTraceNumber);
         putValue(sb, "etn", mElementTraceNumber);
         putValue(sb, "id", mId);

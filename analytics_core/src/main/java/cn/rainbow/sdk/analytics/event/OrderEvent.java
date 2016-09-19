@@ -26,7 +26,6 @@ public class OrderEvent extends Event{
 
     private static final String GOODS_SEPARATOR = ";";
 
-    private int mChannelId;
     private String mMerchantId;
 
     private String mOrderNumber;
@@ -45,10 +44,6 @@ public class OrderEvent extends Event{
     public OrderEvent(int operation) {
         super("order");
         mOperation = operation;
-    }
-
-    public void setChannelId(int channelId) {
-        mChannelId = channelId;
     }
 
     public void setMerchantId(String merchantId) {
@@ -103,8 +98,8 @@ public class OrderEvent extends Event{
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("type=").append(getName());
-        putValue(sb, "op", String.valueOf(mOperation));
         putValue(sb, "c", String.valueOf(mChannelId));
+        putValue(sb, "opt", String.valueOf(mOperation));
         putValue(sb, "mid", mMerchantId);
         putValue(sb, "on", mOrderNumber);
         putValue(sb, "son", mSubOrderNumber);
@@ -212,9 +207,9 @@ public class OrderEvent extends Event{
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append(put("gi",mGoodsId));
-            sb.append(put("gn",mGoodsName));
             sb.append(put("gs",mGoodsSkuCode));
             sb.append(put("gc",mGoodsCount));
+            sb.append(put("gn",mGoodsName));
             sb.append(put("gm",mSkuImage));
             return sb.toString();
         }

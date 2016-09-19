@@ -5,7 +5,6 @@ package cn.rainbow.sdk.analytics.event;
  */
 public class ApvEvent extends Event {
 
-    private int mChannelId;
     private String mMerchantId;
     private String mUrl;
     private String mAppVersion;
@@ -19,10 +18,6 @@ public class ApvEvent extends Event {
 
     public ApvEvent() {
         super("apv");
-    }
-
-    public void setChannelId(int channelId) {
-        mChannelId = channelId;
     }
 
     public void setMerchantId(String merchantId) {
@@ -73,12 +68,12 @@ public class ApvEvent extends Event {
         putValue(sb, "mid", mMerchantId);
         putValue(sb, "u", mUrl, true);
         putValue(sb, "v", mAppVersion);
-        putValue(sb, "mb", mDevice);
-        putValue(sb, "id", mDeviceId);
-        putValue(sb, "o", mSystem);
-        putValue(sb, "ov", mSystemVersion);
         putValue(sb, "et", mEnterTime, true);
         putValue(sb, "lt", mLeaveTime, true);
+        putValue(sb, "mb", mDevice);
+        putValue(sb, "o", mSystem);
+        putValue(sb, "ov", mSystemVersion);
+        putValue(sb, "id", mDeviceId);
         putValue(sb, "tn", mTraceNumber);
         return sb.toString();
     }

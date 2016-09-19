@@ -54,6 +54,7 @@ public class Tracker {
     public void track(Event event){
         if (!mConfig.isEnable()) return;
         if (event != null) {
+            event.setChannelId(getChannelId());
             String eventBody = event.toPersistableString();
             if (!TextUtils.isEmpty(eventBody)) {
                 if (mConfig.isRealTime()) {

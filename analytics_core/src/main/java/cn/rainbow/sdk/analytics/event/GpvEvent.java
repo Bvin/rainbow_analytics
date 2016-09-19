@@ -5,7 +5,6 @@ package cn.rainbow.sdk.analytics.event;
  */
 public class GpvEvent extends Event{
 
-    private int mChannelId;
     private String mMerchantId;
     private String mGoodsId;
     private String mGoodsName;
@@ -21,10 +20,6 @@ public class GpvEvent extends Event{
 
     public GpvEvent() {
         super("gpv");
-    }
-
-    public void setChannelId(int channelId) {
-        mChannelId = channelId;
     }
 
     public void setMerchantId(String merchantId) {
@@ -75,6 +70,10 @@ public class GpvEvent extends Event{
         mTraceNumber = traceNumber;
     }
 
+    public String getGoodsId() {
+        return mGoodsId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -84,13 +83,13 @@ public class GpvEvent extends Event{
         putValue(sb, "gid", mGoodsId);
         putValue(sb, "gn", mGoodsName, true);
         putValue(sb, "gi", mGoodsImage, true);
-        putValue(sb, "id", mId);
-        putValue(sb, "uid", mUid);
+        putValue(sb, "et", mEnterTime, true);
+        putValue(sb, "lt", mLeaveTime, true);
         putValue(sb, "gc1", mCategory1);
         putValue(sb, "gc2", mCategory2);
         putValue(sb, "gc3", mCategory3);
-        putValue(sb, "et", mEnterTime, true);
-        putValue(sb, "lt", mLeaveTime, true);
+        putValue(sb, "id", mId);
+        putValue(sb, "uid", mUid);
         putValue(sb, "tn", mTraceNumber);
         return sb.toString();
     }

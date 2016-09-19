@@ -5,9 +5,13 @@ package cn.rainbow.sdk.analytics.event;
  */
 public class FollowMerchantEvent extends Event{
 
-    private int mOperation;
+    /**添加收藏*/
+    public static final int OP_ADD = 3001;
+    /**取消收藏*/
+    public static final int OP_CANCEL = 3002;
 
-    private int mChannelId;
+
+    private int mOperation;
 
     private String mMerchantId;
 
@@ -20,10 +24,6 @@ public class FollowMerchantEvent extends Event{
     public FollowMerchantEvent(int operation) {
         super("follow_merchant");
         mOperation = operation;
-    }
-
-    public void setChannelId(int channelId) {
-        mChannelId = channelId;
     }
 
     public void setMerchantId(String merchantId) {
@@ -48,10 +48,10 @@ public class FollowMerchantEvent extends Event{
         sb.append("type=").append(getName());
         putValue(sb, "c", String.valueOf(mChannelId));
         putValue(sb, "mid", mMerchantId);
-        putValue(sb, "tn", mTraceNumber);
+        putValue(sb, "optype", String.valueOf(mOperation));
         putValue(sb, "id", mId);
         putValue(sb, "uid", mUid);
-        putValue(sb, "optype", String.valueOf(mOperation));
+        putValue(sb, "tn", mTraceNumber);
         return sb.toString();
     }
 }

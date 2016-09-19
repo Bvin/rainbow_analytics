@@ -12,8 +12,6 @@ public class FollowGoodsEvent extends Event{
 
     private int mOperation;
 
-    private int mChannelId;
-
     private String mMerchantId;
 
     private String mGoodsId;
@@ -33,10 +31,6 @@ public class FollowGoodsEvent extends Event{
     public FollowGoodsEvent(int operation) {
         super("follow_goods");
         mOperation = operation;
-    }
-
-    public void setChannelId(int channelId) {
-        mChannelId = channelId;
     }
 
     public void setMerchantId(String merchantId) {
@@ -81,10 +75,10 @@ public class FollowGoodsEvent extends Event{
         putValue(sb, "gsku", mGoodsSkuCode);
         putValue(sb, "gn", mGoodsName, true);
         putValue(sb, "gi", mGoodsImage, true);
-        putValue(sb, "tn", mTraceNumber);
-        putValue(sb, "id", mId);
         putValue(sb, "uid", mUid);
         putValue(sb, "op", String.valueOf(mOperation));
+        putValue(sb, "tn", mTraceNumber);
+        putValue(sb, "id", mId);
         return sb.toString();
     }
 }
