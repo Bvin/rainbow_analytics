@@ -28,6 +28,10 @@ public class PersistenceService {
     public static PersistenceService getInstance(Context context) {
         if (ourInstance == null) {
             ourInstance = new PersistenceService(context);
+        } else {
+            if (ourInstance.getContext() == null) {
+                ourInstance = new PersistenceService(context);
+            }
         }
         return ourInstance;
     }
@@ -130,6 +134,10 @@ public class PersistenceService {
                 return true;
             }
         });
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     private void release() {

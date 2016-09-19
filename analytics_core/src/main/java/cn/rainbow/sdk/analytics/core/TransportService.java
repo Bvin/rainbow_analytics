@@ -79,8 +79,8 @@ public class TransportService extends IntentService {
                     log("DeleteRecord", "complete");
                     break;
                 case MESSAGE_DB_DELETE:
-                    PersistenceService.getInstance(null).delete(msg.arg1);//删除数据库记录
-                    log("DeleteRecord", String.valueOf(msg.arg1));
+                    PersistenceService.getInstance(getApplicationContext()).delete(msg.arg1);//删除数据库记录
+                    log("DeleteRecord", String.valueOf(msg.arg1));//不一定删除成功...
                     break;
             }
 
