@@ -2,6 +2,7 @@ package cn.rainbow.sdk.analytics.persistence;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
@@ -72,7 +73,12 @@ public class PersistenceService {
         if (mCounter < SQL_TIMES_FREE) {//为了不让数据库长期驻扎内存，设定执行次数，达到设定次数释放数据库
             if (mDatabase == null) {
                 mSQLiteOpenHelper = new DBHelper(mContext);
-                mDatabase = mSQLiteOpenHelper.getWritableDatabase();
+                try {
+                    mDatabase = mSQLiteOpenHelper.getWritableDatabase();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                    return;//打开出数据库异常，将放弃此次数据库操作.
+                }
             }
             if (executor.execute(mDatabase)) {
                 Log.d("THAnalytics-SQL", "exeSql...#"+mCounter);
