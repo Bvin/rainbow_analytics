@@ -72,6 +72,10 @@ public class PersistenceService {
     private void exeSql(SQLExecutor executor) {
         if (mCounter < SQL_TIMES_FREE) {//为了不让数据库长期驻扎内存，设定执行次数，达到设定次数释放数据库
             if (mDatabase == null) {
+                if (mContext == null) {//上下文丢失，放弃执行SQL
+                    Log.e("THAnalytics-SQL", "Context loss");
+                    return;
+                }
                 mSQLiteOpenHelper = new DBHelper(mContext);
                 try {
                     mDatabase = mSQLiteOpenHelper.getWritableDatabase();
