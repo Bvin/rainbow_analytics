@@ -177,11 +177,15 @@ public class TransportService extends IntentService {
         if (response != null) {
             if (response.isSuccess()) {//HTTP访问成功
                 Model model = response.get();
-                log("RequestResponse", model.getOriginResponse());
-                if (model.isOkay()) {//服务端返回成功
-                    return true;
-                } else {
-                    //失败就不管了，下次再推
+                if (model != null) {
+                    log("RequestResponse", model.getOriginResponse());
+                    if (model.isOkay()) {//服务端返回成功
+                        return true;
+                    } else {
+                        //失败就不管了，下次再推
+                    }
+                }else {
+                    log("RequestError: ", "no response target");
                 }
             } else {
                 log("RequestError: ", "http status code is "+response.getNetworkResponse().getResponseCode());

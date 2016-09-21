@@ -16,8 +16,8 @@ public class App extends Application{
         super.onCreate();
         Config config = new Config();
         config.setEnable(true);
-        config.setTestEnv(true);
-        config.setRealTime(false);
+        config.setTestEnv(false);
+        config.setRealTime(true);
         THAnalytics.init(this, config);
 
         new Handler().postDelayed(new Runnable() {
