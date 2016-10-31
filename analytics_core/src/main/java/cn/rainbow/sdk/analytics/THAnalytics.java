@@ -47,4 +47,11 @@ public class THAnalytics {
             Log.e(TAG, "THAnalytics未初始化");
         }
     }
+
+    public static Config getConfig() {
+        if (mTracker != null) {
+            return mTracker.getConfig();
+        }
+        return null;
+    }
 }

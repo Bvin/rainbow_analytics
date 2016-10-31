@@ -85,4 +85,7 @@ public class Tracker {
         });
     }
 
+    public Config getConfig() {
+        return mConfig;
+    }
 }

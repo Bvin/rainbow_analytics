@@ -1,1 +1,1 @@
-include ':sample', ':persistence_layer', ':persistencelayertest', ':nettransport_layer', ':analytics_core'
+include ':sample', ':persistence_layer', ':nettransport_layer', ':analytics_core'
