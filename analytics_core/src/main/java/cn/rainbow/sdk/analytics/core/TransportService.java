@@ -10,8 +10,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.HashMap;
-import java.util.concurrent.BrokenBarrierException;
 
+import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.api.Model;
 import cn.rainbow.sdk.analytics.api.ModelReader;
 import cn.rainbow.sdk.analytics.net.Request;
@@ -199,7 +199,12 @@ public class TransportService extends IntentService {
     //休眠当前线程，达到延迟执行效果
     private void sleepThread() {
         try {
-            Thread.sleep(TASK_INTERVAL);
+            long interval = TASK_INTERVAL;
+            Config config = THAnalytics.getConfig();
+            if (config != null) {
+                interval = config.getTaskInterval();
+            }
+            Thread.sleep(interval);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

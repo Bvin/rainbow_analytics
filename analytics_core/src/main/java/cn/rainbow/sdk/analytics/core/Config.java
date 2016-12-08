@@ -9,6 +9,7 @@ public class Config {
     private boolean mRealTime;
     private boolean mTestEnv;
     private boolean mPushOnWifi;
+    private long mTaskInterval = 1000;
 
     public void setRealTime(boolean realTime) {
         mRealTime = realTime;
@@ -40,5 +41,13 @@ public class Config {
 
     public void setPushOnWifi(boolean pushOnWifi) {
         mPushOnWifi = pushOnWifi;
+    }
+
+    public long getTaskInterval() {
+        return mTaskInterval;
+    }
+
+    public void setTaskInterval(long taskInterval) {
+        mTaskInterval = taskInterval;
     }
 }
