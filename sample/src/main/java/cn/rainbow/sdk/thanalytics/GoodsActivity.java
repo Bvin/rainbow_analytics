@@ -114,6 +114,11 @@ public class GoodsActivity extends BaseActivity {
         THAnalytics.track(thEvent);
     }
 
+    public void testCustomEvent(View view){
+        TestEvent event = new TestEvent();
+        THAnalytics.track(event);
+    }
+
     @Override
     public String traceNumber() {
         return "GoodsActivity";

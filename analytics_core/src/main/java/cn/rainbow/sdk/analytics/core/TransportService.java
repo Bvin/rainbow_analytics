@@ -12,6 +12,7 @@ import android.util.Log;
 import java.util.HashMap;
 
 import cn.rainbow.sdk.analytics.THAnalytics;
+import cn.rainbow.sdk.analytics.api.Api;
 import cn.rainbow.sdk.analytics.api.Model;
 import cn.rainbow.sdk.analytics.api.ModelReader;
 import cn.rainbow.sdk.analytics.net.Request;
@@ -111,8 +112,7 @@ public class TransportService extends IntentService {
     private void handleFromLocal(final String url, final HashMap<Integer,String> data) {
         HashMap.Entry<Integer,String> entry = obtainEntry(data);
         if (entry != null) {
-            String completionUrl = url+"?"+entry.getValue();//完整的url
-            Response<Model> response = performRequest(completionUrl);
+            Response<Model> response = performRequest(buildUrl(url, entry.getValue()));
             boolean isSuccess = handleResponse(response);
             if (isSuccess) {
                 Message message = mHandler.obtainMessage();
@@ -132,10 +132,17 @@ public class TransportService extends IntentService {
         }
     }
 
+    private String buildUrl(String host, String data) {
+        if (data.startsWith("/")) {//有/一定要跟?
+            return host + data.substring(1);
+        } else {
+            return host + Api.URL_REPORT + "?" + data;
+        }
+    }
+
     //单独任务
     private void handleFromCurrent(final String url, String data){
-        String completionUrl = url+"?"+data;//完整的url
-        Response<Model> response = performRequest(completionUrl);
+        Response<Model> response = performRequest(buildUrl(url, data));
         boolean isSuccess = handleResponse(response);
         if (isSuccess){
             //成功就不管了

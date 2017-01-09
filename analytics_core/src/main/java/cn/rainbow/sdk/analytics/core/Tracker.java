@@ -27,10 +27,14 @@ public class Tracker {
     public Tracker(Context context, Config config) {
         mContext = context;
         mConfig = config;
-        if (config.isTestEnv()) {
-            mBaseUrl = Api.HOST_TEST + Api.URL_REPORT;
-        } else {
-            mBaseUrl = Api.HOST_OFFICIAL + Api.URL_REPORT;
+        if (TextUtils.isEmpty(config.getHost())) {
+            if (config.isTestEnv()) {
+                mBaseUrl = Api.HOST_TEST;
+            } else {
+                mBaseUrl = Api.HOST_OFFICIAL;
+            }
+        }else {
+            mBaseUrl = config.getHost();
         }
     }
 

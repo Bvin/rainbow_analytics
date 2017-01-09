@@ -10,6 +10,7 @@ public class Config {
     private boolean mTestEnv;
     private boolean mPushOnWifi;
     private long mTaskInterval = 1000;
+    private String mHost;
 
     public void setRealTime(boolean realTime) {
         mRealTime = realTime;
@@ -49,5 +50,13 @@ public class Config {
 
     public void setTaskInterval(long taskInterval) {
         mTaskInterval = taskInterval;
+    }
+
+    public String getHost() {
+        return mHost;
+    }
+
+    public void setHost(String host) {
+        mHost = host;
     }
 }
