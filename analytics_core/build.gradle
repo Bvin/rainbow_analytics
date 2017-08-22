@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'java'
 group='com.github.bvin'
 //apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -27,4 +26,14 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':nettransport_layer')
     compile project(':persistence_layer')
+}
+
+// build a jar with source files
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
 }
