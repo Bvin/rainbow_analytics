@@ -115,14 +115,15 @@ public class TransportService extends IntentService {
             Response<Model> response = performRequest(buildUrl(url, entry.getValue()));
             boolean isSuccess = handleResponse(response);
             if (isSuccess) {
+                // 删除本地记录
                 Message message = mHandler.obtainMessage();
                 message.what = MESSAGE_DB_DELETE;
                 message.arg1 = entry.getKey();
                 mHandler.sendMessage(message);
-                data.remove(entry.getKey());//移除处理过的任务
             } else {
                 //失败就不管了，下次再推
             }
+            data.remove(entry.getKey());//移除处理过的任务
             sleepThread();
             handleFromLocal(url, data);//递归
         }else {
