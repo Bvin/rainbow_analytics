@@ -6,12 +6,12 @@
  
 ### 引入
 添加以下依赖到build.gradle文件,在project的build.gradle中需要添加jitpack的远程仓库定义。
-
+```
 dependencies {
     ...
     compile 'com.github.bvin.rainbow_analytics:analytics_core:3.6.3'
 }
- 
+```
 
 ### 配置
 ```java

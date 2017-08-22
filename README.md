@@ -7,11 +7,12 @@ analytics and report.
  
 ### Import 
 add dependency with bellow line,and add jitpack maven repo define.
-
+```
 dependencies {
     ...
     compile 'com.github.bvin.rainbow_analytics:analytics_core:3.6.3'
 }
+```
  
 
 ### Config
