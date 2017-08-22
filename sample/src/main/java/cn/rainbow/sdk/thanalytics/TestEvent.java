@@ -8,8 +8,10 @@ import cn.rainbow.sdk.analytics.event.Event;
 
 public class TestEvent extends Event {
 
+    private static final String EVENT_NAME = "TestEvent";
+
     public TestEvent() {
-        super("/report_events_user");
+        super(EVENT_NAME);
     }
 
     @Override

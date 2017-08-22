@@ -1,37 +1,58 @@
-# 移动统计SDK
+# Android Analytics SDK
+This Library is a easy analytics lib,it use very simple only call several method to complete data
+analytics and report.
 
  --- 
  
-### App生命周期统计：
-* public static void onAppStart(Context context)
-* public static void onAppExit()
+ 
+### Import 
+add dependency with bellow line,and add jitpack maven repo define.
 
-### 页面周期统计：
-* public static void onResume(Context context)
-* public static void onPause(Context context)
+dependencies {
+    ...
+    compile 'com.github.bvin.rainbow_analytics:analytics_core:3.6.3'
+}
+ 
 
-### 配置
+### Config
 ```java
 Config config = new Config();
-config.enableDebugLog(true);//打开log
-config.enableCrashTrack(true);//开启崩溃收集
-config.setTestEnv(false);
-config.setPushRemote(true);//设置是否上报到服务器
-config.setSaveLocal(true);//设置是否保存到本地
-config.setPushStrategy(Config.PUSH_STRATEGY_REAL_TIME);//设置上报策略
-//启动时批量发送：PUSH_STRATEGY_BATCH_BOOTSTRAP = 0;
-//实时发送：PUSH_STRATEGY_REAL_TIME = 1;
-THAnalytics.setConfig(config);
+config.setEnable(true);// 统计开关
+config.setRealTime(true);// 实时上报
+config.setTaskInterval(2500);// 上报间隔时间
+THAnalytics.init(content, config);// 初始化
 ```
 
-### 渠道
-```xml
-<meta-data android:name="TH_CHANNEL"  android:value="2006" />
+### Feature
+1. Use THAnalytics.track(event) to track a event,if the config is enable.
+if config real-time will report currently,else will save on local database.
+and report failed it will save on local database yet.
+ 
+2. Use THAnalytics.reportLocal() to report the events on local database,
+if the config is enable.The event record will report one by one, but most
+50 record invoke once.
+
+### Extend
+You can extend the Event class create yourself customer event, only override the
+ toString() method to record your event data body.Like this:
+ 
+```java
+public class TestEvent extends Event {
+
+    private static final String EVENT_NAME = "TestEvent";
+
+    public TestEvent() {
+        super(EVENT_NAME);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(getName());
+        sb.append("?");
+        putValue(sb, "c", String.valueOf(mChannelId));
+        putValue(sb, "tn", "1");
+        return sb.toString();
+    }
+}
 ```
 
-### PROGUARD
-```xml
--keep class cn.rainbow.sdk.analytics.** {*;}
--keep class alexclin.httplite.** {*;}
--keep class alexclin.httplite.url.** {*;}
-```
