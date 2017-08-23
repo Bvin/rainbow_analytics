@@ -51,7 +51,7 @@ public class TransportService extends IntentService {
      * @param map 本地数据
      * @param interval 任务间隔时间
      */
-    public static void startFromLocal(Context context, String url, HashMap<Integer,String> map, long interval) {
+    public static void startFromLocal(Context context, String url, LinkedHashMap<Integer,String> map, long interval) {
         Intent intent = new Intent(context, TransportService.class);
         intent.setAction(ACTION_PUSH_LOCAL);
         intent.putExtra(EXTRA_URL, url);
