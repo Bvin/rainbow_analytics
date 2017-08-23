@@ -112,7 +112,7 @@ public class TransportService extends IntentService {
     private void handleFromLocal(final String url, final HashMap<Integer,String> data) {
         HashMap.Entry<Integer,String> entry = obtainEntry(data);
         if (entry != null) {
-            Response<Model> response = performRequest(buildUrl(url, entry.getValue()));
+            Response<Model> response = performRequest(buildUrl(url, entry.getValue()), entry.getKey());
             boolean isSuccess = handleResponse(response);
             if (isSuccess) {
                 // 删除本地记录
@@ -143,7 +143,7 @@ public class TransportService extends IntentService {
 
     //单独任务
     private void handleFromCurrent(final String url, String data){
-        Response<Model> response = performRequest(buildUrl(url, data));
+        Response<Model> response = performRequest(buildUrl(url, data), -1);
         boolean isSuccess = handleResponse(response);
         if (isSuccess){
             //成功就不管了
@@ -174,10 +174,10 @@ public class TransportService extends IntentService {
     }
 
     //执行请求(GET)
-    private Response<Model> performRequest(String completionUrl) {
+    private Response<Model> performRequest(String completionUrl, int rowId) {
         Request<Model> request = new Request<>();
         ResponseReader<Model> read = new ModelReader();
-        log("RequestStart", completionUrl);
+        log("RequestStart("+rowId+")", completionUrl);
         return request.performGet(completionUrl,read);
     }
 
