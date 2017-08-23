@@ -82,7 +82,7 @@ public class Tracker {
                 for (int i = 0; i < stringSparseArray.size(); i++) {
                     Integer key = stringSparseArray.keyAt(i);
                     data.put(key, stringSparseArray.get(key));
-                    TransportService.startReport(mContext,mBaseUrl,stringSparseArray.get(key), key);
+                    TransportService.startReport(mContext,mBaseUrl,stringSparseArray.get(key), key, mConfig.getTaskInterval());
                 }
                 if (!data.isEmpty()) {
                     //TransportService.startFromLocal(mContext, mBaseUrl, data);

@@ -11,7 +11,6 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import cn.rainbow.sdk.analytics.THAnalytics;
 import cn.rainbow.sdk.analytics.api.Api;
 import cn.rainbow.sdk.analytics.api.Model;
 import cn.rainbow.sdk.analytics.api.ModelReader;
@@ -37,6 +36,7 @@ public class TransportService extends IntentService {
     private static final String EXTRA_LOCAL_DATA = "LOCAL_DATA";
     private static final String EXTRA_CURRENT_DATA = "CURRENT_DATA";
     private static final String EXTRA_ROW_ID = "EXTRA_ROW_ID";
+    private static final String EXTRA_TASK_INTERVAL = "EXTRA_TASK_INTERVAL";
     private static final long TASK_INTERVAL = 1500;//任务间隔时间
 
     public static final int MESSAGE_DB_DELETE = 1;
@@ -63,13 +63,15 @@ public class TransportService extends IntentService {
      * @param url url
      * @param data 数据
      * @param rowId 数据库rowId
+     * @param interval 任务间隔时间
      */
-    public static void startReport(Context context, String url, String data, int rowId) {
+    public static void startReport(Context context, String url, String data, int rowId, long interval) {
         Intent intent = new Intent(context, TransportService.class);
         intent.setAction(ACTION_PUSH_CURRENT);
         intent.putExtra(EXTRA_URL, url);
         intent.putExtra(EXTRA_CURRENT_DATA, data);
         intent.putExtra(EXTRA_ROW_ID, rowId);
+        intent.putExtra(EXTRA_TASK_INTERVAL, interval);
         context.startService(intent);
     }
 
@@ -80,7 +82,7 @@ public class TransportService extends IntentService {
      * @param data 数据
      */
     public static void startFromCurrent(Context context, String url, String data) {
-        startReport(context, url, data, -1);
+        startReport(context, url, data, -1, 0);
     }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
@@ -101,6 +103,8 @@ public class TransportService extends IntentService {
         }
     };
 
+    private long mTaskInterval;
+
     public TransportService() {
         super("TransportThread");//WorkThread-Name
     }
@@ -109,6 +113,7 @@ public class TransportService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
+            mTaskInterval = intent.getLongExtra(EXTRA_TASK_INTERVAL, TASK_INTERVAL);
             if (ACTION_PUSH_LOCAL.equals(action)) {
                 final String url = intent.getStringExtra(EXTRA_URL);
                 final HashMap<Integer,String> data = (HashMap<Integer, String>) intent.getSerializableExtra(EXTRA_LOCAL_DATA);
@@ -157,6 +162,7 @@ public class TransportService extends IntentService {
 
     //单独任务
     private void handleFromCurrent(final String url, String data, int rowId){
+        sleepThread(); // 任务间隔
         Response<Model> response = performRequest(buildUrl(url, data), rowId);
         boolean isSuccess = handleResponse(response);
         if (isSuccess){
@@ -171,7 +177,6 @@ public class TransportService extends IntentService {
             // 如果是从数据库读取的事件，失败了保存到本地，待下次再推
             if (rowId < 0) PersistenceService.getInstance(this).save(new Data(data));
         }
-        sleepThread();// 任务间隔
     }
 
     private void log(String tag, String message) {
@@ -227,13 +232,8 @@ public class TransportService extends IntentService {
     //休眠当前线程，达到延迟执行效果
     private void sleepThread() {
         try {
-            long interval = TASK_INTERVAL;
-            Config config = THAnalytics.getConfig();
-            if (config != null) {
-                interval = config.getTaskInterval();
-            }
-            log("SleepThread("+interval+"ms)",Thread.currentThread().getName());
-            Thread.sleep(interval);
+            log("SleepThread(" + mTaskInterval + "ms)", Thread.currentThread().getName());
+            Thread.sleep(mTaskInterval);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
