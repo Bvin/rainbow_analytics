@@ -36,6 +36,7 @@ public class TransportService extends IntentService {
     private static final String EXTRA_URL = "URL";
     private static final String EXTRA_LOCAL_DATA = "LOCAL_DATA";
     private static final String EXTRA_CURRENT_DATA = "CURRENT_DATA";
+    private static final String EXTRA_ROW_ID = "EXTRA_ROW_ID";
     private static final long TASK_INTERVAL = 1500;//任务间隔时间
 
     public static final int MESSAGE_DB_DELETE = 1;
@@ -57,17 +58,29 @@ public class TransportService extends IntentService {
     }
 
     /**
-     * 即时推送.
+     * 发送事件.
+     * @param context 上下文
+     * @param url url
+     * @param data 数据
+     * @param rowId 数据库rowId
+     */
+    public static void startReport(Context context, String url, String data, int rowId) {
+        Intent intent = new Intent(context, TransportService.class);
+        intent.setAction(ACTION_PUSH_CURRENT);
+        intent.putExtra(EXTRA_URL, url);
+        intent.putExtra(EXTRA_CURRENT_DATA, data);
+        intent.putExtra(EXTRA_ROW_ID, rowId);
+        context.startService(intent);
+    }
+
+    /**
+     * 及时上报.
      * @param context 上下文
      * @param url url
      * @param data 数据
      */
     public static void startFromCurrent(Context context, String url, String data) {
-        Intent intent = new Intent(context, TransportService.class);
-        intent.setAction(ACTION_PUSH_CURRENT);
-        intent.putExtra(EXTRA_URL, url);
-        intent.putExtra(EXTRA_CURRENT_DATA, data);
-        context.startService(intent);
+        startReport(context, url, data, -1);
     }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
@@ -77,7 +90,7 @@ public class TransportService extends IntentService {
             switch (msg.what){
                 case MESSAGE_DB_RELEASE:
                     PersistenceService.getInstance(getApplicationContext()).end();//上传完
-                    log("DeleteRecord", "complete");
+                    log("ReportTask", "complete");
                     break;
                 case MESSAGE_DB_DELETE:
                     PersistenceService.getInstance(getApplicationContext()).delete(msg.arg1);//删除数据库记录
@@ -103,7 +116,8 @@ public class TransportService extends IntentService {
             }else if(ACTION_PUSH_CURRENT.equals(action)){
                 final String url = intent.getStringExtra(EXTRA_URL);
                 String data = intent.getStringExtra(EXTRA_CURRENT_DATA);
-                handleFromCurrent(url,data);
+                int rowId = intent.getIntExtra(EXTRA_ROW_ID, -1);
+                handleFromCurrent(url, data, rowId);
             }
         }
     }
@@ -142,16 +156,22 @@ public class TransportService extends IntentService {
     }
 
     //单独任务
-    private void handleFromCurrent(final String url, String data){
-        Response<Model> response = performRequest(buildUrl(url, data), -1);
+    private void handleFromCurrent(final String url, String data, int rowId){
+        Response<Model> response = performRequest(buildUrl(url, data), rowId);
         boolean isSuccess = handleResponse(response);
         if (isSuccess){
-            //成功就不管了
+            // 删除本地记录
+            if (rowId >= 0) {
+                Message message = mHandler.obtainMessage();
+                message.what = MESSAGE_DB_DELETE;
+                message.arg1 = rowId;
+                mHandler.sendMessage(message);
+            }
         }else {
-            PersistenceService.getInstance(this).save(new Data(data));
-            //失败了保存到本地，待下次再推
+            // 如果是从数据库读取的事件，失败了保存到本地，待下次再推
+            if (rowId < 0) PersistenceService.getInstance(this).save(new Data(data));
         }
-        //sleepThread();//是否需要延迟线程？
+        sleepThread();// 任务间隔
     }
 
     private void log(String tag, String message) {
@@ -212,6 +232,7 @@ public class TransportService extends IntentService {
             if (config != null) {
                 interval = config.getTaskInterval();
             }
+            log("SleepThread("+interval+"ms)",Thread.currentThread().getName());
             Thread.sleep(interval);
         } catch (InterruptedException e) {
             e.printStackTrace();

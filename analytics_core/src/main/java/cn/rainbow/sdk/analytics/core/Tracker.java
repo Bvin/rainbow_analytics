@@ -77,13 +77,15 @@ public class Tracker {
         PersistenceService.getInstance(mContext).query(new PersistenceService.SQLCallback<SparseArray<String>>() {
             @Override
             public void callback(SparseArray<String> stringSparseArray) {
+                PersistenceService.getInstance(mContext).end();//上传完
                 HashMap<Integer, String> data = new HashMap<>();
                 for (int i = 0; i < stringSparseArray.size(); i++) {
                     Integer key = stringSparseArray.keyAt(i);
                     data.put(key, stringSparseArray.get(key));
+                    TransportService.startReport(mContext,mBaseUrl,stringSparseArray.get(key), key);
                 }
                 if (!data.isEmpty()) {
-                    TransportService.startFromLocal(mContext, mBaseUrl, data);
+                    //TransportService.startFromLocal(mContext, mBaseUrl, data);
                 }
             }
         });

@@ -18,7 +18,7 @@ public class App extends Application{
         config.setEnable(true);
         config.setTestEnv(true);
         config.setRealTime(true);
-        config.setTaskInterval(2500);
+        config.setTaskInterval(3500);
         //config.setHost();
         THAnalytics.init(this, config);
 
