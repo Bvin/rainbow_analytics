@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import cn.rainbow.sdk.analytics.api.Api;
 import cn.rainbow.sdk.analytics.api.Model;
@@ -48,12 +49,14 @@ public class TransportService extends IntentService {
      * @param context 上下文
      * @param url url
      * @param map 本地数据
+     * @param interval 任务间隔时间
      */
-    public static void startFromLocal(Context context, String url, HashMap<Integer,String> map) {
+    public static void startFromLocal(Context context, String url, HashMap<Integer,String> map, long interval) {
         Intent intent = new Intent(context, TransportService.class);
         intent.setAction(ACTION_PUSH_LOCAL);
         intent.putExtra(EXTRA_URL, url);
         intent.putExtra(EXTRA_LOCAL_DATA, map);
+        intent.putExtra(EXTRA_TASK_INTERVAL, interval);
         context.startService(intent);
     }
 
@@ -116,7 +119,7 @@ public class TransportService extends IntentService {
             mTaskInterval = intent.getLongExtra(EXTRA_TASK_INTERVAL, TASK_INTERVAL);
             if (ACTION_PUSH_LOCAL.equals(action)) {
                 final String url = intent.getStringExtra(EXTRA_URL);
-                final HashMap<Integer,String> data = (HashMap<Integer, String>) intent.getSerializableExtra(EXTRA_LOCAL_DATA);
+                final LinkedHashMap<Integer,String> data = (LinkedHashMap<Integer, String>) intent.getSerializableExtra(EXTRA_LOCAL_DATA);
                 handleFromLocal(url, data);
             }else if(ACTION_PUSH_CURRENT.equals(action)){
                 final String url = intent.getStringExtra(EXTRA_URL);
@@ -128,8 +131,8 @@ public class TransportService extends IntentService {
     }
 
     //批量递归任务
-    private void handleFromLocal(final String url, final HashMap<Integer,String> data) {
-        HashMap.Entry<Integer,String> entry = obtainEntry(data);
+    private void handleFromLocal(final String url, final LinkedHashMap<Integer,String> data) {
+        LinkedHashMap.Entry<Integer,String> entry = obtainEntry(data);
         if (entry != null) {
             Response<Model> response = performRequest(buildUrl(url, entry.getValue()), entry.getKey());
             boolean isSuccess = handleResponse(response);
@@ -239,8 +242,8 @@ public class TransportService extends IntentService {
         }
     }
 
-    private HashMap.Entry<Integer,String> obtainEntry(HashMap<Integer, String> data) {
-        for (HashMap.Entry<Integer,String> entry :data.entrySet()){
+    private LinkedHashMap.Entry<Integer,String> obtainEntry(LinkedHashMap<Integer, String> data) {
+        for (LinkedHashMap.Entry<Integer,String> entry :data.entrySet()){
             return entry;
         }
         return null;
