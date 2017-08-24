@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
-import android.util.SparseArray;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import cn.rainbow.sdk.analytics.api.Api;
 import cn.rainbow.sdk.analytics.event.Event;
 import cn.rainbow.sdk.analytics.persistence.PersistenceService;
+import cn.rainbow.sdk.analytics.persistence.Record;
 
 /**
  * Created by bvin on 2016/9/14.
@@ -62,7 +62,7 @@ public class Tracker {
             String eventBody = event.toPersistableString();
             if (!TextUtils.isEmpty(eventBody)) {
                 if (mConfig.isRealTime()) {
-                    TransportService.startFromCurrent(mContext,mBaseUrl,eventBody);
+                    TransportService.startReport(mContext,mBaseUrl,eventBody);
                 }else {
                     PersistenceService.getInstance(mContext).save(event);
                 }
@@ -74,19 +74,11 @@ public class Tracker {
     public void reportLocal(){
         if (!mConfig.isEnable()) return;
         //一次最多只能推50条
-        PersistenceService.getInstance(mContext).query(new PersistenceService.SQLCallback<SparseArray<String>>() {
+        PersistenceService.getInstance(mContext).query(new PersistenceService.SQLCallback<ArrayList<Record>>() {
             @Override
-            public void callback(SparseArray<String> stringSparseArray) {
+            public void callback(ArrayList<Record> data) {
                 PersistenceService.getInstance(mContext).end();//上传完
-                HashMap<Integer, String> data = new HashMap<>();
-                for (int i = 0; i < stringSparseArray.size(); i++) {
-                    Integer key = stringSparseArray.keyAt(i);
-                    data.put(key, stringSparseArray.get(key));
-                    TransportService.startReport(mContext,mBaseUrl,stringSparseArray.get(key), key, mConfig.getTaskInterval());
-                }
-                if (!data.isEmpty()) {
-                    //TransportService.startFromLocal(mContext, mBaseUrl, data);
-                }
+                TransportService.startReport(mContext, mBaseUrl, data, mConfig.getTaskInterval());
             }
         });
     }

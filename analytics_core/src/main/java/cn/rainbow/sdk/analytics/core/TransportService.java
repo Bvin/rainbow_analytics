@@ -1,15 +1,15 @@
 package cn.rainbow.sdk.analytics.core;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import cn.rainbow.sdk.analytics.api.Api;
@@ -20,6 +20,7 @@ import cn.rainbow.sdk.analytics.net.response.Response;
 import cn.rainbow.sdk.analytics.net.response.reader.ResponseReader;
 import cn.rainbow.sdk.analytics.persistence.Persistable;
 import cn.rainbow.sdk.analytics.persistence.PersistenceService;
+import cn.rainbow.sdk.analytics.persistence.Record;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -44,18 +45,17 @@ public class TransportService extends IntentService {
     public static final int MESSAGE_DB_RELEASE = 0;
 
     /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
+     * 批量上报
      * @param context 上下文
      * @param url url
-     * @param map 本地数据
+     * @param eventList 事件列表
      * @param interval 任务间隔时间
      */
-    public static void startFromLocal(Context context, String url, LinkedHashMap<Integer,String> map, long interval) {
+    public static void startReport(Context context, String url, ArrayList<Record> eventList, long interval) {
         Intent intent = new Intent(context, TransportService.class);
         intent.setAction(ACTION_PUSH_LOCAL);
         intent.putExtra(EXTRA_URL, url);
-        intent.putExtra(EXTRA_LOCAL_DATA, map);
+        intent.putExtra(EXTRA_LOCAL_DATA, eventList);
         intent.putExtra(EXTRA_TASK_INTERVAL, interval);
         context.startService(intent);
     }
@@ -68,7 +68,7 @@ public class TransportService extends IntentService {
      * @param rowId 数据库rowId
      * @param interval 任务间隔时间
      */
-    public static void startReport(Context context, String url, String data, int rowId, long interval) {
+    private static void startReport(Context context, String url, String data, int rowId, long interval) {
         Intent intent = new Intent(context, TransportService.class);
         intent.setAction(ACTION_PUSH_CURRENT);
         intent.putExtra(EXTRA_URL, url);
@@ -79,12 +79,12 @@ public class TransportService extends IntentService {
     }
 
     /**
-     * 及时上报.
+     * 单次上报.
      * @param context 上下文
      * @param url url
      * @param data 数据
      */
-    public static void startFromCurrent(Context context, String url, String data) {
+    public static void startReport(Context context, String url, String data) {
         startReport(context, url, data, -1, 0);
     }
 
@@ -119,7 +119,7 @@ public class TransportService extends IntentService {
             mTaskInterval = intent.getLongExtra(EXTRA_TASK_INTERVAL, TASK_INTERVAL);
             if (ACTION_PUSH_LOCAL.equals(action)) {
                 final String url = intent.getStringExtra(EXTRA_URL);
-                final LinkedHashMap<Integer,String> data = (LinkedHashMap<Integer, String>) intent.getSerializableExtra(EXTRA_LOCAL_DATA);
+                final ArrayList<Record> data = (ArrayList<Record>) intent.getSerializableExtra(EXTRA_LOCAL_DATA);
                 handleFromLocal(url, data);
             }else if(ACTION_PUSH_CURRENT.equals(action)){
                 final String url = intent.getStringExtra(EXTRA_URL);
@@ -155,17 +155,20 @@ public class TransportService extends IntentService {
         }
     }
 
-    private String buildUrl(String host, String data) {
-        if (data.startsWith("/")) {//有/一定要跟?
-            return host + data.substring(1);
-        } else {
-            return host + Api.URL_REPORT + "?" + data;
+    // 批量循环任务
+    private void handleFromLocal(final String url, final ArrayList<Record> data){
+        for (Record record : data) {
+            handleFromCurrent(url, record.getBody(), record.getRowId());
+            sleepThread();// 任务间隔
         }
+        // 释放数据库
+        Message message = mHandler.obtainMessage();
+        message.what = MESSAGE_DB_RELEASE;
+        mHandler.sendMessage(message);
     }
 
     //单独任务
     private void handleFromCurrent(final String url, String data, int rowId){
-        sleepThread(); // 任务间隔
         Response<Model> response = performRequest(buildUrl(url, data), rowId);
         boolean isSuccess = handleResponse(response);
         if (isSuccess){
@@ -181,6 +184,16 @@ public class TransportService extends IntentService {
             if (rowId < 0) PersistenceService.getInstance(this).save(new Data(data));
         }
     }
+
+
+    private String buildUrl(String host, String data) {
+        if (data.startsWith("/")) {//有/一定要跟?
+            return host + data.substring(1);
+        } else {
+            return host + Api.URL_REPORT + "?" + data;
+        }
+    }
+
 
     private void log(String tag, String message) {
         if (TextUtils.isEmpty(message)) message = "empty content";
