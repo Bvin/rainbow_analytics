@@ -7,7 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
+
+import java.util.ArrayList;
 
 import cn.rainbow.sdk.analytics.persistence.db.DBHelper;
 import cn.rainbow.sdk.analytics.persistence.db.table.EventTable;
@@ -103,16 +104,17 @@ public class PersistenceService {
     }
 
     //查询
-    public void query(final SQLCallback<SparseArray<String>> callback) {
+    public void query(final SQLCallback<ArrayList<Record>> callback) {
         exeSql(new SQLExecutor() {
             @Override
             public boolean execute(SQLiteDatabase db) {
                 Cursor cursor = db.rawQuery("select * from " + EventTable.TABLE_NAME + " desc limit 0," + MAX_QUERY_SIZE + "", null);
                 if (cursor != null) {
-                    SparseArray<String> result = new SparseArray<>();
+                    ArrayList<Record> result = new ArrayList<>();
                     if (cursor.moveToFirst()) {
                         do {
-                            result.put(cursor.getInt(EventTable.COLUMN_INDEX_ID), cursor.getString(EventTable.COLUMN_INDEX_EVENT));
+                            Record record = new Record(cursor.getInt(EventTable.COLUMN_INDEX_ID), cursor.getString(EventTable.COLUMN_INDEX_EVENT));
+                            result.add(record);
                         } while (cursor.moveToNext());
                     }
                     callback.callback(result);
