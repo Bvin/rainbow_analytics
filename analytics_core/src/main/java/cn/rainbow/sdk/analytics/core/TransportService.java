@@ -68,7 +68,7 @@ public class TransportService extends IntentService {
      * @param rowId 数据库rowId
      * @param interval 任务间隔时间
      */
-    private static void startReport(Context context, String url, String data, int rowId, long interval) {
+    public static void startReport(Context context, String url, String data, int rowId, long interval) {
         Intent intent = new Intent(context, TransportService.class);
         intent.setAction(ACTION_PUSH_CURRENT);
         intent.putExtra(EXTRA_URL, url);
