@@ -161,7 +161,6 @@ public class TransportService extends IntentService {
     private void handleFromLocal(final String url, final ArrayList<Record> data){
         for (Record record : data) {
             handleFromCurrent(url, record.getBody(), record.getRowId());
-            sleepThread();// 任务间隔
         }
         // 释放数据库
         Message message = mHandler.obtainMessage();
@@ -185,6 +184,7 @@ public class TransportService extends IntentService {
             // 如果是从数据库读取的事件，失败了保存到本地，待下次再推
             if (rowId < 0) PersistenceService.getInstance(this).save(new Data(data));
         }
+        sleepThread();// 任务间隔
     }
 
 
