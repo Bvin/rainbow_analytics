@@ -57,7 +57,11 @@ public class TransportService extends IntentService {
         intent.putExtra(EXTRA_URL, url);
         intent.putExtra(EXTRA_LOCAL_DATA, eventList);
         intent.putExtra(EXTRA_TASK_INTERVAL, interval);
-        context.startService(intent);
+        try {
+            context.startService(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -86,7 +90,11 @@ public class TransportService extends IntentService {
         intent.putExtra(EXTRA_CURRENT_DATA, data);
         intent.putExtra(EXTRA_ROW_ID, rowId);
         intent.putExtra(EXTRA_TASK_INTERVAL, interval);
-        context.startService(intent);
+        try {
+            context.startService(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
