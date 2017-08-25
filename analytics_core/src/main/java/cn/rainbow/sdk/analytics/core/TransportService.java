@@ -95,6 +95,7 @@ public class TransportService extends IntentService {
             switch (msg.what){
                 case MESSAGE_DB_RELEASE:
                     PersistenceService.getInstance(getApplicationContext()).end();//上传完
+                    mEnd = true;
                     log("ReportTask", "complete");
                     break;
                 case MESSAGE_DB_DELETE:
@@ -107,6 +108,7 @@ public class TransportService extends IntentService {
     };
 
     private long mTaskInterval;
+    private boolean mEnd;// 批量推送结束，每次启动只推送一次
 
     public TransportService() {
         super("TransportThread");//WorkThread-Name
@@ -117,7 +119,7 @@ public class TransportService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             mTaskInterval = intent.getLongExtra(EXTRA_TASK_INTERVAL, TASK_INTERVAL);
-            if (ACTION_PUSH_LOCAL.equals(action)) {
+            if (ACTION_PUSH_LOCAL.equals(action) && !mEnd) {
                 final String url = intent.getStringExtra(EXTRA_URL);
                 final ArrayList<Record> data = (ArrayList<Record>) intent.getSerializableExtra(EXTRA_LOCAL_DATA);
                 handleFromLocal(url, data);

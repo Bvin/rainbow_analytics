@@ -77,7 +77,7 @@ public class Tracker {
         PersistenceService.getInstance(mContext).query(new PersistenceService.SQLCallback<ArrayList<Record>>() {
             @Override
             public void callback(ArrayList<Record> data) {
-                PersistenceService.getInstance(mContext).end();//上传完
+                //PersistenceService.getInstance(mContext).end();//上传完
                 TransportService.startReport(mContext, mBaseUrl, data, mConfig.getTaskInterval());
             }
         });
