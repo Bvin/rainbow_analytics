@@ -61,6 +61,17 @@ public class TransportService extends IntentService {
     }
 
     /**
+     * 发送本地记录.
+     * @param context 上下文
+     * @param url url
+     * @param event 事件记录
+     * @param interval 任务间隔
+     */
+    public static void startReport(Context context, String url, Record event, long interval){
+        startReport(context, url, event.getBody(), event.getRowId(), interval);
+    }
+
+    /**
      * 发送事件.
      * @param context 上下文
      * @param url url
@@ -68,7 +79,7 @@ public class TransportService extends IntentService {
      * @param rowId 数据库rowId
      * @param interval 任务间隔时间
      */
-    public static void startReport(Context context, String url, String data, int rowId, long interval) {
+    private static void startReport(Context context, String url, String data, int rowId, long interval) {
         Intent intent = new Intent(context, TransportService.class);
         intent.setAction(ACTION_PUSH_CURRENT);
         intent.putExtra(EXTRA_URL, url);
