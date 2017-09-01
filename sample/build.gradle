@@ -25,5 +25,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.0'
     testCompile 'org.robolectric:robolectric:3.1.2'
-    compile project(':analytics_core')
+    //compile project(':analytics_core')
+    compile 'com.github.Bvin.rainbow_analytics:analytics_core:dev-SNAPSHOT'
 }
