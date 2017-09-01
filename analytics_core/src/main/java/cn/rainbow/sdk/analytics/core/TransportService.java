@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -135,6 +136,7 @@ public class TransportService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Process.setThreadPriority(Process.THREAD_PRIORITY_LOWEST);
         if (intent != null) {
             final String action = intent.getAction();
             mTaskInterval = intent.getLongExtra(EXTRA_TASK_INTERVAL, TASK_INTERVAL);
@@ -269,7 +271,7 @@ public class TransportService extends IntentService {
     //休眠当前线程，达到延迟执行效果
     private void sleepThread() {
         try {
-            log("SleepThread(" + mTaskInterval + "ms)", Thread.currentThread().getName());
+            log("SleepThread(" + mTaskInterval + "ms)", Thread.currentThread().getName()+ " Priority is "+Process.getThreadPriority(Process.myTid()));
             Thread.sleep(mTaskInterval);
         } catch (InterruptedException e) {
             e.printStackTrace();
